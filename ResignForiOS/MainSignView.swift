@@ -139,6 +139,7 @@ class MainSignView: NSView {
         let args = CommandLine.arguments
         if args.count > 3 {
             openByTerminal = true
+            StatusLabel.stringValue = "openByTerminal"
             if let pindex = args.index(of: "-i") {
                 inputPath = args[pindex + 1]
             }
@@ -157,6 +158,8 @@ class MainSignView: NSView {
             currSelectProfile = proflie
             currSelectCert = cerName ?? nil
             currSelectOutput = outputPath
+            
+            NSWorkspace.shared.openFile(Log.logName)
             Thread.detachNewThreadSelector(#selector(self.signingThread), toTarget: self, with: nil)
         }
     }
@@ -240,7 +243,7 @@ class MainSignView: NSView {
         let inputExists = fileManager.fileExists(atPath: currSelectInput!, isDirectory: &inputIsDir)
         if  inputIsDir.boolValue {
             setStatus("input can not be a Directory")
-            return
+            //return
         }
         if inputExists == false {
             DispatchQueue.main.async(execute: {
@@ -260,7 +263,7 @@ class MainSignView: NSView {
                 return
             }
         }
-        
+
         CodeSigner().sign(inputFile: currSelectInput!, provisioningFile: currSelectProfile?.filePath, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
     }
     

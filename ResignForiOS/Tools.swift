@@ -48,7 +48,7 @@ public func setStatus(_ status: String) {
     if !Thread.isMainThread {
         DispatchQueue.main.sync {
             setStatus(status)
-            print(status)
+            //print(status)
         }
     } else {
         print(status)

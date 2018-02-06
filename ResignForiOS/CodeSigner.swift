@@ -97,16 +97,16 @@ class CodeSigner: NSObject {
     func copyProvisionProfile(_ inputProfile: String?, _ oldProfilePath: String, _ tempDir: String) -> Bool {
         var profilePath: String? = nil
         if let inputProfile = inputProfile {
-            if fileManager.fileExists(atPath: oldProfilePath) {
-                setStatus("overWrite new provisioning profile to app bundle")
-                do {
+            setStatus("overWrite new provisioning profile to app bundle")
+            do {
+                if fileManager.fileExists(atPath: oldProfilePath) {
                     try fileManager.removeItem(atPath: oldProfilePath)
-                    try fileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath)
-                    profilePath = inputProfile
-                } catch let error as NSError {
-                    setStatus("Error copying provisioning profile \(error.localizedDescription)")
-                    return false
                 }
+                try fileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath)
+                profilePath = inputProfile
+            } catch let error as NSError {
+                setStatus("Error copying provisioning profile \(error.localizedDescription)")
+                return false
             }
         } else {
             profilePath = oldProfilePath
@@ -159,7 +159,6 @@ class CodeSigner: NSObject {
         var isDirectory: ObjCBool = true
         
         for file in files! {
-            
             fileManager.fileExists(atPath: payloadDirectory.appendPathComponent(file), isDirectory: &isDirectory)
             if !isDirectory.boolValue { continue }
             
@@ -173,7 +172,6 @@ class CodeSigner: NSObject {
             //MARK: Delete CFBundleResourceSpecification from Info.plist
             currInfoPlist.delete(key: "CFBundleResourceSpecification")
 
-            
             //MARK: copy provisionProfile
             if copyProvisionProfile(provisioningFile, provisioningPath, tempFolder) == false {
                 cleanup(tempFolder);
@@ -206,7 +204,6 @@ class CodeSigner: NSObject {
                 }
                 currInfoPlist.bundleIdentifier = newBundleID
             }
-            
             
             //MARK: Change Display Name
             if newDisplayName != "" {
@@ -243,10 +240,10 @@ class CodeSigner: NSObject {
                     alert.alertStyle = .critical
                     alert.runModal()
                     //MARK: alert if certificate  expired
-                    setStatus("Error verifying code signature")
-                    Log.write(verificationTask.output)
-                    self.cleanup(tempFolder); return
+                    setStatus("Error verifying code signature:\(verificationTask.output)")
+                    self.cleanup(tempFolder);
                 })
+                return
             }
         }
         
@@ -256,8 +253,7 @@ class CodeSigner: NSObject {
             do {
                 try fileManager.removeItem(atPath: outputFile)
             } catch let error as NSError {
-                setStatus("Error deleting output file")
-                Log.write(error.localizedDescription)
+                setStatus("Error deleting output file: \(error.localizedDescription)")
                 cleanup(tempFolder); return
             }
         }
@@ -270,7 +266,6 @@ class CodeSigner: NSObject {
         setStatus("Done, output at \(outputFile)")
         
         if openByTerminal {
-            NSWorkspace.shared.openFile(Log.logName)
             NSApp.terminate(self)
         }
     }
@@ -287,8 +282,7 @@ class CodeSigner: NSObject {
         
         if codesignTask.status != 0 {
             //MARK: alert if certificate expired
-            setStatus("Error codesigning \(file)")
-            Log.write(codesignTask.output)
+            setStatus("Error codesigning \(file) error:\(codesignTask.output)")
         }
     }
     
