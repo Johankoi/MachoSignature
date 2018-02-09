@@ -70,8 +70,17 @@ class CodeSigner: NSObject {
                 setStatus("Error copying app to payload directory")
                 return false
             }
+        } else if inputFileExt == "xcarchive" {
+            do {
+                try fileManager.createDirectory(atPath: payloadDir, withIntermediateDirectories: true, attributes: nil)
+                try fileManager.copyItem(atPath: input.appendPathComponent("Products/Applications/"), toPath: payloadDir)
+                setStatus("Copying xcarchive to payload directory")
+            } catch {
+                setStatus("Error copying xcarchive to payload directory")
+                return false
+            }
         } else {
-            setStatus("input file not ipa")
+            setStatus("input file not support")
             return false
         }
 

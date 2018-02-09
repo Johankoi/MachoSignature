@@ -292,7 +292,7 @@ class MainSignView: NSView {
         openDialog.canChooseDirectories = false
         openDialog.allowsMultipleSelection = false
         openDialog.allowsOtherFileTypes = false
-        openDialog.allowedFileTypes = ["ipa", "IPA", "app", "APP"]
+        openDialog.allowedFileTypes = ["ipa", "IPA", "app", "APP", "xcarchive"]
         openDialog.runModal()
         if let filename = openDialog.urls.first {
             currSelectInput = filename.path
