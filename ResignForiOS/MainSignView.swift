@@ -66,7 +66,7 @@ class MainSignView: NSView {
     fileprivate var openByTerminal = false
     
     //MARK: Drag / Drop
-    fileprivate var fileTypes: [String] = ["ipa","app","mobileprovision"]
+    fileprivate var fileTypes: [String] = ["ipa","app","mobileprovision", "xcarchive"]
     fileprivate var fileTypeIsOk = false
     
     
@@ -110,8 +110,8 @@ class MainSignView: NSView {
     
     func fileDropped(_ filePath: String) {
         switch filePath.pathExtension.lowercased() {
-        case "ipa", "app":
-            inputFileField.stringValue = filePath
+        case "ipa", "app", "xcarchive":
+            currSelectInput = filePath
             break
         default: break
         }
