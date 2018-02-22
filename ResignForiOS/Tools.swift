@@ -14,7 +14,7 @@ class NSMenuLink: NSMenuItem {
 }
 
 public func fixSigning() {
-    let script = "do shell script \"/bin/bash \\\"\(Bundle.main.path(forResource: "fix-wwdr", ofType: "sh")!)\\\"\" with administrator privileges"
+    let script = "do shell script \"/bin/bash \\\"\(Bundle.main.path(forResource: "UpdateAppleCer", ofType: "sh")!)\\\"\" with administrator privileges"
     NSAppleScript(source: script)?.executeAndReturnError(nil)
     return
 }
@@ -48,7 +48,6 @@ public func setStatus(_ status: String) {
     if !Thread.isMainThread {
         DispatchQueue.main.sync {
             setStatus(status)
-            //print(status)
         }
     } else {
         print(status)
