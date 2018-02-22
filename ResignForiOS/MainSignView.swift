@@ -23,11 +23,10 @@ public extension NSPasteboard.PasteboardType {
 
 
 class MainSignView: NSView {
-    
+
     let securityPath = "/usr/bin/security"
     let defaults = UserDefaults()
     let fileManager = FileManager.default
-    
     
     //MARK: IBOutlets
     @IBOutlet var inputFileField: NSTextField!
@@ -236,15 +235,9 @@ class MainSignView: NSView {
             newVersion = self.appVersion.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         
-        //MARK: Sanity checks
-        
         // check inputFile path is a dir, return directly
-        var inputIsDir: ObjCBool = false
-        let inputExists = fileManager.fileExists(atPath: currSelectInput!, isDirectory: &inputIsDir)
-        if  inputIsDir.boolValue {
-            setStatus("input can not be a Directory")
-            //return
-        }
+        let inputExists = fileManager.fileExists(atPath: currSelectInput!, isDirectory: nil)
+  
         if inputExists == false {
             DispatchQueue.main.async(execute: {
                 let alert = NSAlert()
@@ -264,7 +257,9 @@ class MainSignView: NSView {
             }
         }
 
-        CodeSigner().sign(inputFile: currSelectInput!, provisioningFile: currSelectProfile?.filePath, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
+        let signer = CodeSigner()
+        signer.delegate = self
+        signer.sign(inputFile: currSelectInput!, provisioningFile: currSelectProfile?.filePath, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
     }
     
     
@@ -326,3 +321,32 @@ class MainSignView: NSView {
     
 }
 
+extension MainSignView: CodeSignDelegate {
+    
+    func codeSignBegin(workingDir: String) {
+        setStatus("CodeSign begin with workingDir: \(workingDir)")
+    }
+    
+    func codeSignLogRecord(logDes: String) {
+        setStatus(logDes)
+    }
+    
+    func codeSignError(errDes: String, tempDir: String) {
+        setStatus(errDes)
+        cleanup(tempDir)
+    }
+    
+    func codeSigneEndSuccessed(outPutPath: String, tempDir: String) {
+        cleanup(tempDir)
+        setStatus("CodeSigneEndSuccessed, output at \(outPutPath)")
+    }
+    
+    func cleanup(_ dir: String) {
+        do {
+            setStatus("Deleting: \(dir)")
+            try fileManager.removeItem(atPath: dir)
+        } catch {
+            setStatus("Deleting: \(dir) error")
+        }
+    }
+}

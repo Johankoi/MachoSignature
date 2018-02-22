@@ -11,7 +11,7 @@ import Cocoa
 
 
 class Compress: NSObject {
-
+    
     static let shared = Compress()
     private override init() {}
     
@@ -39,7 +39,12 @@ class Compress: NSObject {
     }
 }
 
-
+protocol CodeSignDelegate {
+    func codeSignBegin(workingDir: String)
+    func codeSignLogRecord(logDes: String)
+    func codeSigneEndSuccessed(outPutPath: String, tempDir: String)
+    func codeSignError(errDes: String, tempDir: String)
+}
 
 
 class CodeSigner: NSObject {
@@ -47,8 +52,10 @@ class CodeSigner: NSObject {
     let mktempPath = "/usr/bin/mktemp"
     let chmodPath = "/bin/chmod"
     let codesignPath = "/usr/bin/codesign"
-
+    
     let fileManager = FileManager.default
+    
+    var delegate: CodeSignDelegate?
     
     func makeTempFolder() -> String? {
         let bundleID = Bundle.main.bundleIdentifier
@@ -56,65 +63,51 @@ class CodeSigner: NSObject {
         return tempTask.output
     }
     
-    func checkInputAndHandel(_ input: String, _ output: String) -> Bool {
-        let payloadDir = output.appendPathComponent("Payload/")
+    func checkInputAndHandel(_ input: String, _ workingDir: String) -> Bool {
+        let payloadDir = workingDir.appendPathComponent("Payload/")
         let inputFileExt = input.pathExtension.lowercased()
         if inputFileExt == "ipa" {
-            Compress.shared.unzip(input, outputPath: output)
+            delegate?.codeSignLogRecord(logDes: "Unzip \(input) to \(workingDir)")
+            Compress.shared.unzip(input, outputPath: workingDir)
         } else if inputFileExt == "app" {
             do {
                 try fileManager.createDirectory(atPath: payloadDir, withIntermediateDirectories: true, attributes: nil)
                 try fileManager.copyItem(atPath: input, toPath: payloadDir.appendPathComponent(input.lastPathComponent))
-                setStatus("Copying app to payload directory")
+                delegate?.codeSignLogRecord(logDes: "Copying app to \(payloadDir)")
             } catch {
-                setStatus("Error copying app to payload directory")
+                delegate?.codeSignLogRecord(logDes: "Error copying app to \(payloadDir)")
                 return false
             }
         } else if inputFileExt == "xcarchive" {
             do {
                 try fileManager.createDirectory(atPath: payloadDir, withIntermediateDirectories: true, attributes: nil)
                 try fileManager.copyItem(atPath: input.appendPathComponent("Products/Applications/"), toPath: payloadDir)
-                setStatus("Copying xcarchive to payload directory")
+                delegate?.codeSignLogRecord(logDes: "Copying xcarchive to to \(payloadDir)")
             } catch {
-                setStatus("Error copying xcarchive to payload directory")
+                delegate?.codeSignLogRecord(logDes: "Error copying xcarchive to to \(payloadDir)")
                 return false
             }
         } else {
-            setStatus("input file not support")
-            return false
-        }
-
-        // Check ipa Payload directory to judge if the Task above successed
-        if !fileManager.fileExists(atPath: output.appendPathComponent("Payload/")) {
-            setStatus("Payload directory doesn't exist")
+            delegate?.codeSignLogRecord(logDes: "Input file not support")
             return false
         }
         return true
     }
     
     
-    func cleanup(_ tempFolder: String) {
-        do {
-            setStatus("Deleting: \(tempFolder)")
-            try fileManager.removeItem(atPath: tempFolder)
-        } catch let error as NSError {
-            setStatus("delete tempfolder error \(error.localizedDescription)")
-        }
-    }
-    
     //MARK: Copy Provisioning Profile
     func copyProvisionProfile(_ inputProfile: String?, _ oldProfilePath: String, _ tempDir: String) -> Bool {
         var profilePath: String? = nil
         if let inputProfile = inputProfile {
-            setStatus("overWrite new provisioning profile to app bundle")
+            delegate?.codeSignLogRecord(logDes: "OverWrite new provisioning profile to app bundle")
             do {
                 if fileManager.fileExists(atPath: oldProfilePath) {
                     try fileManager.removeItem(atPath: oldProfilePath)
                 }
                 try fileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath)
                 profilePath = inputProfile
-            } catch let error as NSError {
-                setStatus("Error copying provisioning profile \(error.localizedDescription)")
+            } catch {
+                delegate?.codeSignLogRecord(logDes: "Error copying provisioning profile \(error.localizedDescription)")
                 return false
             }
         } else {
@@ -125,7 +118,7 @@ class CodeSigner: NSObject {
         if let profilePath = profilePath {
             let profile = Profile(filePath: profilePath)!
             let result = profile.writeEntitlements(toFile: tempDir + "/entitlements.plist")
-            setStatus("Write entitlements to plist \(result ? "ok" : "error")")
+            delegate?.codeSignLogRecord(logDes: "Write entitlements to plist \(result ? "ok" : "error")")
             return result
         } else {
             return false
@@ -134,7 +127,7 @@ class CodeSigner: NSObject {
     
     
     func sign(inputFile: String, provisioningFile: String?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String, openByTerminal: Bool) {
-
+        
         //MARK: Create working temp folder
         var tempFolder: String = makeTempFolder()!
         
@@ -142,24 +135,21 @@ class CodeSigner: NSObject {
         let entitlementsPlist = tempFolder.appendPathComponent("entitlements.plist")
         let payloadDirectory = workingDirectory.appendPathComponent("Payload/")
         
-        setStatus("Working directory: \(workingDirectory)")
-        setStatus("Payload folder: \(payloadDirectory)")
+        delegate?.codeSignBegin(workingDir: workingDirectory)
         
         //MARK: Codesign Test
         
         //MARK: Create workingDirectory Temp Directory
         do {
             try fileManager.createDirectory(atPath: workingDirectory, withIntermediateDirectories: true, attributes: nil)
-        } catch let error as NSError {
-            setStatus("Error creating directory \(error.localizedDescription)")
-            cleanup(tempFolder)
+        } catch {
+            let errDescr = "Create workingDir error"
+            delegate?.codeSignError(errDes: errDescr, tempDir: tempFolder)
             return
         }
         
-        
         if checkInputAndHandel(inputFile, workingDirectory) == false {
-            setStatus("Write entitlements fail")
-            cleanup(tempFolder)
+            delegate?.codeSignError(errDes: "CheckInput: \(inputFile) fail", tempDir: tempFolder)
             return
         }
         
@@ -180,10 +170,10 @@ class CodeSigner: NSObject {
             
             //MARK: Delete CFBundleResourceSpecification from Info.plist
             currInfoPlist.delete(key: "CFBundleResourceSpecification")
-
+            
             //MARK: copy provisionProfile
             if copyProvisionProfile(provisioningFile, provisioningPath, tempFolder) == false {
-                cleanup(tempFolder);
+                delegate?.codeSignError(errDes: "CopyProvisionProfile fail", tempDir: tempFolder)
             }
             
             //MARK: Make sure that the executable is well... executable.
@@ -199,7 +189,7 @@ class CodeSigner: NSObject {
                         let appexPlist = PlistHelper(plistPath: appexFile + "/Info.plist")
                         if let appexBundleID = appexPlist.bundleIdentifier {
                             let newAppexID = "\(newBundleID)\(appexBundleID.substring(from: oldAppID.endIndex))"
-                            setStatus("Changing \(appexFile) id to \(newAppexID)")
+                            delegate?.codeSignLogRecord(logDes: "Changing \(appexFile) bundleId to \(newAppexID)")
                             appexPlist.bundleIdentifier = newAppexID
                         }
                         if let _ = appexPlist.wkAppBundleIdentifier {
@@ -207,7 +197,6 @@ class CodeSigner: NSObject {
                         }
                         recursiveDirectorySearch(appexFile, extensions: ["app"], found: changeAppexID)
                     }
-
                     // Search appex in current app file to changeAppID
                     recursiveDirectorySearch(appFilePath, extensions: ["appex"], found: changeAppexID)
                 }
@@ -228,15 +217,14 @@ class CodeSigner: NSObject {
             if newShortVersion != "" {
                 currInfoPlist.shortBundleVersion = newShortVersion
             }
-
+            
             
             //MARK: Codesigning - App
-            let signableExtensions = ["dylib","so","0","vis","pvr","framework","appex","app"]
-            recursiveDirectorySearch(appFilePath, extensions: signableExtensions, found: { file  in
+            let signableExts = ["dylib","so","0","vis","pvr","framework","appex","app"]
+            recursiveDirectorySearch(appFilePath, extensions: signableExts, found: { file  in
                 codeSign(file, certificate: signingCertificate, entitlements: entitlementsPlist)
             })
             codeSign(appFilePath, certificate: signingCertificate, entitlements: entitlementsPlist)
-            
             
             //MARK: Codesigning - Verification
             let verificationTask = Process().execute(codesignPath, workingDirectory: nil, arguments: ["-v", appFilePath])
@@ -249,8 +237,7 @@ class CodeSigner: NSObject {
                     alert.alertStyle = .critical
                     alert.runModal()
                     //MARK: alert if certificate  expired
-                    setStatus("Error verifying code signature:\(verificationTask.output)")
-                    self.cleanup(tempFolder);
+                    self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
                 })
                 return
             }
@@ -261,24 +248,23 @@ class CodeSigner: NSObject {
         if fileManager.fileExists(atPath: outputFile) {
             do {
                 try fileManager.removeItem(atPath: outputFile)
-            } catch let error as NSError {
-                setStatus("Error deleting output file: \(error.localizedDescription)")
-                cleanup(tempFolder); return
+            } catch {
+                delegate?.codeSignError(errDes: "Delete exists output file fail", tempDir: tempFolder)
+                return
             }
         }
         
-        setStatus("Packaging IPA")
+        delegate?.codeSignLogRecord(logDes: "Packaging IPA: \(outputFile)")
+        
         Compress.shared.zip(workingDirectory, outputFile: outputFile)
         
-        //MARK: Cleanup
-        cleanup(tempFolder)
-        setStatus("Done, output at \(outputFile)")
+        delegate?.codeSigneEndSuccessed(outPutPath: outputFile, tempDir: tempFolder)
         
         if openByTerminal {
             NSApp.terminate(self)
         }
     }
-
+    
     
     //MARK: Codesigning
     func codeSign(_ file: String, certificate: String, entitlements: String?) {
@@ -291,7 +277,7 @@ class CodeSigner: NSObject {
         
         if codesignTask.status != 0 {
             //MARK: alert if certificate expired
-            setStatus("Error codesigning \(file) error:\(codesignTask.output)")
+            delegate?.codeSignLogRecord(logDes: "Error codesigning \(file) error:\(codesignTask.output)")
         }
     }
     
@@ -311,5 +297,5 @@ class CodeSigner: NSObject {
             }
         }
     }
-        
+    
 }
