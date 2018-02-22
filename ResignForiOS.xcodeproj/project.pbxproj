@@ -19,6 +19,7 @@
 		8A4B79A02016D6F5007ACEA4 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B799A2016D6F5007ACEA4 /* Tools.swift */; };
 		8A4B79A22016D71E007ACEA4 /* UpdateAppleCer.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */; };
 		8A4B79A42016DBB6007ACEA4 /* MainSignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79A32016DBB6007ACEA4 /* MainSignView.swift */; };
+		8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A66D1F7203ECAE200A6D27A /* HProgregressHUD.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		8A4B799A2016D6F5007ACEA4 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = UpdateAppleCer.sh; sourceTree = "<group>"; };
 		8A4B79A32016DBB6007ACEA4 /* MainSignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSignView.swift; sourceTree = "<group>"; };
+		8A66D1F7203ECAE200A6D27A /* HProgregressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HProgregressHUD.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				8A4B79852016D5E2007ACEA4 /* AppDelegate.swift */,
 				8A4B79872016D5E2007ACEA4 /* ViewController.swift */,
 				8A4B79A32016DBB6007ACEA4 /* MainSignView.swift */,
+				8A66D1F7203ECAE200A6D27A /* HProgregressHUD.swift */,
 				8A4B79892016D5E2007ACEA4 /* Assets.xcassets */,
 				8A4B798B2016D5E2007ACEA4 /* Main.storyboard */,
 				8A4B798E2016D5E2007ACEA4 /* Info.plist */,
@@ -168,6 +171,7 @@
 				8A4B79A42016DBB6007ACEA4 /* MainSignView.swift in Sources */,
 				8A4B799F2016D6F5007ACEA4 /* ProcessTask.swift in Sources */,
 				8A4B799B2016D6F5007ACEA4 /* ProfileManager.swift in Sources */,
+				8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */,
 				8A4B799D2016D6F5007ACEA4 /* StringExtension.swift in Sources */,
 				8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */,
 				8A4B799E2016D6F5007ACEA4 /* PlistHelper.swift in Sources */,

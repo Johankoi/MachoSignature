@@ -281,7 +281,7 @@ class MainSignView: NSView {
         }
     }
     
-    @IBAction func doBrowse(_ sender: AnyObject) {
+    @IBAction func selectInput(_ sender: AnyObject) {
         let openDialog = NSOpenPanel()
         openDialog.canChooseFiles = true
         openDialog.canChooseDirectories = false
@@ -301,13 +301,19 @@ class MainSignView: NSView {
     }
     
     
-    @IBAction func statusLabelClick(_ sender: NSButton) {
+    @IBAction func openOutputFile(_ sender: NSButton) {
         if let outputFile = self.currSelectOutput {
             if fileManager.fileExists(atPath: outputFile) {
                 NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: outputFile)])
             }
         }
     }
+    
+    
+    @IBAction func openLogFile(_ sender: Any) {
+        NSWorkspace.shared.openFile(Log.logName)
+    }
+    
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -325,6 +331,10 @@ extension MainSignView: CodeSignDelegate {
     
     func codeSignBegin(workingDir: String) {
         setStatus("CodeSign begin with workingDir: \(workingDir)")
+        DispatchQueue.main.async {
+            let hud = HProgregressHUD.showHUDAddedTo(view: self, animated: true)
+            hud.label.stringValue = "CodeSigning"
+        }
     }
     
     func codeSignLogRecord(logDes: String) {
@@ -333,11 +343,17 @@ extension MainSignView: CodeSignDelegate {
     
     func codeSignError(errDes: String, tempDir: String) {
         setStatus(errDes)
+        DispatchQueue.main.async {
+            HProgregressHUD.HUDFor(view: self)?.hideAnimated(true)
+        }
         cleanup(tempDir)
     }
     
     func codeSigneEndSuccessed(outPutPath: String, tempDir: String) {
         cleanup(tempDir)
+        DispatchQueue.main.async {
+            HProgregressHUD.HUDFor(view: self)?.hideAnimated(true)
+        }
         setStatus("CodeSigneEndSuccessed, output at \(outPutPath)")
     }
     
