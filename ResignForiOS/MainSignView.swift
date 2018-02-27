@@ -196,7 +196,7 @@ class MainSignView: NSView {
         alert.addButton(withTitle: "Yes")
         alert.addButton(withTitle: "No")
         if alert.runModal() == .alertFirstButtonReturn {
-            fixSigning()
+            updateAppleCer()
             populateCodesigningCerts()
         }
     }

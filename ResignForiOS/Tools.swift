@@ -9,11 +9,7 @@
 import Foundation
 import AppKit
 
-class NSMenuLink: NSMenuItem {
-    @IBInspectable var url: String?
-}
-
-public func fixSigning() {
+public func updateAppleCer() {
     let script = "do shell script \"/bin/bash \\\"\(Bundle.main.path(forResource: "UpdateAppleCer", ofType: "sh")!)\\\"\" with administrator privileges"
     NSAppleScript(source: script)?.executeAndReturnError(nil)
     return
@@ -21,6 +17,7 @@ public func fixSigning() {
 
 
 class Log {
+    
     static let mainBundle = Bundle.main
     static let bundleID = mainBundle.bundleIdentifier
     static let bundleName = mainBundle.infoDictionary!["CFBundleName"]
@@ -44,12 +41,12 @@ class Log {
 
 
 public func setStatus(_ status: String) {
-    Log.write(status)
     if !Thread.isMainThread {
         DispatchQueue.main.sync {
             setStatus(status)
         }
     } else {
+        Log.write(status)
         print(status)
     }
 }
