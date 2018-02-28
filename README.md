@@ -1,6 +1,5 @@
-# ResignForiOS
 
-###使用说明
+### 使用说明
 ![resign-tool.png](http://upload-images.jianshu.io/upload_images/7079027-fefbb797a49ce89d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 如上图所示，可以选择要签名的包文件，这个工具支持**ipa，app，xcarchive**三种文件作为签名源文件，**重签名之后都会生成ipa**。
@@ -10,11 +9,12 @@
 **App Display Name:**  可以重新设定一个app名字。
 **App Version:** 可以重新指定version。
 **App Short Version:** 可以重新指定Short version。
-###安装方法
+
+### 安装方法
 1.直接下载[源码](https://github.com/HanProjectCoder/ResignForiOS)使用xcode运行
 2.从[GitHub仓库releases](https://github.com/HanProjectCoder/ResignForiOS/releases)找最新发布的dmg安装包，下载安装即可
 
-###命令行模式：
+### 命令行模式：
 支持使用命令行调起签名功能：(前提是要通过dmg安装到应用目录下)
 **命令：**
 ```
@@ -33,8 +33,8 @@ open -a ResignForiOS  --args  -i /xxx/xxx.ipa  -p /xxx/xxx.mobileprovision -c "x
 **注意使用此命令行模式，执行命令之前，要关闭退出之前打开的窗口。**
 
 
-###签名失败可能的问题以及解决方案
-#####1.目标机有多个版本xcode，命令行环境下没有select对应的当前的xcode版本：
+### 签名失败可能的问题以及解决方案
+##### 1.目标机有多个版本xcode，命令行环境下没有select对应的当前的xcode版本：
 检查一下当前命令号环境下的xcode：
 ```
 xcode-select --print-path
@@ -43,7 +43,7 @@ xcode-select --print-path
 ```
 sudo xcode-select -switch /Applications/XcodeXXX.app/Contents/Developer 
 ```
-#####2.缺少Apple Worldwide Developer Relations Certification Authority证书
+##### 2.缺少Apple Worldwide Developer Relations Certification Authority证书
 检查一下是否安装了AppleWWDRCA.cer：
 ```
 security find-certificate -c "Apple Worldwide Developer Relations Certification Authority"
