@@ -19,7 +19,7 @@ App Short Version: 可以重新指定Short version。
 ```
 open -a ResignForiOS --args 
 ```
-必加参数： 
+必加参数：  
 -i  要重签名的ipa/app/xcarchive文件路径  
 -p 描述文件路径  
 -c 证书名字，可以在终端使用security find-identity -v -p codesigning命令列出所有在钥匙串的证书，可以挑选出所需签名的证书名字  
@@ -32,7 +32,7 @@ open -a ResignForiOS  --args  -i /xxx/xxx.ipa  -p /xxx/xxx.mobileprovision -c "x
 
 
 ### 签名失败可能的问题以及解决方案
-##### 1.目标机有多个版本xcode，命令行环境下没有select对应的当前的xcode版本：
+#### 1.目标机有多个版本xcode，命令行环境下没有select对应的当前的xcode版本：
 检查一下当前命令号环境下的xcode：
 ```
 xcode-select --print-path
@@ -41,7 +41,7 @@ xcode-select --print-path
 ```
 sudo xcode-select -switch /Applications/XcodeXXX.app/Contents/Developer 
 ```
-##### 2.缺少Apple Worldwide Developer Relations Certification Authority证书
+#### 2.缺少Apple Worldwide Developer Relations Certification Authority证书
 检查一下是否安装了AppleWWDRCA.cer：
 ```
 security find-certificate -c "Apple Worldwide Developer Relations Certification Authority"
