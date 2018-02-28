@@ -4,15 +4,20 @@
 
 如上图所示，可以选择要签名的包文件，这个工具支持**ipa，app，xcarchive**三种文件作为签名源文件，**重签名之后都会生成ipa**。
 
-**Provisioning Profile：**用于选择描述文件，会像xcode一样**检索所有双击安装在电脑上的描述文件，列举出来**，会自动过滤掉过期的。
+  **Provisioning Profile：**用于选择描述文件，会像xcode一样**检索所有双击安装在电脑上的描述文件，列举出来**，会自动过滤掉过期的。
 **Signing Certificate:** 选择对应的证书，**同样会检索系统钥匙串安装的可用的证书**，会自动过滤掉过期的。
+
 **new BundleID:** 可以重新指定一个新的BundleID。
+
 **App Display Name:**  可以重新设定一个app名字。
+
 **App Version:** 可以重新指定version。
+
 **App Short Version:** 可以重新指定Short version。
 
 ### 安装方法
 1.直接下载[源码](https://github.com/HanProjectCoder/ResignForiOS)使用xcode运行
+
 2.从[GitHub仓库releases](https://github.com/HanProjectCoder/ResignForiOS/releases)找最新发布的dmg安装包，下载安装即可
 
 ### 命令行模式：
