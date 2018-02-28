@@ -11,7 +11,7 @@
 **App Short Version:** 可以重新指定Short version。
 
 ### 安装方法
-1.直接下载源码使用xcode运行
+1.直接下载源码使用xcode运行  
 2.从[GitHub仓库releases](https://github.com/HanProjectCoder/ResignForiOS/releases)找最新发布的dmg安装包，下载安装即可
 
 ### 命令行模式：
@@ -20,7 +20,7 @@
 ```
 open -a ResignForiOS --args 
 ```
-**必加参数：**
+**必加参数：**  
 -i  要重签名的ipa/app/xcarchive文件路径  
 -p 描述文件路径  
 -c 证书名字，可以在终端使用**security find-identity -v -p codesigning**命令列出所有在钥匙串的证书，可以挑选出所需签名的证书名字  
