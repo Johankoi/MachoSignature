@@ -1,9 +1,8 @@
 # ResignForiOS
-ipa resign
-##个人开发重签名工具介绍
+
 ###使用说明
-开发了一个MAC APP应用，具有可视化的操作界面，且已经开源: [GitHub入口](https://github.com/HanProjectCoder/ResignForiOS)
 ![resign-tool.png](http://upload-images.jianshu.io/upload_images/7079027-fefbb797a49ce89d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 如上图所示，可以选择要签名的包文件，这个工具支持**ipa，app，xcarchive**三种文件作为签名源文件，**重签名之后都会生成ipa**。
 **Provisioning Profile：**用于选择描述文件，会像xcode一样**检索所有双击安装在电脑上的描述文件，列举出来**，会自动过滤掉过期的。
 **Signing Certificate:** 选择对应的证书，**同样会检索系统钥匙串安装的可用的证书**，会自动过滤掉过期的。
