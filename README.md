@@ -3,15 +3,32 @@
 
 如上图所示，可以选择要签名的包文件，这个工具支持ipa，app，xcarchive三种文件作为签名源文件，重签名之后都会生成ipa。  
 
+
+
+| 表头1  | 表头2|
+| ---------- | -----------|
+| 表格单元   | 表格单元   |
+| 表格单元   | 表格单元   |
+
+### 对齐
+表格可以指定对齐方式
+
+| 左对齐 | 居中  | 右对齐 |
+| :------------ |:---------------:| -----:|
+| col 3 is得到    打的低  | some wordy text | $1600 |
+| col 2 is      | centered        |   $12 |
+| zebra stripes | are neat        |    $1 |
+
+
 | 选项 | 说明 | 
-| :------: | :------ |
+| :--------------- | -----:| 
 | Provisioning Profile | 用于选择描述文件，会像xcode一样索所有双击安装在电脑上的描述文件，列举出来，会自动过滤掉过期的。| 
-|Signing Certificate  | 选择对应的证书，同样会检索系统钥匙串安装的可用的证书，会自动过滤掉过期的。| 
-| new BundleID   | 可以重新指定一个新的BundleID。 | 
-| App Display Name | 可以重新设定一个app名字。 | 
-| Signing Certificate | 选择对应的证书，同样会检索系统钥匙串安装的可用的证书，会自动过滤掉过期的。| 
-| App Version | 可以重新指定version。 |
-| App Short Version | 可以重新指定Short version。 |
+| Signing Certificate  | 选择对应的证书，同样会检索系统钥匙串安装的可用的证书，会自动过滤掉过期的。| 
+| new BundleID         | 可以重新指定一个新的BundleID。 | 
+| App Display Name     | 可以重新设定一个app名字。 | 
+| Signing Certificate  | 选择对应的证书，同样会检索系统钥匙串安装的可用的证书，会自动过滤掉过期的。| 
+| App Version          | 可以重新指定version。 | 
+| App Short Version    | 可以重新指定Short version。 | 
 
 ### 安装方法
 1.直接下载源码使用xcode运行  
@@ -26,7 +43,7 @@ open -a ResignForiOS --args
 必加参数：  
 
 | 参数 | 说明 | 
-| ------| ------ |
+| :---------------: | ------ |
 | -i  | 要重签名的ipa/app/xcarchive文件路径  | 
 |-p |  描述文件路径  | 
 |-c |  证书名字，可以在终端使用security find-identity -v -p codesigning命令列出所有在钥匙串的证书，可以挑选出所需签名的证书名字    | 
