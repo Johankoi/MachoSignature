@@ -5,7 +5,6 @@
 如上图所示，可以选择要签名的包文件，这个工具支持**ipa，app，xcarchive**三种文件作为签名源文件，**重签名之后都会生成ipa**。
 
 **Provisioning Profile：**用于选择描述文件，会像xcode一样**检索所有双击安装在电脑上的描述文件，列举出来**，会自动过滤掉过期的。
-
 **Signing Certificate:** 选择对应的证书，**同样会检索系统钥匙串安装的可用的证书**，会自动过滤掉过期的。
 **new BundleID:** 可以重新指定一个新的BundleID。
 **App Display Name:**  可以重新设定一个app名字。
