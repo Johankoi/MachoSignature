@@ -96,36 +96,23 @@ class CodeSigner: NSObject {
     
     
     //MARK: Copy Provisioning Profile
-    func copyProvisionProfile(_ inputProfile: String?, _ oldProfilePath: String, _ tempDir: String) -> Bool {
-        var profilePath: String? = nil
-        if let inputProfile = inputProfile {
-            delegate?.codeSignLogRecord(logDes: "OverWrite new provisioning profile to app bundle")
-            do {
-                if fileManager.fileExists(atPath: oldProfilePath) {
-                    try fileManager.removeItem(atPath: oldProfilePath)
-                }
-                try fileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath)
-                profilePath = inputProfile
-            } catch {
-                delegate?.codeSignLogRecord(logDes: "Error copying provisioning profile \(error.localizedDescription)")
-                return false
-            }
-        } else {
-            profilePath = oldProfilePath
+    func checkProfilePath(_ inputProfile: String?, _ oldProfilePath: String) -> String? {
+        delegate?.codeSignLogRecord(logDes: "make sure which profile should be using")
+        guard let inputProfile = inputProfile else {
+            return oldProfilePath
         }
-        
-        // write entitlements to  entitlements.plist in the tempDir for save before codesign
-        if let profilePath = profilePath {
-            let profile = Profile(filePath: profilePath)!
-            let result = profile.writeEntitlements(toFile: tempDir + "/entitlements.plist")
-            delegate?.codeSignLogRecord(logDes: "Write entitlements to plist \(result ? "ok" : "error")")
-            return result
-        } else {
-            return false
+        do {
+            if fileManager.fileExists(atPath: oldProfilePath) {
+                try fileManager.removeItem(atPath: oldProfilePath)
+            }
+            try fileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath)
+            return inputProfile
+        } catch {
+            delegate?.codeSignLogRecord(logDes: "Error copying provisioning profile \(error.localizedDescription)")
+            return nil
         }
     }
-    
-    
+
     func sign(inputFile: String, provisioningFile: String?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String, openByTerminal: Bool) {
         
         //MARK: Create working temp folder
@@ -171,10 +158,22 @@ class CodeSigner: NSObject {
             //MARK: Delete CFBundleResourceSpecification from Info.plist
             currInfoPlist.delete(key: "CFBundleResourceSpecification")
             
-            //MARK: copy provisionProfile
-            if copyProvisionProfile(provisioningFile, provisioningPath, tempFolder) == false {
-                delegate?.codeSignError(errDes: "CopyProvisionProfile fail", tempDir: tempFolder)
+            
+            let profilePath = checkProfilePath(provisioningFile, provisioningPath)
+            guard let profile = Profile(filePath: profilePath!) else {
+                delegate?.codeSignError(errDes: "Creat Profile fail", tempDir: tempFolder)
+                continue
             }
+            
+            var entitleDic = profile.entitlements.fullDictionary
+            let xcentPath = appFilePath.appendPathComponent("archived-expanded-entitlements.xcent")
+            NSDictionary(contentsOfFile: xcentPath)?.forEach {
+                let key = $0 as! String
+                let value = $1 as AnyObject
+                entitleDic?.updateValue(value, forKey: key)
+            }
+            (entitleDic! as NSDictionary).write(toFile: entitlementsPlist, atomically: true)
+            
             
             //MARK: Make sure that the executable is well... executable.
             if let bundleExecutable = currInfoPlist.bundleExecutable {
@@ -221,9 +220,9 @@ class CodeSigner: NSObject {
             
             //MARK: Codesigning - App
             let signableExts = ["dylib","so","0","vis","pvr","framework","appex","app"]
-            recursiveDirectorySearch(appFilePath, extensions: signableExts, found: { file  in
+            recursiveDirectorySearch(appFilePath, extensions: signableExts) { file  in
                 codeSign(file, certificate: signingCertificate, entitlements: entitlementsPlist)
-            })
+            }
             codeSign(appFilePath, certificate: signingCertificate, entitlements: entitlementsPlist)
             
             //MARK: Codesigning - Verification
@@ -268,6 +267,7 @@ class CodeSigner: NSObject {
     
     //MARK: Codesigning
     func codeSign(_ file: String, certificate: String, entitlements: String?) {
+        delegate?.codeSignLogRecord(logDes: "codeSign:\(file)")
         var arguments = ["-vvv","-fs",certificate,"--no-strict"]
         if fileManager.fileExists(atPath: entitlements!) {
             arguments.append("--entitlements=\(entitlements!)")

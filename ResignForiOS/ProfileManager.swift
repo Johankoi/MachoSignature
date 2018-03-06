@@ -150,11 +150,6 @@ open class Profile: NSObject {
     }
     
     
-    open func writeEntitlements(toFile: String) -> Bool {
-        return (entitlements.fullDictionary as NSDictionary).write(toFile: toFile, atomically: true)
-    }
-    
-    
     // MARK: Initialize with a decoded Profile info Dict
     public init?(dictionary: [String: AnyObject]?) {
         self.creationDate = dictionary?[creationDateKey] as? Date
