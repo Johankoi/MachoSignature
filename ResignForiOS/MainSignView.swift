@@ -206,6 +206,7 @@ class MainSignView: NSView {
         if codesigningCerts.count == 0 {
             showCodesignCertsErrorAlert()
         } else {
+            
             NSApplication.shared.windows[0].makeFirstResponder(self)
             let saveDialog = NSSavePanel()
             saveDialog.allowedFileTypes = ["ipa","app"]
@@ -223,27 +224,29 @@ class MainSignView: NSView {
     @objc func signingThread() {
         
         //MARK: Set up variables
-        var newBundleID : String = ""
-        var newDisplayName : String = ""
-        var newShortVersion : String = ""
-        var newVersion : String = ""
+        var newBundleID :String = ""
+        var newDisplayName :String = ""
+        var newShortVersion :String = ""
+        var newVersion :String = ""
+        var inputFieldValue :String = ""
         
         DispatchQueue.main.sync {
             newBundleID = self.newBundleIDField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
             newDisplayName = self.appDisplayName.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
             newShortVersion = self.appShortVersion.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
             newVersion = self.appVersion.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+            inputFieldValue = self.inputFileField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         
+        let inputFilePath :String = currSelectInput ?? inputFieldValue
+        
         // check inputFile path is a dir, return directly
-        let inputExists = fileManager.fileExists(atPath: currSelectInput!, isDirectory: nil)
-  
-        if inputExists == false {
+        if fileManager.fileExists(atPath: inputFilePath, isDirectory: nil) == false {
             DispatchQueue.main.async(execute: {
                 let alert = NSAlert()
                 alert.messageText = "Input file not found"
                 alert.addButton(withTitle: "OK")
-                alert.informativeText = "The file \(self.currSelectInput!) could not be found"
+                alert.informativeText = "The file \(inputFilePath) could not be found"
                 alert.runModal()
             })
             return
@@ -259,7 +262,7 @@ class MainSignView: NSView {
 
         let signer = CodeSigner()
         signer.delegate = self
-        signer.sign(inputFile: currSelectInput!, provisioningFile: currSelectProfile?.filePath, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
+        signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile?.filePath, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
     }
     
     
