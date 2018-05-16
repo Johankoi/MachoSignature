@@ -81,7 +81,12 @@ class CodeSigner: NSObject {
         } else if inputFileExt == "xcarchive" {
             do {
                 try fileManager.createDirectory(atPath: payloadDir, withIntermediateDirectories: true, attributes: nil)
-                try fileManager.copyItem(atPath: input.appendPathComponent("Products/Applications/"), toPath: payloadDir)
+                let appPath = input.appendPathComponent("Products/Applications/")
+                if let files = try? fileManager.contentsOfDirectory(atPath: appPath) {
+                    for file in files {
+                        try fileManager.copyItem(atPath: appPath + "/\(file)", toPath: payloadDir + "/\(file)")
+                    }
+                }
                 delegate?.codeSignLogRecord(logDes: "Copying xcarchive to to \(payloadDir)")
             } catch {
                 delegate?.codeSignLogRecord(logDes: "Error copying xcarchive to to \(payloadDir)")
