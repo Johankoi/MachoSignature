@@ -20,7 +20,27 @@
 		8A4B79A22016D71E007ACEA4 /* UpdateAppleCer.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */; };
 		8A4B79A42016DBB6007ACEA4 /* MainSignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79A32016DBB6007ACEA4 /* MainSignView.swift */; };
 		8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A66D1F7203ECAE200A6D27A /* HProgregressHUD.swift */; };
+		8AF9995F20AD85EB00661F05 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9995E20AD85EB00661F05 /* main.swift */; };
+		8AF9996320AD868F00661F05 /* CodeSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */; };
+		8AF9996420AD869100661F05 /* PlistHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79982016D6F5007ACEA4 /* PlistHelper.swift */; };
+		8AF9996520AD869800661F05 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */; };
+		8AF9996620AD869D00661F05 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */; };
+		8AF9996720AD86A000661F05 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* StringExtension.swift */; };
+		8AF9996820AD86A900661F05 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B799A2016D6F5007ACEA4 /* Tools.swift */; };
+		8AF9996A20AD8E7000661F05 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9996920AD8E7000661F05 /* Core.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8AF9995A20AD85EB00661F05 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8A4B79822016D5E2007ACEA4 /* ResignForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResignForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,10 +59,20 @@
 		8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = UpdateAppleCer.sh; sourceTree = "<group>"; };
 		8A4B79A32016DBB6007ACEA4 /* MainSignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSignView.swift; sourceTree = "<group>"; };
 		8A66D1F7203ECAE200A6D27A /* HProgregressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HProgregressHUD.swift; sourceTree = "<group>"; };
+		8AF9995C20AD85EB00661F05 /* CoolResign */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CoolResign; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AF9995E20AD85EB00661F05 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		8AF9996920AD8E7000661F05 /* Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		8A4B797F2016D5E2007ACEA4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AF9995920AD85EB00661F05 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -56,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				8A4B79842016D5E2007ACEA4 /* ResignForiOS */,
+				8AF9995D20AD85EB00661F05 /* CoolResign */,
 				8A4B79832016D5E2007ACEA4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				8A4B79822016D5E2007ACEA4 /* ResignForiOS.app */,
+				8AF9995C20AD85EB00661F05 /* CoolResign */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,6 +122,15 @@
 			path = ResignForiOS;
 			sourceTree = "<group>";
 		};
+		8AF9995D20AD85EB00661F05 /* CoolResign */ = {
+			isa = PBXGroup;
+			children = (
+				8AF9996920AD8E7000661F05 /* Core.swift */,
+				8AF9995E20AD85EB00661F05 /* main.swift */,
+			);
+			path = CoolResign;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -110,13 +151,30 @@
 			productReference = 8A4B79822016D5E2007ACEA4 /* ResignForiOS.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8AF9995B20AD85EB00661F05 /* CoolResign */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8AF9996220AD85EB00661F05 /* Build configuration list for PBXNativeTarget "CoolResign" */;
+			buildPhases = (
+				8AF9995820AD85EB00661F05 /* Sources */,
+				8AF9995920AD85EB00661F05 /* Frameworks */,
+				8AF9995A20AD85EB00661F05 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CoolResign;
+			productName = CoolResign;
+			productReference = 8AF9995C20AD85EB00661F05 /* CoolResign */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		8A4B797A2016D5E2007ACEA4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0920;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = cheng;
 				TargetAttributes = {
@@ -128,6 +186,10 @@
 								enabled = 0;
 							};
 						};
+					};
+					8AF9995B20AD85EB00661F05 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -145,6 +207,7 @@
 			projectRoot = "";
 			targets = (
 				8A4B79812016D5E2007ACEA4 /* ResignForiOS */,
+				8AF9995B20AD85EB00661F05 /* CoolResign */,
 			);
 		};
 /* End PBXProject section */
@@ -177,6 +240,21 @@
 				8A4B799E2016D6F5007ACEA4 /* PlistHelper.swift in Sources */,
 				8A4B79862016D5E2007ACEA4 /* AppDelegate.swift in Sources */,
 				8A4B79A02016D6F5007ACEA4 /* Tools.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AF9995820AD85EB00661F05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AF9996320AD868F00661F05 /* CodeSigner.swift in Sources */,
+				8AF9996620AD869D00661F05 /* ProfileManager.swift in Sources */,
+				8AF9996720AD86A000661F05 /* StringExtension.swift in Sources */,
+				8AF9996420AD869100661F05 /* PlistHelper.swift in Sources */,
+				8AF9996820AD86A900661F05 /* Tools.swift in Sources */,
+				8AF9996520AD869800661F05 /* ProcessTask.swift in Sources */,
+				8AF9996A20AD8E7000661F05 /* Core.swift in Sources */,
+				8AF9995F20AD85EB00661F05 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +410,32 @@
 			};
 			name = Release;
 		};
+		8AF9996020AD85EB00661F05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		8AF9996120AD85EB00661F05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -349,6 +453,15 @@
 			buildConfigurations = (
 				8A4B79932016D5E2007ACEA4 /* Debug */,
 				8A4B79942016D5E2007ACEA4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8AF9996220AD85EB00661F05 /* Build configuration list for PBXNativeTarget "CoolResign" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8AF9996020AD85EB00661F05 /* Debug */,
+				8AF9996120AD85EB00661F05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

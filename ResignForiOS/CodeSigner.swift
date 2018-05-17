@@ -58,8 +58,8 @@ class CodeSigner: NSObject {
     var delegate: CodeSignDelegate?
     
     func makeTempFolder() -> String? {
-        let bundleID = Bundle.main.bundleIdentifier
-        let tempTask = Process().execute(mktempPath, workingDirectory: nil, arguments: ["-d", "-t", bundleID!])
+        let bundleID = Bundle.main.bundleIdentifier ?? "com.chengcheng.ResignForiOS"
+        let tempTask = Process().execute(mktempPath, workingDirectory: nil, arguments: ["-d", "-t", bundleID])
         return tempTask.output
     }
     
@@ -264,9 +264,6 @@ class CodeSigner: NSObject {
         
         delegate?.codeSigneEndSuccessed(outPutPath: outputFile, tempDir: tempFolder)
         
-        if openByTerminal {
-            NSApp.terminate(self)
-        }
     }
     
     
