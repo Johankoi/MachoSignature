@@ -130,50 +130,7 @@ class MainSignView: NSView {
             _ = Process().execute(xcsCmd, workingDirectory: nil, arguments: ["--install"])
             NSApplication.shared.terminate(self)
         }
-        
         setStatus("check XCode Task over")
-        
-        var inputPath: String?
-        var proflie: Profile?
-        var cerName: String?
-        var outputPath: String?
-        
-        let args = CommandLine.arguments
-    
-        if args.count > 3 {
-            NSWorkspace.shared.openFile(Log.logName)
-            setStatus("begin args count = \(args.count)")
-            
-            openByTerminal = true
-            // StatusLabel.stringValue = "openByTerminal"
-
-            setStatus("-i arg")
-            if let pindex = args.index(of: "-i") {
-                inputPath = args[pindex + 1]
-            }
-            
-            setStatus("-p arg")
-            if let pindex = args.index(of: "-p") {
-                let profliePath = args[pindex + 1]
-                proflie = Profile(filePath: profliePath)
-            }
-            
-            setStatus("-c arg")
-            if let pindex = args.index(of: "-c") {
-                cerName = args[pindex + 1]
-            }
-            
-            setStatus("-o arg")
-            if let pindex = args.index(of: "-o") {
-                outputPath = args[pindex + 1]
-            }
-            
-            currSelectInput = inputPath ?? nil
-            currSelectProfile = proflie
-            currSelectCert = cerName ?? nil
-            currSelectOutput = outputPath
-            Thread.detachNewThreadSelector(#selector(self.signingThread), toTarget: self, with: nil)
-        }
     }
     
     

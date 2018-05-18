@@ -233,6 +233,8 @@ class CodeSigner: NSObject {
             //MARK: Codesigning - Verification
             let verificationTask = Process().execute(codesignPath, workingDirectory: nil, arguments: ["-v", appFilePath])
             if verificationTask.status != 0 {
+                //MARK: alert if certificate  expired
+                self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
                 DispatchQueue.main.async(execute: {
                     let alert = NSAlert()
                     alert.addButton(withTitle: "OK")
@@ -240,8 +242,6 @@ class CodeSigner: NSObject {
                     alert.informativeText = verificationTask.output
                     alert.alertStyle = .critical
                     alert.runModal()
-                    //MARK: alert if certificate  expired
-                    self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
                 })
                 return
             }

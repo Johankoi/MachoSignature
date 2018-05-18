@@ -65,12 +65,15 @@ let helpOpt = Option(trigger:.mixed("h","help"))
 let parser = OptionParser(definitions:[inputOpt, provisionOpt, cerNameOpt, bundleIDOpt,outputOpt,helpOpt])
 
 let arguments = CommandLine.arguments
+//let arguments = ["./CoolResign", "-i", "/Users/hanxiaoqing/Documents/sdkTest_c.xcarchive", "-p", "/Users/hanxiaoqing/Desktop/SvnFolder/NewSDKFolder/provisioning/enterprise/DIS_ALL_NZK3GXHA6L.mobileprovision", "-c", "iPhone Distribution: Babeltime Inc.", "-o", "/Users/hanxiaoqing/Documents/sdkTest_c.ipa"]
+
 print("get all args: \(arguments)")
 
 let spliceArgs = arguments[1 ..< arguments.count]
 if spliceArgs.count == 0 { exit(0) }
 
 do {
+
     let (options, rest) = try parser.parse(Array(spliceArgs))
     
     if options[helpOpt] != nil {
@@ -116,10 +119,12 @@ do {
         if outputOpt.matches(argKey) {
             worker.outputPath = argValue
         }
-        worker.work()
+    
     }
+    // 判断xcode-select -p是否有值
+    // 判断 证书是否存在
     
-    
+    worker.work()
 } catch let OptionKitError.invalidOption(description: description) {
     print("OptionKit throw error: \n \(description)")
 }
