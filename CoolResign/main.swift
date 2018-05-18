@@ -6,7 +6,7 @@
 //  Copyright © 2018年 cheng. All rights reserved.
 //
 //https://github.com/stupergenius/Bens-Log/blob/master/blog-projects/swift-command-line/btc.swift
-
+//https://github.com/kylef/Commander
 import Foundation
 
 class CommandWorker: NSObject {
@@ -42,6 +42,7 @@ extension CommandWorker: CodeSignDelegate {
     func codeSigneEndSuccessed(outPutPath: String, tempDir: String) {
         cleanup(tempDir)
         print("CodeSigneEndSuccessed, output at \(outPutPath)")
+         exit(0)
     }
     
     func cleanup(_ dir: String) {
@@ -70,15 +71,13 @@ let arguments = CommandLine.arguments
 print("get all args: \(arguments)")
 
 let spliceArgs = arguments[1 ..< arguments.count]
-if spliceArgs.count == 0 { exit(0) }
 
 do {
-
     let (options, rest) = try parser.parse(Array(spliceArgs))
     
-    if options[helpOpt] != nil {
+    if spliceArgs.count == 0 || options[helpOpt] != nil {
         print(parser.helpStringForCommandName("show codesign important args"))
-        exit(0)
+        exit(1)
     }
     
     let inputArgKeyCount = options.keys.count
@@ -87,12 +86,12 @@ do {
     // require arg: -i -p -c -o, the "-h, -b" two args neednt required
     if inputArgKeyCount < parser.definitions.count - 2 {
         print("Input arg keys not enough, Please check !!!")
-        exit(0)
+        exit(2)
     }
     
     guard rest.count == inputArgKeyCount else {
         print("One or more arguments value not set, Please check !!!")
-        exit(0)
+        exit(3)
     }
     
     let worker = CommandWorker()
@@ -126,6 +125,7 @@ do {
     
     worker.work()
 } catch let OptionKitError.invalidOption(description: description) {
+    exit(4)
     print("OptionKit throw error: \n \(description)")
 }
 
