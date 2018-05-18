@@ -65,7 +65,7 @@ let helpOpt = Option(trigger:.mixed("h","help"))
 let parser = OptionParser(definitions:[inputOpt, provisionOpt, cerNameOpt, bundleIDOpt,outputOpt,helpOpt])
 
 let arguments = CommandLine.arguments
-//let arguments = ["./CoolResign", "-i", "/Users/hanxiaoqing/Documents/sdkTest_c.xcarchive", "-p", "/Users/hanxiaoqing/Desktop/SvnFolder/NewSDKFolder/provisioning/enterprise/DIS_ALL_NZK3GXHA6L.mobileprovision", "-c", "iPhone Distribution: Babeltime Inc.", "-o", "/Users/hanxiaoqing/Documents/sdkTest_c.ipa"]
+//let arguments = ["CoolResign", "-i", "/Users/hanxiaoqing/Documents/sdkTest_c.xcarchive", "-p", "/Users/hanxiaoqing/Desktop/SvnFolder/NewSDKFolder/provisioning/enterprise/DIS_ALL_NZK3GXHA6L.mobileprovision", "-c", "iPhone Distribution: Babeltime Inc.", "-o", "/Users/hanxiaoqing/Documents/sdkTest_c.ipa", "-b", "com.babeltime.sdkdemo.unity"]
 
 print("get all args: \(arguments)")
 
@@ -85,7 +85,7 @@ do {
     print("input argkey count: \(inputArgKeyCount)")
     
     // require arg: -i -p -c -o, the "-h, -b" two args neednt required
-    if inputArgKeyCount != parser.definitions.count - 2 {
+    if inputArgKeyCount < parser.definitions.count - 2 {
         print("Input arg keys not enough, Please check !!!")
         exit(0)
     }
