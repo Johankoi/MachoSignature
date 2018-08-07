@@ -54,10 +54,10 @@ open class PlistHelper: NSObject {
     }
     var shortBundleVersion: String? {
         set {
-            setValue(newValue!, for: "CFBundleShortBundleVersion")
+            setValue(newValue!, for: "CFBundleShortVersionString")//CFBundleShortBundleVersion
         }
         get {
-            return getValue(for: "CFBundleShortBundleVersion")
+            return getValue(for: "CFBundleShortVersionString")
         }
     }
     
