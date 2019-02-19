@@ -151,8 +151,8 @@ class MainSignView: NSView {
         if securityResult.output.count < 1 {
             showCodesignCertsErrorAlert()
             return
-        }
-        codesigningCerts = securityResult.output.components(separatedBy: "\"").filter({ $0.contains("iPhone")})
+        }        
+        codesigningCerts = securityResult.output.split(separator: "\"").map{String($0)}.filter({ $0.contains("iPhone")})
         for cert in self.codesigningCerts {
             codeSignCertsPop.addItem(withTitle: cert)
         }
@@ -239,10 +239,10 @@ class MainSignView: NSView {
     //MARK: IBActions
     @IBAction func chooseProvisioningProfile(_ sender: NSPopUpButton) {
         if sender.indexOfSelectedItem == 0 {
-            newBundleIDField.isEditable = true
+//            newBundleIDField.isEditable = true
             newBundleIDField.stringValue = ""
         } else {
-            newBundleIDField.isEditable = false
+//            newBundleIDField.isEditable = false
             currSelectProfile = provisioningProfiles[sender.indexOfSelectedItem - 1]
             let matchCer = currSelectProfile?.developerCertificates.first
             if let matchCer = matchCer, codesigningCerts.contains(matchCer) {
