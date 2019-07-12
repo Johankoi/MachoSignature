@@ -44,6 +44,11 @@ open class ProfileManager {
                 }
             }
         }
+        
+        validProfiles = validProfiles.sorted(by: { (p1, p2) -> Bool in
+            return p1.name < p2.name
+        })
+        
         return validProfiles
     }
     
