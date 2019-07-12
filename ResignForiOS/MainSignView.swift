@@ -136,9 +136,13 @@ class MainSignView: NSView {
     
     func populateProvisioningProfiles() {
         var items = ["Re-Sign Only"]
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
         for profile in provisioningProfiles {
-            items.append("\(profile.name) (\(profile.teamIdentifiers.first!))")
+            let createDateStr = df.string(from: profile.creationDate)
+            items.append(" \(profile.name) (\(profile.teamIdentifiers.first!)) (\(profile.bundleID)) \(createDateStr)")
         }
+        
         profileSelcetPop.removeAllItems()
         profileSelcetPop.addItems(withTitles:items)
         profileSelcetPop.selectItem(at: 0)
@@ -238,13 +242,18 @@ class MainSignView: NSView {
     
     //MARK: IBActions
     @IBAction func chooseProvisioningProfile(_ sender: NSPopUpButton) {
+        
+        // 选择Resign Only
         if sender.indexOfSelectedItem == 0 {
 //            newBundleIDField.isEditable = true
             newBundleIDField.stringValue = ""
         } else {
 //            newBundleIDField.isEditable = false
             currSelectProfile = provisioningProfiles[sender.indexOfSelectedItem - 1]
+            setStatus("当前选择的profile: \(sender.indexOfSelectedItem - 1) ~ \(currSelectProfile?.filePath)")
+            
             let matchCer = currSelectProfile?.developerCertificates.first
+        
             if let matchCer = matchCer, codesigningCerts.contains(matchCer) {
                 codeSignCertsPop.selectItem(withTitle: matchCer)
                 currSelectCert = matchCer
