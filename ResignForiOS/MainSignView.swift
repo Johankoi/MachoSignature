@@ -142,6 +142,7 @@ class MainSignView: NSView {
         profileSelcetPop.removeAllItems()
         profileSelcetPop.addItems(withTitles:items)
         profileSelcetPop.selectItem(at: 0)
+        assert(profileSelcetPop.numberOfItems == provisioningProfiles.count + 1, "Duplicate provisioning profiles");
     }
     
     
