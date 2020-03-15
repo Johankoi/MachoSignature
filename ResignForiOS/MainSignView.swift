@@ -142,6 +142,7 @@ class MainSignView: NSView {
         profileSelcetPop.removeAllItems()
         profileSelcetPop.addItems(withTitles:items)
         profileSelcetPop.selectItem(at: 0)
+        assert(profileSelcetPop.numberOfItems == provisioningProfiles.count + 1, "Duplicate provisioning profiles");
     }
     
     
@@ -152,7 +153,7 @@ class MainSignView: NSView {
             showCodesignCertsErrorAlert()
             return
         }        
-        codesigningCerts = securityResult.output.split(separator: "\"").map{String($0)}.filter({ $0.contains("iPhone")})
+        codesigningCerts = securityResult.output.split(separator: "\"").map{String($0)}.filter({ $0.contains("iPhone") || $0.contains("Apple")})
         for cert in self.codesigningCerts {
             codeSignCertsPop.addItem(withTitle: cert)
         }
