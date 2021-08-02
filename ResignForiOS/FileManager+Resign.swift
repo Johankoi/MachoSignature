@@ -38,10 +38,30 @@ extension FileManager {
     }
 
     @discardableResult
+    static func copyItem(atPath srcPath: String, toPath dstPath: String) -> Bool {
+        do {
+            try FileManager.default.copyItem(atPath: srcPath, toPath: dstPath)
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    @discardableResult
+    static func copyItem(atPath srcPath: URL, toPath dstPath: URL) -> Bool {
+        copyItem(atPath: srcPath.path, toPath: dstPath.path)
+    }
+    
+    
+    @discardableResult
     static func removeItem(atPath path: String) -> Bool {
         do {
-            try FileManager.default.removeItem(atPath: path)
-            return true
+            if FileManager.default.fileExists(atPath: path) {
+                try FileManager.default.removeItem(atPath: path)
+                return true
+            } else {
+                return false
+            }
         } catch {
             return false
         }

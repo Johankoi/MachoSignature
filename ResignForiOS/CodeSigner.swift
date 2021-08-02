@@ -65,40 +65,28 @@ class CodeSigner: NSObject {
     
     func checkInputAndHandel(_ input: String, _ workingDir: String) -> Bool {
         let payloadDir = workingDir.appendPathComponent("Payload/")
-        let inputFileExt = input.pathExtension.lowercased()
-        if inputFileExt == "ipa" {
+        let dstAppPath = payloadDir.appendPathComponent(input.lastPathComponent)
+        
+        let inputFormat = input.pathExtension.pathExtentionFormat;
+        switch inputFormat {
+        case .IPA: do {
             delegate?.codeSignLogRecord(logDes: "Unzip \(input) to \(workingDir)")
             Compress.shared.unzip(input, outputPath: workingDir)
-        } else if inputFileExt == "app" {
-            do {
-                try fileManager.createDirectory(atPath: payloadDir, withIntermediateDirectories: true, attributes: nil)
-                try fileManager.copyItem(atPath: input, toPath: payloadDir.appendPathComponent(input.lastPathComponent))
-                delegate?.codeSignLogRecord(logDes: "Copying app to \(payloadDir)")
-            } catch {
-                delegate?.codeSignLogRecord(logDes: "Error copying app to \(payloadDir)")
-                return false
-            }
-        } else if inputFileExt == "xcarchive" {
-            do {
-                try fileManager.createDirectory(atPath: payloadDir, withIntermediateDirectories: true, attributes: nil)
-                let appPath = input.appendPathComponent("Products/Applications/")
-                if let files = try? fileManager.contentsOfDirectory(atPath: appPath) {
-                    for file in files {
-                        try fileManager.copyItem(atPath: appPath + "/\(file)", toPath: payloadDir + "/\(file)")
-                    }
-                }
-                delegate?.codeSignLogRecord(logDes: "Copying xcarchive to to \(payloadDir)")
-            } catch {
-                delegate?.codeSignLogRecord(logDes: "Error copying xcarchive to to \(payloadDir)")
-                return false
-            }
-        } else {
-            delegate?.codeSignLogRecord(logDes: "Input file not support")
-            return false
         }
+        case .APP: do {
+            FileManager.createDirectory(atPath: payloadDir)
+            FileManager.copyItem(atPath: input, toPath: dstAppPath)
+        }
+        case .XCARCHIVE: do {
+            FileManager.createDirectory(atPath: payloadDir)
+            FileManager.copyItem(atPath: input.appendPathComponent("Products/Applications/"), toPath: dstAppPath)
+        }
+        case .unknown: return false
+        }
+        
         return true
     }
-    
+       
     
     //MARK: Copy Provisioning Profile
     func checkProfilePath(_ inputProfile: String?, _ oldProfilePath: String) -> String? {
@@ -106,14 +94,10 @@ class CodeSigner: NSObject {
         guard let inputProfile = inputProfile else {
             return oldProfilePath
         }
-        do {
-            if fileManager.fileExists(atPath: oldProfilePath) {
-                try fileManager.removeItem(atPath: oldProfilePath)
-            }
-            try fileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath)
+        FileManager.removeItem(atPath: oldProfilePath)
+        if FileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath) == true {
             return inputProfile
-        } catch {
-            delegate?.codeSignLogRecord(logDes: "Error copying provisioning profile \(error.localizedDescription)")
+        } else {
             return nil
         }
     }
@@ -121,29 +105,25 @@ class CodeSigner: NSObject {
     func sign(inputFile: String, provisioningFile: String?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String, openByTerminal: Bool) {
         
         //MARK: Create working temp folder
-        var tempFolder: String = makeTempFolder()!
+        let tempFolder: String = makeTempFolder()!
         
-        let workingDirectory = tempFolder.appendPathComponent("out")
+        let workingDirectory = tempFolder.appendPathComponent("out");
+        delegate?.codeSignBegin(workingDir: workingDirectory);
+        if FileManager.createDirectory(atPath: workingDirectory) == false {
+            delegate?.codeSignError(errDes: "Create workingDir error", tempDir: tempFolder)
+            return
+        }
+      
         let entitlementsPlist = tempFolder.appendPathComponent("entitlements.plist")
         let payloadDirectory = workingDirectory.appendPathComponent("Payload/")
         
-        delegate?.codeSignBegin(workingDir: workingDirectory)
         
-        //MARK: Codesign Test
-        
-        //MARK: Create workingDirectory Temp Directory
-        do {
-            try fileManager.createDirectory(atPath: workingDirectory, withIntermediateDirectories: true, attributes: nil)
-        } catch {
-            let errDescr = "Create workingDir error"
-            delegate?.codeSignError(errDes: errDescr, tempDir: tempFolder)
-            return
-        }
-        
+
         if checkInputAndHandel(inputFile, workingDirectory) == false {
             delegate?.codeSignError(errDes: "CheckInput: \(inputFile) fail", tempDir: tempFolder)
             return
         }
+        
         
         // Loop through app bundles in payload directory
         let files = try? fileManager.contentsOfDirectory(atPath: payloadDirectory)

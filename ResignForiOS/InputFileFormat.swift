@@ -25,6 +25,7 @@ extension String {
         if self.isEmpty { return .unknown }
         switch self {
         case "ipa": return .IPA
+        case "app": return .APP
         case "xcarchive": return .XCARCHIVE
         default:
             return .unknown

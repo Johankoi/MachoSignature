@@ -13,7 +13,7 @@
 		8A4B798D2016D5E2007ACEA4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A4B798B2016D5E2007ACEA4 /* Main.storyboard */; };
 		8A4B799B2016D6F5007ACEA4 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */; };
 		8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */; };
-		8A4B799D2016D6F5007ACEA4 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* StringExtension.swift */; };
+		8A4B799D2016D6F5007ACEA4 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* String+Resign.swift */; };
 		8A4B799E2016D6F5007ACEA4 /* PlistHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79982016D6F5007ACEA4 /* PlistHelper.swift */; };
 		8A4B799F2016D6F5007ACEA4 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */; };
 		8A4B79A02016D6F5007ACEA4 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B799A2016D6F5007ACEA4 /* Tools.swift */; };
@@ -25,7 +25,7 @@
 		8AF9996420AD869100661F05 /* PlistHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79982016D6F5007ACEA4 /* PlistHelper.swift */; };
 		8AF9996520AD869800661F05 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */; };
 		8AF9996620AD869D00661F05 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */; };
-		8AF9996720AD86A000661F05 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* StringExtension.swift */; };
+		8AF9996720AD86A000661F05 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* String+Resign.swift */; };
 		8AF9996820AD86A900661F05 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B799A2016D6F5007ACEA4 /* Tools.swift */; };
 		8AF9996A20AD8E7000661F05 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9996920AD8E7000661F05 /* Core.swift */; };
 		A5F24E1926B7C6D9003B114E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A5F24E1826B7C6D9003B114E /* libz.tbd */; };
@@ -55,7 +55,7 @@
 		8A4B798F2016D5E2007ACEA4 /* ResignForiOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ResignForiOS.entitlements; sourceTree = "<group>"; };
 		8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
 		8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeSigner.swift; sourceTree = "<group>"; };
-		8A4B79972016D6F5007ACEA4 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		8A4B79972016D6F5007ACEA4 /* String+Resign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Resign.swift"; sourceTree = "<group>"; };
 		8A4B79982016D6F5007ACEA4 /* PlistHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlistHelper.swift; sourceTree = "<group>"; };
 		8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessTask.swift; sourceTree = "<group>"; };
 		8A4B799A2016D6F5007ACEA4 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
@@ -111,6 +111,7 @@
 		8A4B79842016D5E2007ACEA4 /* ResignForiOS */ = {
 			isa = PBXGroup;
 			children = (
+				8A4B79972016D6F5007ACEA4 /* String+Resign.swift */,
 				A5F24E3126B7E132003B114E /* FileManager+Resign.swift */,
 				A5F24E2B26B7D893003B114E /* InputFileFormat.swift */,
 				8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */,
@@ -118,7 +119,6 @@
 				8A4B79982016D6F5007ACEA4 /* PlistHelper.swift */,
 				8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */,
 				8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */,
-				8A4B79972016D6F5007ACEA4 /* StringExtension.swift */,
 				8A4B799A2016D6F5007ACEA4 /* Tools.swift */,
 				8A4B79852016D5E2007ACEA4 /* AppDelegate.swift */,
 				8A4B79872016D5E2007ACEA4 /* ViewController.swift */,
@@ -254,7 +254,7 @@
 				8A4B799F2016D6F5007ACEA4 /* ProcessTask.swift in Sources */,
 				8A4B799B2016D6F5007ACEA4 /* ProfileManager.swift in Sources */,
 				8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */,
-				8A4B799D2016D6F5007ACEA4 /* StringExtension.swift in Sources */,
+				8A4B799D2016D6F5007ACEA4 /* String+Resign.swift in Sources */,
 				8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */,
 				8A4B799E2016D6F5007ACEA4 /* PlistHelper.swift in Sources */,
 				A5F24E3226B7E132003B114E /* FileManager+Resign.swift in Sources */,
@@ -269,7 +269,7 @@
 			files = (
 				8AF9996320AD868F00661F05 /* CodeSigner.swift in Sources */,
 				8AF9996620AD869D00661F05 /* ProfileManager.swift in Sources */,
-				8AF9996720AD86A000661F05 /* StringExtension.swift in Sources */,
+				8AF9996720AD86A000661F05 /* String+Resign.swift in Sources */,
 				8AF9996420AD869100661F05 /* PlistHelper.swift in Sources */,
 				8AF9996820AD86A900661F05 /* Tools.swift in Sources */,
 				8AF9996520AD869800661F05 /* ProcessTask.swift in Sources */,
