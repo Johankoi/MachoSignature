@@ -10,9 +10,7 @@ import Foundation
 extension String {
     
     var lastPathComponent: String {
-        get {
-            return (self as NSString).lastPathComponent
-        }
+        (self as NSString).lastPathComponent
     }
     var pathExtension: String {
         get {

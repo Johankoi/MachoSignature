@@ -28,6 +28,9 @@
 		8AF9996720AD86A000661F05 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* StringExtension.swift */; };
 		8AF9996820AD86A900661F05 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B799A2016D6F5007ACEA4 /* Tools.swift */; };
 		8AF9996A20AD8E7000661F05 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9996920AD8E7000661F05 /* Core.swift */; };
+		A5F24E1926B7C6D9003B114E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A5F24E1826B7C6D9003B114E /* libz.tbd */; };
+		A5F24E2C26B7D893003B114E /* InputFileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F24E2B26B7D893003B114E /* InputFileFormat.swift */; };
+		A5F24E3226B7E132003B114E /* FileManager+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F24E3126B7E132003B114E /* FileManager+Resign.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,6 +65,9 @@
 		8AF9995C20AD85EB00661F05 /* CoolResign */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CoolResign; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AF9995E20AD85EB00661F05 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		8AF9996920AD8E7000661F05 /* Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
+		A5F24E1826B7C6D9003B114E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		A5F24E2B26B7D893003B114E /* InputFileFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFileFormat.swift; sourceTree = "<group>"; };
+		A5F24E3126B7E132003B114E /* FileManager+Resign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Resign.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5F24E1926B7C6D9003B114E /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +95,7 @@
 				8A4B79842016D5E2007ACEA4 /* ResignForiOS */,
 				8AF9995D20AD85EB00661F05 /* CoolResign */,
 				8A4B79832016D5E2007ACEA4 /* Products */,
+				A5F24E1726B7C6D9003B114E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,6 +111,8 @@
 		8A4B79842016D5E2007ACEA4 /* ResignForiOS */ = {
 			isa = PBXGroup;
 			children = (
+				A5F24E3126B7E132003B114E /* FileManager+Resign.swift */,
+				A5F24E2B26B7D893003B114E /* InputFileFormat.swift */,
 				8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */,
 				8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */,
 				8A4B79982016D6F5007ACEA4 /* PlistHelper.swift */,
@@ -129,6 +139,14 @@
 				8AF9995E20AD85EB00661F05 /* main.swift */,
 			);
 			path = CoolResign;
+			sourceTree = "<group>";
+		};
+		A5F24E1726B7C6D9003B114E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A5F24E1826B7C6D9003B114E /* libz.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,12 +250,14 @@
 			files = (
 				8A4B79882016D5E2007ACEA4 /* ViewController.swift in Sources */,
 				8A4B79A42016DBB6007ACEA4 /* MainSignView.swift in Sources */,
+				A5F24E2C26B7D893003B114E /* InputFileFormat.swift in Sources */,
 				8A4B799F2016D6F5007ACEA4 /* ProcessTask.swift in Sources */,
 				8A4B799B2016D6F5007ACEA4 /* ProfileManager.swift in Sources */,
 				8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */,
 				8A4B799D2016D6F5007ACEA4 /* StringExtension.swift in Sources */,
 				8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */,
 				8A4B799E2016D6F5007ACEA4 /* PlistHelper.swift in Sources */,
+				A5F24E3226B7E132003B114E /* FileManager+Resign.swift in Sources */,
 				8A4B79862016D5E2007ACEA4 /* AppDelegate.swift in Sources */,
 				8A4B79A02016D6F5007ACEA4 /* Tools.swift in Sources */,
 			);

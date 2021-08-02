@@ -216,7 +216,7 @@ open class Profile: NSObject {
 
 open class Entitlements {
     
-    open let fullDictionary: [String: AnyObject]!
+    public let fullDictionary: [String: AnyObject]!
     
     // General
     open let applicationIdentifer: String!

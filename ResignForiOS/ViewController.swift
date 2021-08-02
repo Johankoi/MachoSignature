@@ -7,6 +7,8 @@
 //
 
 import Cocoa
+//#import “zlib.h”
+import zlib
 
 class ViewController: NSViewController {
 
