@@ -8,6 +8,42 @@
 import Cocoa
 import Security
 
+/**
+maybeCachedCheckingQueue.async {
+    do {
+        self.maybeCached = Set()
+        try self.config.fileManager.contentsOfDirectory(atPath: self.directoryURL.path).forEach { fileName in
+            self.maybeCached?.insert(fileName)
+        }
+    } catch {
+        // Just disable the functionality if we fail to initialize it properly. This will just revert to
+        // the behavior which is to check file existence on disk directly.
+        self.maybeCached = nil
+    }
+}
+ 
+ 
+ 
+ public static func certificates(in bundle: Bundle = Bundle.main) -> [SecCertificate] {
+         var certificates: [SecCertificate] = []
+
+         let paths = Set([".cer", ".CER", ".crt", ".CRT", ".der", ".DER"].map { fileExtension in
+             bundle.paths(forResourcesOfType: fileExtension, inDirectory: nil)
+         }.joined())
+
+         for path in paths {
+             if
+                 let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
+                 let certificate = SecCertificateCreateWithData(nil, certificateData)
+             {
+                 certificates.append(certificate)
+             }
+         }
+
+         return certificates
+     }
+
+**/
 
 open class ProfileManager {
     
@@ -195,6 +231,9 @@ open class Profile: NSObject {
             var optionalDecoder: CMSDecoder?
             var optionalDataRef: CFData?
             
+            
+            var optionalCertsDataRef: CFArray?
+            
             CMSDecoderCreate(&optionalDecoder)
             if let decoderRef = optionalDecoder {
                 CMSDecoderUpdateMessage(decoderRef, (profileData as NSData).bytes, Int(profileData.count))
@@ -202,7 +241,84 @@ open class Profile: NSObject {
                 CMSDecoderCopyContent(decoderRef, &optionalDataRef)
                 
                 let decodedProfileData = optionalDataRef! as Data
-                let plistDict = try! PropertyListSerialization.propertyList(from: decodedProfileData, options: .mutableContainersAndLeaves, format: nil)
+              
+                
+
+                CMSDecoderCopyAllCerts(decoderRef, &optionalCertsDataRef)
+                let oneCerData = CFArrayGetValueAtIndex(optionalCertsDataRef,2);
+                let certificate = unsafeBitCast(oneCerData, to: SecCertificate.self)
+                
+                let certificateData = SecCertificateCopyData(certificate)
+                let certificateRef = SecCertificateCreateWithData(nil, certificateData)
+                
+                let summary = SecCertificateCopySubjectSummary(certificateRef!)
+                
+                var cn:  CFString? = nil
+                SecCertificateCopyCommonName(certificateRef!, &cn)
+
+                var plistDict = try! PropertyListSerialization.propertyList(from: decodedProfileData, options: .mutableContainersAndLeaves, format: nil) as! [String: Any]
+                
+                
+                
+                
+//
+//               let handeledDict = plistDict.map { (key, value) -> [String: Any] in
+//                    if value is Date {
+//                        plistDict[key] = "我是个日期";
+//                    }
+//                    if value is Data {
+//                        plistDict[key] = "我是个数据";
+//                    }
+//                    plistDict["DER-Encoded-Profile"] = "我是个数据";
+//                    return plistDict
+//                }
+//
+//
+//                do {
+//                    let encodedDictionary = try JSONEncoder().encode(handeledDict)
+//                    print(encodedDictionary)
+//                } catch {
+//                    print("Error: ", error)
+//                }
+//                //利用自带的json库转换成Data
+//
+//                //如果设置options为JSONSerialization.WritingOptions.prettyPrinted，则打印格式更好阅读
+//
+//                let data = try? JSONSerialization.data(withJSONObject: handeledDict, options: [])
+//
+//                //Data转换成String打印输出
+//
+//                let str = String(data:data!, encoding: String.Encoding.utf8)
+//
+//                //输出json字符串
+//
+//                print("Json Str:\(str!)")
+//
+//
+//
+//
+//
+//
+//
+//
+//
+                
+                
+//                let plistDictdata = try! PropertyListSerialization.data(fromPropertyList: decodedProfileData, format: .binary, options: 0)
+//                do {
+//                    // make sure this JSON is in the format we expect
+//                    if let json = try JSONSerialization.jsonObject(with: plistDictdata, options: []) as? [String: Any] {
+//                        // try to read out a string array
+//                        if let names = json["AppIDName"] as? [String] {
+//                            print(names)
+//                        }
+//                    }
+//                } catch let error as NSError {
+//                    print("Failed to load: \(error.localizedDescription)")
+//                }
+                
+                
+                
                 return plistDict as? [String: AnyObject]
             }
         }

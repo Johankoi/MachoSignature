@@ -27,8 +27,7 @@ extension String {
         case "ipa": return .IPA
         case "app": return .APP
         case "xcarchive": return .XCARCHIVE
-        default:
-            return .unknown
+        default: return .unknown
         }
     }
 }

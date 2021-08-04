@@ -90,7 +90,6 @@ class CodeSigner: NSObject {
     
     //MARK: Copy Provisioning Profile
     func checkProfilePath(_ inputProfile: String?, _ oldProfilePath: String) -> String? {
-        delegate?.codeSignLogRecord(logDes: "make sure which profile should be using")
         guard let inputProfile = inputProfile else {
             return oldProfilePath
         }
@@ -104,7 +103,6 @@ class CodeSigner: NSObject {
 
     func sign(inputFile: String, provisioningFile: String?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String, openByTerminal: Bool) {
         
-        //MARK: Create working temp folder
         let tempFolder: String = makeTempFolder()!
         
         let workingDirectory = tempFolder.appendPathComponent("out");
@@ -118,7 +116,6 @@ class CodeSigner: NSObject {
         let payloadDirectory = workingDirectory.appendPathComponent("Payload/")
         
         
-
         if checkInputAndHandel(inputFile, workingDirectory) == false {
             delegate?.codeSignError(errDes: "CheckInput: \(inputFile) fail", tempDir: tempFolder)
             return
@@ -138,10 +135,11 @@ class CodeSigner: NSObject {
             let infoPlistPath = appFilePath.appendPathComponent("Info.plist")
             let provisioningPath = appFilePath.appendPathComponent("embedded.mobileprovision")
             
-            let currInfoPlist = PlistHelper(plistPath: infoPlistPath)
+            let currInfoPlist = PropertyListProcessor(with: infoPlistPath)
+            
             
             //MARK: Delete CFBundleResourceSpecification from Info.plist
-            currInfoPlist.delete(key: "CFBundleResourceSpecification")
+            currInfoPlist.delete(key: RSCFBundleResourceSpecificationKey)
             
             
             let profilePath = checkProfilePath(provisioningFile, provisioningPath)
@@ -161,47 +159,11 @@ class CodeSigner: NSObject {
             
             
             //MARK: Make sure that the executable is well... executable.
-            if let bundleExecutable = currInfoPlist.bundleExecutable {
+            if let bundleExecutable = currInfoPlist.getValue(for: RSCFBundleExecutableKey) {
                 _ = Process().execute(chmodPath, workingDirectory: nil, arguments: ["755", appFilePath.appendPathComponent(bundleExecutable)])
             }
-            
-            //MARK: Change Application ID
-            if newBundleID != "" {
-                if let oldAppID = currInfoPlist.bundleIdentifier {
-                    //  recursive func
-                    func changeAppexID(_ appexFile: String) {
-                        let appexPlist = PlistHelper(plistPath: appexFile + "/Info.plist")
-                        if let appexBundleID = appexPlist.bundleIdentifier {
-                            let newAppexID = "\(newBundleID)\(appexBundleID.substring(from: oldAppID.endIndex))"
-                            delegate?.codeSignLogRecord(logDes: "Changing \(appexFile) bundleId to \(newAppexID)")
-                            appexPlist.bundleIdentifier = newAppexID
-                        }
-                        if let _ = appexPlist.wkAppBundleIdentifier {
-                            appexPlist.wkAppBundleIdentifier = newBundleID
-                        }
-                        recursiveDirectorySearch(appexFile, extensions: ["app"], found: changeAppexID)
-                    }
-                    // Search appex in current app file to changeAppID
-                    recursiveDirectorySearch(appFilePath, extensions: ["appex"], found: changeAppexID)
-                }
-                currInfoPlist.bundleIdentifier = newBundleID
-            }
-            
-            //MARK: Change Display Name
-            if newDisplayName != "" {
-                currInfoPlist.bundleDisplayName = newDisplayName
-            }
-            
-            //MARK: Change Version
-            if newVersion != "" {
-                currInfoPlist.bundleVersion = newVersion
-            }
-            
-            //MARK: Change Short Version
-            if newShortVersion != "" {
-                currInfoPlist.shortBundleVersion = newShortVersion
-            }
-            
+          
+            updatePlist(dict: [:])
             
             //MARK: Codesigning - App
             let signableExts = ["dylib","so","0","vis","pvr","framework","appex","app"]
@@ -229,14 +191,7 @@ class CodeSigner: NSObject {
         
         //MARK: Packaging
         //Check if output already exists and delete if so
-        if fileManager.fileExists(atPath: outputFile) {
-            do {
-                try fileManager.removeItem(atPath: outputFile)
-            } catch {
-                delegate?.codeSignError(errDes: "Delete exists output file fail", tempDir: tempFolder)
-                return
-            }
-        }
+        FileManager.removeItem(atPath: outputFile)
         
         delegate?.codeSignLogRecord(logDes: "Packaging IPA: \(outputFile)")
         
@@ -264,6 +219,47 @@ class CodeSigner: NSObject {
     }
     
     
+
+    func updatePlist(dict: Dictionary<String, Any>)  {
+        /**
+        //MARK: Change Application ID
+        if newBundleID != "" {
+            if let oldAppID = currInfoPlist.bundleIdentifier {
+                //  recursive func
+                func changeAppexID(_ appexFile: String) {
+                    let appexPlist = PlistHelper(plistPath: appexFile + "/Info.plist")
+                    if let appexBundleID = appexPlist.bundleIdentifier {
+                        let newAppexID = "\(newBundleID)\(appexBundleID.substring(from: oldAppID.endIndex))"
+                        delegate?.codeSignLogRecord(logDes: "Changing \(appexFile) bundleId to \(newAppexID)")
+                        appexPlist.bundleIdentifier = newAppexID
+                    }
+                    if let _ = appexPlist.wkAppBundleIdentifier {
+                        appexPlist.wkAppBundleIdentifier = newBundleID
+                    }
+                    recursiveDirectorySearch(appexFile, extensions: ["app"], found: changeAppexID)
+                }
+                // Search appex in current app file to changeAppID
+                recursiveDirectorySearch(appFilePath, extensions: ["appex"], found: changeAppexID)
+            }
+            currInfoPlist.bundleIdentifier = newBundleID
+        }
+        
+        //MARK: Change Display Name
+        if newDisplayName != "" {
+            currInfoPlist.bundleDisplayName = newDisplayName
+        }
+        
+        //MARK: Change Version
+        if newVersion != "" {
+            currInfoPlist.bundleVersion = newVersion
+        }
+        
+        //MARK: Change Short Version
+        if newShortVersion != "" {
+            currInfoPlist.shortBundleVersion = newShortVersion
+        }
+         **/
+    }
     func recursiveDirectorySearch(_ path: String, extensions: [String], found: ((_ file: String) -> Void)) {
         if let files = try? fileManager.contentsOfDirectory(atPath: path) {
             var isDirectory: ObjCBool = true

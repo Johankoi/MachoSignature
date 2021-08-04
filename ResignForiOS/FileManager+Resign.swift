@@ -8,9 +8,8 @@
 
 import Foundation
 
-
+// MARK: - File System Modification
 extension FileManager {
-    // MARK: - Common Directories
 
     static var temporaryDirectoryPath: String {
         NSTemporaryDirectory()
@@ -20,7 +19,6 @@ extension FileManager {
         URL(fileURLWithPath: FileManager.temporaryDirectoryPath, isDirectory: true)
     }
 
-    // MARK: - File System Modification
 
     @discardableResult
     static func createDirectory(atPath path: String) -> Bool {
