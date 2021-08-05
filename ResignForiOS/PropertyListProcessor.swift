@@ -18,7 +18,6 @@ public let RSWKCompanionAppBundleIdentifierKey  = "WKCompanionAppBundleIdentifie
  
 class PropertyListProcessor: NSObject {
     
-    let defaultsPath = "/usr/bin/defaults"
     var plistPath: String
     var dictContent: NSMutableDictionary
 

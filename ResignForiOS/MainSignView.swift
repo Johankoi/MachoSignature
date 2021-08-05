@@ -43,7 +43,9 @@ class MainSignView: NSView {
     @IBOutlet var StatusLabel: NSTextField!
     
     //MARK: Variables
-    var provisioningProfiles: [Profile] = ProfileManager().updateProfiles()
+//    var provisioningProfiles: [Profile] = ProfileManager().updateProfiles()
+    
+    var provisioningProfiles: [ProvisioningProfile] = MobileProvisionProcessor().profiles
     var codesigningCerts: [String] = []
     
     var currSelectInput: String? = nil {
@@ -54,9 +56,9 @@ class MainSignView: NSView {
         }
     }
     
-    var currSelectProfile: Profile? {
+    var currSelectProfile: ProvisioningProfile? {
         didSet {
-            newBundleIDField.stringValue = currSelectProfile?.bundleID ?? ""
+            newBundleIDField.stringValue = currSelectProfile?.bundleIdentifier ?? ""
         }
     }
     
@@ -137,7 +139,9 @@ class MainSignView: NSView {
     func populateProvisioningProfiles() {
         var items = ["Re-Sign Only"]
         for profile in provisioningProfiles {
-            items.append("\(profile.name) (\(profile.teamIdentifiers.first!))")
+//            items.append("\(profile.name) (\(profile.teamIdentifiers.first!))")
+            
+            items.append(profile.verboseOutput)
         }
         profileSelcetPop.removeAllItems()
         profileSelcetPop.addItems(withTitles:items)
@@ -232,7 +236,7 @@ class MainSignView: NSView {
 
         let signer = CodeSigner()
         signer.delegate = self
-        signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile?.filePath, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
+        signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile?.url?.absoluteString, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
     }
     
     
@@ -245,12 +249,12 @@ class MainSignView: NSView {
 //            newBundleIDField.isEditable = false
             currSelectProfile = provisioningProfiles[sender.indexOfSelectedItem - 1]
             let matchCer = currSelectProfile?.developerCertificates.first
-            if let matchCer = matchCer, codesigningCerts.contains(matchCer) {
-                codeSignCertsPop.selectItem(withTitle: matchCer)
-                currSelectCert = matchCer
-            } else {
-                //MARK: todo  // 提醒用户没有匹配的证书
-            }
+//            if let matchCer = matchCer, codesigningCerts.contains(matchCer) {
+//                codeSignCertsPop.selectItem(withTitle: matchCer)
+//                currSelectCert = matchCer
+//            } else {
+//                //MARK: todo  // 提醒用户没有匹配的证书
+//            }
         }
     }
     

@@ -277,13 +277,14 @@ public struct ProvisioningProfile: Equatable, Codable {
         return expirationDate <= now
     }
     
+    // UNDO:
     public var isWildcard: Bool {
         //   return entitlements.applicationIdentifer.hasSuffix("*")
         return true
     }
     
     
-    
+    // UNDO:
     public func matches(_ bundleID: String) -> Bool {
         //        var appID = self.entitlements.applicationIdentifer
         //        if let dotRange = appID?.range(of: ".") {
@@ -296,8 +297,14 @@ public struct ProvisioningProfile: Equatable, Codable {
         return true
     }
     
+    // UNDO:
     // public var buildType: String
     
+    // UNDO:
+//    let appID = entitlements.applicationIdentifer
+//    let index = appID?.index((appID?.startIndex)!, offsetBy: (applicationIdentifierPrefix.first?.count)! + 1)
+//    self.bundleID = (appID?.substring(from: index!))!.trimmingCharacters(in: CharacterSet(charactersIn: "*"))
+
     
     var bundleIdentifier: String {
         switch entitlements["application-identifier"] {
@@ -335,7 +342,7 @@ public struct ProvisioningProfile: Equatable, Codable {
         version = try values.decode(Int.self, forKey: .version)
         
     }
-    
+    // UNDO:
     public func encode(to encoder: Encoder) throws {
         //           var container = encoder.container(keyedBy: CodingKeys.self)
         //           try container.encode(name, forKey: .name)
@@ -395,8 +402,8 @@ public extension ProvisioningProfile {
                          "UUID: \(uuid)",
                          "App ID Name: \(appIdName)",
                          "Team Name: \(teamName)",
-                         "Expiry: \(expiry)"]
-            return "Profile Name: \(name) UUID: \(uuid) Expiry: \(expiry)"
+                         "Expire: \(expiry)"]
+            return "\(name) (\(uuid)) (Expire: \(expiry))"
            
         }
         // UNDO:
@@ -416,6 +423,7 @@ public extension ProvisioningProfile {
 }
 
 public extension ProvisioningProfile {
+    // UNDO:
 //        func getTranslatedDevices(using file: File) throws -> [String] {
 //            let translator = try DeviceTranslator(file: file)
 //            if let devices = provisionedDevices {
@@ -430,7 +438,7 @@ public extension ProvisioningProfile {
 
 
 public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equatable {
-    //     添加下面的方法
+    // UNDO:  添加下面的方法
     //    https://github.com/ajpagente/Revamp/blob/master/Sources/Library/ProfileAnalyzer.swift
     var profiles = [ProvisioningProfile]()
     var loading = false
@@ -444,7 +452,7 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
             return
         }
         loading = true
-        DispatchQueue.global().async {
+//        DispatchQueue.global().async {
             let fileManager = FileManager.default
             let profilesDirectoryURL = libraryDirectoryURL.appendingPathComponent("/MobileDevice/Provisioning Profiles")
             let enumerator = fileManager.enumerator(at: profilesDirectoryURL,
@@ -458,12 +466,12 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
                     profiles.append(profile)
                 }
             }
-            
+            self.profiles = profiles
             DispatchQueue.main.async {
                 self.loading = false
-                self.profiles = profiles
+               
             }
-        }
+//        }
     }
     
     
@@ -477,6 +485,8 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
             }
         }
     }
+    
+    // UNDO:
     func profilesMatching(_ bundleID: String, acceptWildcardMatches: Bool = false) -> [ProvisioningProfile] {
        
 //        var matches = updateProfiles().filter({ $0.matches(bundleID) })
@@ -487,9 +497,9 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
         [ProvisioningProfile]()
     }
     
+    // UNDO:
     //有效的未过期mobileProvision[] collection成 -> 名字数组
     //从mobileProvision名字获取mobileProvision 进而 得到 包含的证书信息类
-    
     func installedMobileProvisions() -> [String] { return [""] }
     
     func mapProvisionToStringArray() -> [String] { return [""] }
@@ -535,10 +545,7 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
 }
 
 
-// undo ：
-
-
-
+// UNDO:
 // 1.如果描述文件指定了一些设备，说明这个描述文件用来限制一些设备安装或者调试：
 // getTaskAllow是yes，就表明这个是可调试的的描述文件，no代表是Ad Hoc类型证书
 // 2.如果描述文件未指定任何设备，说明这个包描述文件用来发布appstore，或者是Enterprise类型
