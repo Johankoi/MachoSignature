@@ -47,6 +47,26 @@ protocol CodeSignDelegate {
 }
 
 
+
+//https://github.com/ajpagente/Revamp/blob/master/Sources/Library/Codesign.swift
+/**
+public struct Signer {
+    @discardableResult
+    public static func sign(_ file: File, using engine: SigningEngine) throws -> Bool {
+        let workspace = try Workspace()
+        try workspace.writeFile(file, to: .input, decompress: true)
+
+        let foldersToSign = workspace.inputFolder.findSubfolders(withExtension: [".app", "*.appex", ".framework"])
+        for folder in foldersToSign {
+            let _ = try engine.sign(folder: folder)
+        }
+
+        let resignedFileName    = "rv_\(file.name)"
+        try workspace.compressFolder(workspace.inputFolder, to: .output, with: resignedFileName)
+        try workspace.copyFileFromOutput(named: resignedFileName, to: file.parent!)
+        return true
+    }
+**/
 class CodeSigner: NSObject {
     
     let mktempPath = "/usr/bin/mktemp"

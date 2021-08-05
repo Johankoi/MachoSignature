@@ -7,6 +7,14 @@
 //
 import Cocoa
 import Security
+//https://github.com/ajpagente/Revamp/tree/master/Sources/Library
+//https://github.com/XGPASS/iOSKnowledgeBase/blob/fca7cf46a4807ee9ba18f7c581a462d937c983fd/IPAInspection/IPAInspection/SwiftyProvisioningProfile/SwiftyCMSDecoder.swift
+//https://github.com/yansaid/ProfilesManager/tree/dcad6a42a6a9d0f44def5f7c806edb98b31961e2/Shared
+
+
+
+//https://github.com/ProfileCreator/ProfileCreator
+//https://github.com/slarew/AppleOSS-Security/blob/e1c79a556eb82f18e2c72f2fcab7878d9ecabf5e/OSX/libsecurity_cms/regressions/cms-hashagility-test.c
 
 /**
 maybeCachedCheckingQueue.async {
@@ -245,7 +253,7 @@ open class Profile: NSObject {
                 
 
                 CMSDecoderCopyAllCerts(decoderRef, &optionalCertsDataRef)
-                let oneCerData = CFArrayGetValueAtIndex(optionalCertsDataRef,2);
+                let oneCerData = CFArrayGetValueAtIndex(optionalCertsDataRef,1);
                 let certificate = unsafeBitCast(oneCerData, to: SecCertificate.self)
                 
                 let certificateData = SecCertificateCopyData(certificate)
@@ -259,7 +267,7 @@ open class Profile: NSObject {
                 var plistDict = try! PropertyListSerialization.propertyList(from: decodedProfileData, options: .mutableContainersAndLeaves, format: nil) as! [String: Any]
                 
                 
-                
+               
                 
 //
 //               let handeledDict = plistDict.map { (key, value) -> [String: Any] in
