@@ -139,8 +139,6 @@ class MainSignView: NSView {
     func populateProvisioningProfiles() {
         var items = ["Re-Sign Only"]
         for profile in provisioningProfiles {
-//            items.append("\(profile.name) (\(profile.teamIdentifiers.first!))")
-            
             items.append(profile.verboseOutput)
         }
         profileSelcetPop.removeAllItems()
