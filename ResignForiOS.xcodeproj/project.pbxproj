@@ -11,7 +11,6 @@
 		8A4B79882016D5E2007ACEA4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79872016D5E2007ACEA4 /* ViewController.swift */; };
 		8A4B798A2016D5E2007ACEA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A4B79892016D5E2007ACEA4 /* Assets.xcassets */; };
 		8A4B798D2016D5E2007ACEA4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A4B798B2016D5E2007ACEA4 /* Main.storyboard */; };
-		8A4B799B2016D6F5007ACEA4 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */; };
 		8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */; };
 		8A4B799D2016D6F5007ACEA4 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* String+Resign.swift */; };
 		8A4B799E2016D6F5007ACEA4 /* PropertyListProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */; };
@@ -24,14 +23,13 @@
 		8AF9996320AD868F00661F05 /* CodeSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */; };
 		8AF9996420AD869100661F05 /* PropertyListProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */; };
 		8AF9996520AD869800661F05 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */; };
-		8AF9996620AD869D00661F05 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */; };
 		8AF9996720AD86A000661F05 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* String+Resign.swift */; };
 		8AF9996820AD86A900661F05 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B799A2016D6F5007ACEA4 /* Tools.swift */; };
 		8AF9996A20AD8E7000661F05 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9996920AD8E7000661F05 /* Core.swift */; };
+		A34FB89C26BEFBB500839439 /* CertificateDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB89B26BEFBB500839439 /* CertificateDataProcessor.swift */; };
 		A56205E226BA850B000A92E7 /* MobileProvisionProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56205E126BA850B000A92E7 /* MobileProvisionProcessor.swift */; };
 		A56205E926BBD1E1000A92E7 /* DecodableDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56205E826BBD1E1000A92E7 /* DecodableDefault.swift */; };
 		A56205FB26BBF33F000A92E7 /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56205FA26BBF33F000A92E7 /* Entitlements.swift */; };
-		A56205FF26BBF468000A92E7 /* RVCMSDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56205FE26BBF468000A92E7 /* RVCMSDecoder.swift */; };
 		A5F24E1926B7C6D9003B114E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A5F24E1826B7C6D9003B114E /* libz.tbd */; };
 		A5F24E2C26B7D893003B114E /* InputFileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F24E2B26B7D893003B114E /* InputFileFormat.swift */; };
 		A5F24E3226B7E132003B114E /* FileManager+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F24E3126B7E132003B114E /* FileManager+Resign.swift */; };
@@ -57,7 +55,6 @@
 		8A4B798C2016D5E2007ACEA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8A4B798E2016D5E2007ACEA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A4B798F2016D5E2007ACEA4 /* ResignForiOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ResignForiOS.entitlements; sourceTree = "<group>"; };
-		8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
 		8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeSigner.swift; sourceTree = "<group>"; };
 		8A4B79972016D6F5007ACEA4 /* String+Resign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Resign.swift"; sourceTree = "<group>"; };
 		8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyListProcessor.swift; sourceTree = "<group>"; };
@@ -69,10 +66,10 @@
 		8AF9995C20AD85EB00661F05 /* CoolResign */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CoolResign; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AF9995E20AD85EB00661F05 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		8AF9996920AD8E7000661F05 /* Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
+		A34FB89B26BEFBB500839439 /* CertificateDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDataProcessor.swift; sourceTree = "<group>"; };
 		A56205E126BA850B000A92E7 /* MobileProvisionProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileProvisionProcessor.swift; sourceTree = "<group>"; };
 		A56205E826BBD1E1000A92E7 /* DecodableDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecodableDefault.swift; sourceTree = "<group>"; };
 		A56205FA26BBF33F000A92E7 /* Entitlements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entitlements.swift; sourceTree = "<group>"; };
-		A56205FE26BBF468000A92E7 /* RVCMSDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RVCMSDecoder.swift; sourceTree = "<group>"; };
 		A5F24E1826B7C6D9003B114E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		A5F24E2B26B7D893003B114E /* InputFileFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFileFormat.swift; sourceTree = "<group>"; };
 		A5F24E3126B7E132003B114E /* FileManager+Resign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Resign.swift"; sourceTree = "<group>"; };
@@ -119,7 +116,6 @@
 		8A4B79842016D5E2007ACEA4 /* ResignForiOS */ = {
 			isa = PBXGroup;
 			children = (
-				A56205FE26BBF468000A92E7 /* RVCMSDecoder.swift */,
 				A56205FA26BBF33F000A92E7 /* Entitlements.swift */,
 				A56205E826BBD1E1000A92E7 /* DecodableDefault.swift */,
 				8A4B79972016D6F5007ACEA4 /* String+Resign.swift */,
@@ -128,9 +124,9 @@
 				8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */,
 				8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */,
 				8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */,
+				A34FB89B26BEFBB500839439 /* CertificateDataProcessor.swift */,
 				A56205E126BA850B000A92E7 /* MobileProvisionProcessor.swift */,
 				8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */,
-				8A4B79952016D6F5007ACEA4 /* ProfileManager.swift */,
 				8A4B799A2016D6F5007ACEA4 /* Tools.swift */,
 				8A4B79852016D5E2007ACEA4 /* AppDelegate.swift */,
 				8A4B79872016D5E2007ACEA4 /* ViewController.swift */,
@@ -266,7 +262,7 @@
 				A56205E926BBD1E1000A92E7 /* DecodableDefault.swift in Sources */,
 				A5F24E2C26B7D893003B114E /* InputFileFormat.swift in Sources */,
 				8A4B799F2016D6F5007ACEA4 /* ProcessTask.swift in Sources */,
-				8A4B799B2016D6F5007ACEA4 /* ProfileManager.swift in Sources */,
+				A34FB89C26BEFBB500839439 /* CertificateDataProcessor.swift in Sources */,
 				8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */,
 				8A4B799D2016D6F5007ACEA4 /* String+Resign.swift in Sources */,
 				8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */,
@@ -274,7 +270,6 @@
 				A5F24E3226B7E132003B114E /* FileManager+Resign.swift in Sources */,
 				8A4B79862016D5E2007ACEA4 /* AppDelegate.swift in Sources */,
 				A56205FB26BBF33F000A92E7 /* Entitlements.swift in Sources */,
-				A56205FF26BBF468000A92E7 /* RVCMSDecoder.swift in Sources */,
 				8A4B79A02016D6F5007ACEA4 /* Tools.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,7 +279,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AF9996320AD868F00661F05 /* CodeSigner.swift in Sources */,
-				8AF9996620AD869D00661F05 /* ProfileManager.swift in Sources */,
 				8AF9996720AD86A000661F05 /* String+Resign.swift in Sources */,
 				8AF9996420AD869100661F05 /* PropertyListProcessor.swift in Sources */,
 				8AF9996820AD86A900661F05 /* Tools.swift in Sources */,

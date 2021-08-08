@@ -42,10 +42,8 @@ class MainSignView: NSView {
     @IBOutlet var StartButton: NSButton!
     @IBOutlet var StatusLabel: NSTextField!
     
-    //MARK: Variables
-//    var provisioningProfiles: [Profile] = ProfileManager().updateProfiles()
-    
-    var provisioningProfiles: [ProvisioningProfile] = MobileProvisionProcessor().profiles
+
+    var provisioningProfiles: [ProvisioningProfile] = MobileProvisionProcessor().filterAll()
     var codesigningCerts: [String] = []
     
     var currSelectInput: String? = nil {
@@ -143,7 +141,7 @@ class MainSignView: NSView {
         }
         profileSelcetPop.removeAllItems()
         profileSelcetPop.addItems(withTitles:items)
-        profileSelcetPop.selectItem(at: 0)
+        profileSelcetPop.selectItem(at: 1)
     }
     
     
@@ -154,7 +152,7 @@ class MainSignView: NSView {
             showCodesignCertsErrorAlert()
             return
         }        
-        codesigningCerts = securityResult.output.split(separator: "\"").map{String($0)}.filter({ $0.contains("iPhone")})
+        codesigningCerts = securityResult.output.split(separator: "\"").map{String($0)}.filter({ $0.contains("iPhone") || $0.contains("Apple Development") })
         for cert in self.codesigningCerts {
             codeSignCertsPop.addItem(withTitle: cert)
         }
@@ -231,10 +229,20 @@ class MainSignView: NSView {
                 return
             }
         }
-
+        
         let signer = CodeSigner()
         signer.delegate = self
-        signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile?.url?.absoluteString, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
+        if currSelectProfile == nil {
+            DispatchQueue.main.sync {
+                currSelectProfile = provisioningProfiles[self.profileSelcetPop.indexOfSelectedItem - 1]
+            }
+        }
+        if currSelectCert == nil {
+            DispatchQueue.main.sync {
+                currSelectCert = self.codeSignCertsPop.selectedItem?.title
+            }
+        }
+        signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
     }
     
     

@@ -4,10 +4,46 @@
 //
 //  Created by hanxiaoqing on 2018/1/23.
 //  Copyright © 2018年 cheng. All rights reserved.
-//
-
 
 import Cocoa
+
+
+/**
+maybeCachedCheckingQueue.async {
+    do {
+        self.maybeCached = Set()
+        try self.config.fileManager.contentsOfDirectory(atPath: self.directoryURL.path).forEach { fileName in
+            self.maybeCached?.insert(fileName)
+        }
+    } catch {
+        // Just disable the functionality if we fail to initialize it properly. This will just revert to
+        // the behavior which is to check file existence on disk directly.
+        self.maybeCached = nil
+    }
+}
+ 
+ 
+ 
+ public static func certificates(in bundle: Bundle = Bundle.main) -> [SecCertificate] {
+         var certificates: [SecCertificate] = []
+
+         let paths = Set([".cer", ".CER", ".crt", ".CRT", ".der", ".DER"].map { fileExtension in
+             bundle.paths(forResourcesOfType: fileExtension, inDirectory: nil)
+         }.joined())
+
+         for path in paths {
+             if
+                 let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
+                 let certificate = SecCertificateCreateWithData(nil, certificateData)
+             {
+                 certificates.append(certificate)
+             }
+         }
+
+         return certificates
+     }
+
+**/
 
 
 class Compress: NSObject {
@@ -106,22 +142,8 @@ class CodeSigner: NSObject {
         
         return true
     }
-       
-    
-    //MARK: Copy Provisioning Profile
-    func checkProfilePath(_ inputProfile: String?, _ oldProfilePath: String) -> String? {
-        guard let inputProfile = inputProfile else {
-            return oldProfilePath
-        }
-        FileManager.removeItem(atPath: oldProfilePath)
-        if FileManager.copyItem(atPath: inputProfile, toPath: oldProfilePath) == true {
-            return inputProfile
-        } else {
-            return nil
-        }
-    }
 
-    func sign(inputFile: String, provisioningFile: String?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String, openByTerminal: Bool) {
+    func sign(inputFile: String, provisioningFile: ProvisioningProfile?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String, openByTerminal: Bool) {
         
         let tempFolder: String = makeTempFolder()!
         
@@ -132,7 +154,6 @@ class CodeSigner: NSObject {
             return
         }
       
-        let entitlementsPlist = tempFolder.appendPathComponent("entitlements.plist")
         let payloadDirectory = workingDirectory.appendPathComponent("Payload/")
         
         
@@ -153,33 +174,23 @@ class CodeSigner: NSObject {
             //MARK: Bundle variables setup
             let appFilePath = payloadDirectory.appendPathComponent(file)
             let infoPlistPath = appFilePath.appendPathComponent("Info.plist")
-            let provisioningPath = appFilePath.appendPathComponent("embedded.mobileprovision")
-            
-            let currInfoPlist = PropertyListProcessor(with: infoPlistPath)
-            
+
+            let plistProcessor = PropertyListProcessor(with: infoPlistPath)
             
             //MARK: Delete CFBundleResourceSpecification from Info.plist
-            currInfoPlist.delete(key: RSCFBundleResourceSpecificationKey)
+            plistProcessor.delete(key: RSCFBundleResourceSpecificationKey)
             
             
-            let profilePath = checkProfilePath(provisioningFile, provisioningPath)
-            guard let profile = Profile(filePath: profilePath!) else {
-                delegate?.codeSignError(errDes: "Creat Profile fail", tempDir: tempFolder)
-                continue
+            let entitlementsPlist = tempFolder.appendPathComponent("entitlements.plist")
+            do {
+                try provisioningFile?.writeEntitlementsPlist(to: entitlementsPlist)
+            } catch {
+                delegate?.codeSignError(errDes: "writeEntitlements error", tempDir: tempFolder)
             }
-            
-            var entitleDic = profile.entitlements.fullDictionary
-            let xcentPath = appFilePath.appendPathComponent("archived-expanded-entitlements.xcent")
-            NSDictionary(contentsOfFile: xcentPath)?.forEach {
-                let key = $0 as! String
-                let value = $1 as AnyObject
-                entitleDic?.updateValue(value, forKey: key)
-            }
-            (entitleDic! as NSDictionary).write(toFile: entitlementsPlist, atomically: true)
-            
+
             
             //MARK: Make sure that the executable is well... executable.
-            if let bundleExecutable = currInfoPlist.getValue(for: RSCFBundleExecutableKey) {
+            if let bundleExecutable = plistProcessor.getValue(for: RSCFBundleExecutableKey) {
                 _ = Process().execute(chmodPath, workingDirectory: nil, arguments: ["755", appFilePath.appendPathComponent(bundleExecutable)])
             }
           
@@ -218,7 +229,6 @@ class CodeSigner: NSObject {
         Compress.shared.zip(workingDirectory, outputFile: outputFile)
         
         delegate?.codeSigneEndSuccessed(outPutPath: outputFile, tempDir: tempFolder)
-        
     }
     
     
@@ -237,7 +247,6 @@ class CodeSigner: NSObject {
             delegate?.codeSignLogRecord(logDes: "Error codesigning \(file) error:\(codesignTask.output)")
         }
     }
-    
     
 
     func updatePlist(dict: Dictionary<String, Any>)  {

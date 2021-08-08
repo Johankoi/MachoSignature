@@ -5,208 +5,14 @@
 //  Created by hxq on 2021/8/4.
 //  Copyright © 2021 cheng. All rights reserved.
 //
+/**
+ https://github.com/ajpagente/Revamp/tree/master/Sources/Library
+ https://github.com/XGPASS/iOSKnowledgeBase/blob/fca7cf46a4807ee9ba18f7c581a462d937c983fd/IPAInspection
+ https://github.com/yansaid/ProfilesManager/tree/dcad6a42a6a9d0f44def5f7c806edb98b31961e2/Shared
+ */
 
 import Foundation
-import Security
 
-
-public struct Certificate: Encodable, Equatable {
-    
-    public enum InitError: Error, Equatable {
-        case failedToFindValue(key: String)
-        case failedToCastValue(expected: String, actual: String)
-        case failedToFindLabel(label: String)
-    }
-    
-    public let notValidBefore: Date
-    public let notValidAfter:  Date
-    
-    public let issuerCommonName:  String
-    public let issuerCountryName: String
-    public let issuerOrgName:     String
-    public let issuerOrgUnit:     String
-    
-    public let serialNumber:      String
-    public let fingerprints:      [String:String]
-    
-    public let commonName:  String?
-    public let countryName: String
-    public let orgName:     String?
-    public let orgUnit:     String
-    
-    public init(results: [CFString: Any], commonName: String?) throws {
-        self.commonName = commonName
-        
-        notValidBefore = try Certificate.getValue(for: kSecOIDX509V1ValidityNotBefore, from: results)
-        notValidAfter = try Certificate.getValue(for: kSecOIDX509V1ValidityNotAfter, from: results)
-        
-        let issuerName: [[CFString: Any]] = try Certificate.getValue(for: kSecOIDX509V1IssuerName, from: results)
-        issuerCommonName = try Certificate.getValue(for: kSecOIDCommonName, fromDict: issuerName)
-        issuerCountryName = try Certificate.getValue(for: kSecOIDCountryName, fromDict: issuerName)
-        issuerOrgName = try Certificate.getValue(for: kSecOIDOrganizationName, fromDict: issuerName)
-        issuerOrgUnit = try Certificate.getValue(for: kSecOIDOrganizationalUnitName, fromDict: issuerName)
-        
-        serialNumber = try Certificate.getValue(for: kSecOIDX509V1SerialNumber, from: results)
-        
-        let shaFingerprints: [[CFString: Any]] = try Certificate.getValue(for: "Fingerprints" as CFString, from: results)
-        let sha1Fingerprint: Data   = try Certificate.getValue(for: "SHA-1" as CFString, fromDict: shaFingerprints)
-        let sha256Fingerprint: Data = try Certificate.getValue(for: "SHA-256" as CFString, fromDict: shaFingerprints)
-        
-        let sha1   = sha1Fingerprint.map { String(format: "%02x", $0) }.joined()
-        let sha256 = sha256Fingerprint.map { String(format: "%02x", $0) }.joined()
-        
-        self.fingerprints = ["SHA-1":   sha1.uppercased(),
-                             "SHA-256": sha256.uppercased()]
-        
-        let subjectName: [[CFString: Any]] = try Certificate.getValue(for: kSecOIDX509V1SubjectName, from: results)
-        countryName = try Certificate.getValue(for: kSecOIDCountryName, fromDict: subjectName)
-        orgName = try? Certificate.getValue(for: kSecOIDOrganizationName, fromDict: subjectName)
-        orgUnit = try Certificate.getValue(for: kSecOIDOrganizationalUnitName, fromDict: subjectName)
-    }
-    
-    static func getValue<T>(for key: CFString, from values: [CFString: Any]) throws -> T {
-        let node = values[key] as? [CFString: Any]
-        
-        guard let rawValue = node?[kSecPropertyKeyValue] else {
-            throw InitError.failedToFindValue(key: key as String)
-        }
-        
-        if T.self is Date.Type {
-            if let value = rawValue as? TimeInterval {
-                // Force unwrap here is fine as we've validated the type above
-                return Date(timeIntervalSinceReferenceDate: value) as! T
-            }
-        }
-        
-        guard let value = rawValue as? T else {
-            let type = (node?[kSecPropertyKeyType] as? String) ?? String(describing: rawValue)
-            throw InitError.failedToCastValue(expected: String(describing: T.self), actual: type)
-        }
-        
-        return value
-    }
-    
-    static func getValue<T>(for key: CFString, fromDict values: [[CFString: Any]]) throws -> T {
-        guard let results = values.first(where: { ($0[kSecPropertyKeyLabel] as? String) == (key as String) }) else {
-            throw InitError.failedToFindLabel(label: key as String)
-        }
-        
-        guard let rawValue = results[kSecPropertyKeyValue] else {
-            throw InitError.failedToFindValue(key: key as String)
-        }
-        
-        guard let value = rawValue as? T else {
-            let type = (results[kSecPropertyKeyType] as? String) ?? String(describing: rawValue)
-            throw InitError.failedToCastValue(expected: String(describing: T.self), actual: type)
-        }
-        
-        return value
-    }
-}
-
-
-public extension Certificate {
-    enum ParseError: Error {
-        case failedToCreateCertificate
-        case failedToCreateTrust
-        case failedToExtractValues
-    }
-    
-    static func parse(from data: Data) throws -> Certificate {
-        let certificate = try getSecCertificate(data: data)
-        
-        var error: Unmanaged<CFError>?
-        let values = SecCertificateCopyValues(certificate, nil, &error)
-        
-        if let error = error {
-            throw error.takeRetainedValue() as Error
-        }
-        
-        guard let valuesDict = values as? [CFString: Any] else {
-            throw ParseError.failedToExtractValues
-        }
-        
-        var commonName: CFString?
-        SecCertificateCopyCommonName(certificate, &commonName)
-        
-        return try Certificate(results: valuesDict, commonName: commonName as String?)
-    }
-    
-    private static func getSecCertificate(data: Data) throws -> SecCertificate {
-        guard let certificate = SecCertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
-            throw ParseError.failedToCreateCertificate
-        }
-        
-        return certificate
-    }
-}
-
-// MARK: - Certificate Encoder/Decoder
-public struct BaseCertificate: Codable, Equatable {
-    public let data: Data
-    public let certificate: Certificate?
-    
-    // MARK: - Codable
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        data = try container.decode(Data.self)
-        certificate = try? Certificate.parse(from: data)
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(data)
-    }
-    
-    // MARK: - Convenience
-    public var base64Encoded: String {
-        return data.base64EncodedString()
-    }
-}
-
-
-
-public enum PropertyListDictionaryValue: Hashable, Codable, Equatable {
-    
-    case string(String)
-    case bool(Bool)
-    case array([PropertyListDictionaryValue])
-    case unknown
-    
-    public init(from decoder: Decoder) throws {
-        
-        let container = try decoder.singleValueContainer()
-        
-        if let string = try? container.decode(String.self) {
-            self = .string(string)
-        } else if let bool = try? container.decode(Bool.self) {
-            self = .bool(bool)
-        } else if let array = try? container.decode([PropertyListDictionaryValue].self) {
-            self = .array(array)
-        } else {
-            self = .unknown
-        }
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        
-        var container = encoder.singleValueContainer()
-        
-        switch self {
-        case .string(let string):
-            try container.encode(string)
-        case .bool(let bool):
-            try container.encode(bool)
-        case .array(let array):
-            try container.encode(array)
-        case .unknown:
-            break
-        }
-        
-    }
-    
-}
 
 public struct ProvisioningProfile: Equatable, Codable {
     
@@ -228,7 +34,6 @@ public struct ProvisioningProfile: Equatable, Codable {
     }
     
     public var url: URL?
-    
     
     /// The name you gave your App ID in the provisioning portal
     public var appIdName: String
@@ -300,16 +105,25 @@ public struct ProvisioningProfile: Equatable, Codable {
     // UNDO:
     // public var buildType: String
     
-    // UNDO:
-//    let appID = entitlements.applicationIdentifer
-//    let index = appID?.index((appID?.startIndex)!, offsetBy: (applicationIdentifierPrefix.first?.count)! + 1)
-//    self.bundleID = (appID?.substring(from: index!))!.trimmingCharacters(in: CharacterSet(charactersIn: "*"))
-
     
     var bundleIdentifier: String {
         switch entitlements["application-identifier"] {
         case .string(let value):
-            return value
+            let cutStart = value.index(value.startIndex, offsetBy: teamIdentifier.count + 1)
+            return String(value[cutStart...])
+        /** Other Mehods:
+         // suffix
+         let result1 = value.suffix(value.count - teamIdentifier.count - 1);
+         
+         let cutPrefix = teamIdentifier + "."
+         var range = value.range(of: cutPrefix)!
+         
+         // suffix from range.upperBound
+         let result2 = value.suffix(from: range.upperBound)
+         
+         // suffix from cutPrefix.endIndex
+         let result3 = value.suffix(from: cutPrefix.endIndex)
+         **/
         default:
             return ""
         }
@@ -340,13 +154,24 @@ public struct ProvisioningProfile: Equatable, Codable {
         timeToLive = try values.decode(Int.self, forKey: .timeToLive)
         uuid = try values.decode(String.self, forKey: .uuid)
         version = try values.decode(Int.self, forKey: .version)
-        
     }
-    // UNDO:
+    
     public func encode(to encoder: Encoder) throws {
-        //           var container = encoder.container(keyedBy: CodingKeys.self)
-        //           try container.encode(name, forKey: .name)
-        //        .....
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(appIdName, forKey: .appIdName)
+        try container.encode(applicationIdentifierPrefixs, forKey: .applicationIdentifierPrefixs)
+        try container.encode(creationDate, forKey: .creationDate)
+        try container.encode(platforms, forKey: .platforms)
+        try container.encode(developerCertificates, forKey: .developerCertificates)
+        try container.encode(entitlements, forKey: .entitlements)
+        try container.encode(expirationDate, forKey: .expirationDate)
+        try container.encode(name, forKey: .name)
+        try container.encode(provisionedDevices, forKey: .provisionedDevices)
+        try container.encode(teamIdentifiers, forKey: .teamIdentifiers)
+        try container.encode(teamName, forKey: .teamName)
+        try container.encode(timeToLive, forKey: .timeToLive)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encode(version, forKey: .version)
     }
     
     
@@ -357,90 +182,46 @@ public struct ProvisioningProfile: Equatable, Codable {
     
 }
 
+
+
 public extension ProvisioningProfile {
-    enum ParserError: Error {
-        case decoderCreationFailed
-        case dataCreationFailed
+    var simpleOutput: String {
+        return "\(uuid) \(name)"
     }
     
-        static func parse(from data: Data) throws -> ProvisioningProfile? {
-            guard let decoder = RVCMSDecoder() else {
-                throw ParserError.decoderCreationFailed
-            }
-    
-            decoder.updateMessage(with: data as NSData)
-            decoder.finalizeMessage()
-    
-            guard let data = decoder.data else {
-                throw ParserError.dataCreationFailed
-            }
-    
-            var profile: ProvisioningProfile?
-            do {
-                profile = try PropertyListDecoder().decode(ProvisioningProfile.self, from: data)
-            } catch {
-                debugPrint(error)
-                print(error)
-                // TODO: log this error
-            }
-    
-            return profile
-        }
-}
-
-public extension ProvisioningProfile {
-        var simpleOutput: String {
-            return "\(uuid) \(name)"
-        }
-    
-        var verboseOutput: String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-    
-            let expiry = "\(dateFormatter.string(from: expirationDate))"
-            let lines = ["Profile Name: \(name)",
-                         "UUID: \(uuid)",
-                         "App ID Name: \(appIdName)",
-                         "Team Name: \(teamName)",
-                         "Expire: \(expiry)"]
-            return "\(name) (\(uuid)) (Expire: \(expiry))"
-           
-        }
-        // UNDO:
-        private func formatExpired(_ string: String) -> String {
-            return string
-        }
-}
-
-public extension ProvisioningProfile {
-        func writeEntitlementsPlist(to filePath: String) throws {
-            let encoder = PropertyListEncoder()
-            encoder.outputFormat = .xml
-            let data = try encoder.encode(entitlements)
-            try data.write(to: URL(fileURLWithPath: filePath))
-        }
-    
-}
-
-public extension ProvisioningProfile {
+    var verboseOutput: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd,yyyy"
+        
+        let expiry = "\(dateFormatter.string(from: expirationDate))"
+        let lines = ["Profile Name: \(name)",
+                     "UUID: \(uuid)",
+                     "App ID Name: \(appIdName)",
+                     "Team Name: \(teamName)",
+                     "Expire: \(expiry)"]
+        return "\(name) (Expire: \(expiry))"
+        
+    }
     // UNDO:
-//        func getTranslatedDevices(using file: File) throws -> [String] {
-//            let translator = try DeviceTranslator(file: file)
-//            if let devices = provisionedDevices {
-//                return try translator.translate(devices)
-//            }
-//            return []
-//        }
+    private func formatExpired(_ string: String) -> String {
+        return string
+    }
 }
 
-
-
+public extension ProvisioningProfile {
+    func writeEntitlementsPlist(to filePath: String) throws {
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .xml
+        let data = try encoder.encode(entitlements)
+        try data.write(to: URL(fileURLWithPath: filePath))
+    }
+    
+}
 
 
 public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equatable {
-    // UNDO:  添加下面的方法
-    //    https://github.com/ajpagente/Revamp/blob/master/Sources/Library/ProfileAnalyzer.swift
-    var profiles = [ProvisioningProfile]()
+    
+    private var uuidProvisons = [String: ProvisioningProfile]()
     var loading = false
     
     init() {
@@ -452,34 +233,38 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
             return
         }
         loading = true
-//        DispatchQueue.global().async {
-            let fileManager = FileManager.default
-            let profilesDirectoryURL = libraryDirectoryURL.appendingPathComponent("/MobileDevice/Provisioning Profiles")
-            let enumerator = fileManager.enumerator(at: profilesDirectoryURL,
-                                                    includingPropertiesForKeys: [.nameKey],
-                                                    options: .skipsHiddenFiles,
-                                                    errorHandler: nil)!
-            
-            var profiles = [ProvisioningProfile]()
-            for case let url as URL in enumerator {
-                if let profile = self.parse(url: url) {
-                    profiles.append(profile)
-                }
+        //        DispatchQueue.global().async {
+        let fileManager = FileManager.default
+        let profilesDirectoryURL = libraryDirectoryURL.appendingPathComponent("/MobileDevice/Provisioning Profiles")
+        let enumerator = fileManager.enumerator(at: profilesDirectoryURL,
+                                                includingPropertiesForKeys: [.nameKey],
+                                                options: .skipsHiddenFiles,
+                                                errorHandler: nil)!
+        
+        for case let url as URL in enumerator {
+            if let profile = self.parse(url: url) {
+                uuidProvisons[profile.uuid] = profile
             }
-            self.profiles = profiles
-            DispatchQueue.main.async {
-                self.loading = false
-               
-            }
-//        }
+        }
+        DispatchQueue.main.async {
+            self.loading = false
+        }
+        //        }
     }
     
+    /**
+     Returns all the `ProvisioningProfile` in uuidProvisons.
+     */
+    func filterAll() -> [ProvisioningProfile] {
+        return uuidProvisons.map{ $1 }
+    }
     
     func delete(profile: ProvisioningProfile) {
         if let url = profile.url {
             do {
                 try FileManager.default.removeItem(at: url)
-                profiles.removeAll { $0 == profile }
+                //                profiles.re
+                //                profiles.removeAll { $0 == profile }
             } catch {
                 print(error.localizedDescription)
             }
@@ -488,14 +273,27 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
     
     // UNDO:
     func profilesMatching(_ bundleID: String, acceptWildcardMatches: Bool = false) -> [ProvisioningProfile] {
-       
-//        var matches = updateProfiles().filter({ $0.matches(bundleID) })
-//        if !acceptWildcardMatches {
-//            matches = matches.filter({ !$0.isWildcard })
-//        }
-//        return matches
+        
+        //        var matches = updateProfiles().filter({ $0.matches(bundleID) })
+        //        if !acceptWildcardMatches {
+        //            matches = matches.filter({ !$0.isWildcard })
+        //        }
+        //        return matches
         [ProvisioningProfile]()
     }
+    
+    /**
+     Returns the `Response` if it has the specified `statusCode`.
+     
+     - parameters:
+     - statusCode: The acceptable status code.
+     - throws: `MoyaError.statusCode` when others are encountered.
+     */
+    func filter(statusCode: Int) throws -> ProvisioningProfile? {
+        //        return try filter(statusCodes: statusCode...statusCode)
+        return nil
+    }
+    
     
     // UNDO:
     //有效的未过期mobileProvision[] collection成 -> 名字数组
@@ -507,11 +305,140 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
     func developerCertificates(in: [String:String]) -> [String] { return [""] }
     
     
+    
+    //
+    //    public static func getUUID(from file: File) throws -> String {
+    //           let profile = try parseProfile(from: file)
+    //           return profile.UUID
+    //       }
+    //
+    //       public static func getNameUUID(from file: File) throws -> String {
+    //           let profile = try parseProfile(from: file)
+    //           return "\(profile.UUID)  \(profile.name)"
+    //       }
+    //
+    //       public static func getFileNameUUID(from file: File) throws -> String {
+    //           let profile = try parseProfile(from: file)
+    //           return "\(profile.UUID)  \(file.name)"
+    //       }
+    //
+    //       public static func getLimitedInfo(from file: File, colorize: Bool = false) throws -> [OutputGroup] {
+    //           let groups = try getInfo(from: file, colorize: colorize, translationFile: nil)
+    //           return Array(groups.prefix(3))
+    //       }
+    //
+    //       public static func getAllInfo(from file: File, colorize: Bool = false, translateWith translationFile: File? = nil) throws -> [OutputGroup] {
+    //           return try getInfo(from: file, colorize: colorize, translationFile: translationFile)
+    //       }
+    //
+    //       private static func getInfo(from file: File, colorize: Bool, translationFile: File?) throws -> [OutputGroup] {
+    //           var groups: [OutputGroup] = []
+    //           let profile = try parseProfile(from: file)
+    //
+    //           groups.append(try getProfileInfo(from: profile, colorize: colorize))
+    //           groups.append(try getEntitlements(from: profile, colorize: colorize))
+    //           groups.append(try getCertificates(from: profile, colorize: colorize))
+    //           groups.append(try getProvisionedDevices(from: profile, colorize: colorize, translationFile: translationFile))
+    //
+    //           let outputGroups = OutputGroups(groups)
+    //           return outputGroups.groups
+    //       }
+    //
+    //       public static func getProfileInfo(from file: File, colorize: Bool = false) throws -> [OutputGroup] {
+    //           var fileInfo = [String]()
+    //           fileInfo.append("File Name: \(file.name)")
+    //           let fileInfoGroup = OutputGroup(lines: fileInfo, header: "File Info", separator: ":")
+    //
+    //           let profile = try parseProfile(from: file)
+    //           let profileInfoGroup = try getProfileInfo(from: profile, colorize: colorize)
+    //
+    //           return [fileInfoGroup, profileInfoGroup]
+    //       }
+    //
+    //       private static func parseProfile(from file: File) throws -> ProvisioningProfile {
+    //           let profileURL  = file.url
+    //           let data        = try Data(contentsOf: profileURL)
+    //           let profile     = try ProvisioningProfile.parse(from: data)
+    //           return profile!
+    //       }
+    //
+    //       private static func getProfileInfo(from profile: ProvisioningProfile, colorize: Bool = false) throws -> OutputGroup {
+    //           var info: [String] = []
+    //           info.append("Profile Name: \(profile.name)")
+    //           info.append("Profile UUID: \(profile.UUID)")
+    //           info.append("App ID Name: \(profile.appIDName)")
+    //           info.append("Team Name: \(profile.teamName)")
+    //           info.append("Profile Expiry: \(formatDate(profile.expirationDate, colorizeIfExpired: colorize))")
+    //           return OutputGroup(lines: info, header: "Profile Info", separator: ":")
+    //       }
+    //
+    //       private static func getEntitlements(from profile: ProvisioningProfile, colorize: Bool = false) throws -> OutputGroup {
+    //           let entitlements = Entitlements(profile.entitlements)
+    //           let keys = ["application-identifier", "get-task-allow", "com.apple.developer.nfc.readersession.formats",
+    //                       "aps-environment", ]
+    //           let filtered = entitlements.filterDisplayableEntitlements(with: keys)
+    //           let info = filtered.map { "\($0.key): \($0.value)" }
+    //           return OutputGroup(lines: info, header: "Entitlements", separator: ":")
+    //       }
+    //
+    //       private static func getCertificates(from profile: ProvisioningProfile, colorize: Bool = false) throws -> OutputGroup {
+    //           var certificateInfo: [String] = []
+    //           for (n, certificate) in profile.developerCertificates.enumerated() {
+    //               certificateInfo.append("Certificate #: \(n+1)")
+    //               certificateInfo.append("Common Name: \(certificate.certificate!.commonName!)")
+    //               certificateInfo.append("Team Identifier: \(certificate.certificate!.orgUnit)")
+    //               certificateInfo.append("Serial Number: \(certificate.certificate!.serialNumber)")
+    //               certificateInfo.append("SHA-1: \(certificate.certificate!.fingerprints["SHA-1"]!)")
+    //               certificateInfo.append("Expiry: \(formatDate(certificate.certificate!.notValidAfter, colorizeIfExpired: colorize))")
+    //           }
+    //           return OutputGroup(lines: certificateInfo, header: "Developer Certificates", separator: ":")
+    //       }
+    //
+    //       private static func getProvisionedDevices(from profile: ProvisioningProfile, colorize: Bool, translationFile: File?) throws -> OutputGroup {
+    //           var provisionedDevices: [String] = []
+    //           var printDevices: [String] = []
+    //           if let file = translationFile {
+    //               provisionedDevices = try profile.getTranslatedDevices(using: file)
+    //           } else {
+    //               if let devices = profile.provisionedDevices { provisionedDevices = devices }
+    //           }
+    //
+    //           let count = provisionedDevices.count
+    //           for (n, device) in provisionedDevices.enumerated() {
+    //               printDevices.append("Device \(n+1) of \(count): \(device)")
+    //           }
+    //
+    //           return OutputGroup(lines: printDevices, header: "Provisioned Devices", separator: ":")
+    //       }
+    //
+    //       private static func formatDate(_ date: Date, colorizeIfExpired: Bool) -> String {
+    //           let dateFormatter = DateFormatter()
+    //           dateFormatter.dateFormat = "MMM dd,yyyy"
+    //           let dateString = dateFormatter.string(from: date)
+    //
+    //           let now = Date()
+    //           if colorizeIfExpired && date <= now { return "\(dateString, color: .red)" }
+    //           else { return dateString }
+    //       }
+    //
+    
+    
+    
+    
+    
     public var debugDescription: String = ""
     
     public static func == (lhs: MobileProvisionProcessor, rhs: MobileProvisionProcessor) -> Bool {
         return true
     }
+    
+    
+    
+    enum ParserError: Error {
+        case decoderCreationFailed
+        case dataCreationFailed
+    }
+    
     
     private func parse(url: URL) -> ProvisioningProfile? {
         var profile: ProvisioningProfile? = nil
