@@ -173,14 +173,7 @@ class CodeSigner: NSObject {
             
             //MARK: Bundle variables setup
             let appFilePath = payloadDirectory.appendPathComponent(file)
-            let infoPlistPath = appFilePath.appendPathComponent("Info.plist")
 
-            let plistProcessor = PropertyListProcessor(with: infoPlistPath)
-            
-            //MARK: Delete CFBundleResourceSpecification from Info.plist
-            plistProcessor.delete(key: RSCFBundleResourceSpecificationKey)
-            
-            
             let entitlementsPlist = tempFolder.appendPathComponent("entitlements.plist")
             do {
                 try provisioningFile?.writeEntitlementsPlist(to: entitlementsPlist)
@@ -189,12 +182,27 @@ class CodeSigner: NSObject {
             }
 
             
-            //MARK: Make sure that the executable is well... executable.
-            if let bundleExecutable = plistProcessor.getValue(for: RSCFBundleExecutableKey) {
-                _ = Process().execute(chmodPath, workingDirectory: nil, arguments: ["755", appFilePath.appendPathComponent(bundleExecutable)])
-            }
+            let infoPlistPath = appFilePath.appendPathComponent("Info.plist")
+            let plistProcessor = PropertyListProcessor(with: infoPlistPath)
+            
+            plistProcessor.delete(key: "CFBundleResourceSpecification")
+            
           
-            updatePlist(dict: [:])
+            // Make sure that the executable is well executable.
+            let bundleExecutable = plistProcessor.content.bundleExecutable
+            _ = Process().execute(chmodPath, workingDirectory: nil, arguments: ["755", appFilePath.appendPathComponent(bundleExecutable)])
+
+//            updatePlist(dict: [:])
+//            do {
+//                var plist = plistProcessor.content
+//                plist.bundleIdentifier = "com.han.132"
+//                try plist.write(to: infoPlistPath)
+//            } catch {
+//
+//            }
+            
+            
+            
             
             //MARK: Codesigning - App
             let signableExts = ["dylib","so","0","vis","pvr","framework","appex","app"]

@@ -138,41 +138,41 @@ public struct ProvisioningProfile: Equatable, Codable {
         }
     }
     
-    public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        appIdName = try values.decode(String.self, forKey: .appIdName)
-        applicationIdentifierPrefixs = try values.decode([String].self, forKey: .applicationIdentifierPrefixs)
-        creationDate = try values.decode(Date.self, forKey: .creationDate)
-        platforms = try values.decode([String].self, forKey: .platforms)
-        developerCertificates = try values.decode([BaseCertificate].self, forKey: .developerCertificates)
-        entitlements = try values.decode([String: PropertyListDictionaryValue].self, forKey: .entitlements)
-        expirationDate = try values.decode(Date.self, forKey: .expirationDate)
-        name = try values.decode(String.self, forKey: .name)
-        provisionedDevices = try values.decode([String].self, forKey: .provisionedDevices)
-        teamIdentifiers = try values.decode([String].self, forKey: .teamIdentifiers)
-        teamName = try values.decode(String.self, forKey: .teamName)
-        timeToLive = try values.decode(Int.self, forKey: .timeToLive)
-        uuid = try values.decode(String.self, forKey: .uuid)
-        version = try values.decode(Int.self, forKey: .version)
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(appIdName, forKey: .appIdName)
-        try container.encode(applicationIdentifierPrefixs, forKey: .applicationIdentifierPrefixs)
-        try container.encode(creationDate, forKey: .creationDate)
-        try container.encode(platforms, forKey: .platforms)
-        try container.encode(developerCertificates, forKey: .developerCertificates)
-        try container.encode(entitlements, forKey: .entitlements)
-        try container.encode(expirationDate, forKey: .expirationDate)
-        try container.encode(name, forKey: .name)
-        try container.encode(provisionedDevices, forKey: .provisionedDevices)
-        try container.encode(teamIdentifiers, forKey: .teamIdentifiers)
-        try container.encode(teamName, forKey: .teamName)
-        try container.encode(timeToLive, forKey: .timeToLive)
-        try container.encode(uuid, forKey: .uuid)
-        try container.encode(version, forKey: .version)
-    }
+//    public init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        appIdName = try values.decode(String.self, forKey: .appIdName)
+//        applicationIdentifierPrefixs = try values.decode([String].self, forKey: .applicationIdentifierPrefixs)
+//        creationDate = try values.decode(Date.self, forKey: .creationDate)
+//        platforms = try values.decode([String].self, forKey: .platforms)
+//        developerCertificates = try values.decode([BaseCertificate].self, forKey: .developerCertificates)
+//        entitlements = try values.decode([String: PropertyListDictionaryValue].self, forKey: .entitlements)
+//        expirationDate = try values.decode(Date.self, forKey: .expirationDate)
+//        name = try values.decode(String.self, forKey: .name)
+//        provisionedDevices = try values.decode([String].self, forKey: .provisionedDevices)
+//        teamIdentifiers = try values.decode([String].self, forKey: .teamIdentifiers)
+//        teamName = try values.decode(String.self, forKey: .teamName)
+//        timeToLive = try values.decode(Int.self, forKey: .timeToLive)
+//        uuid = try values.decode(String.self, forKey: .uuid)
+//        version = try values.decode(Int.self, forKey: .version)
+//    }
+//    
+//    public func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(appIdName, forKey: .appIdName)
+//        try container.encode(applicationIdentifierPrefixs, forKey: .applicationIdentifierPrefixs)
+//        try container.encode(creationDate, forKey: .creationDate)
+//        try container.encode(platforms, forKey: .platforms)
+//        try container.encode(developerCertificates, forKey: .developerCertificates)
+//        try container.encode(entitlements, forKey: .entitlements)
+//        try container.encode(expirationDate, forKey: .expirationDate)
+//        try container.encode(name, forKey: .name)
+//        try container.encode(provisionedDevices, forKey: .provisionedDevices)
+//        try container.encode(teamIdentifiers, forKey: .teamIdentifiers)
+//        try container.encode(teamName, forKey: .teamName)
+//        try container.encode(timeToLive, forKey: .timeToLive)
+//        try container.encode(uuid, forKey: .uuid)
+//        try container.encode(version, forKey: .version)
+//    }
     
     
     public static func == (lhs: ProvisioningProfile, rhs: ProvisioningProfile) -> Bool {

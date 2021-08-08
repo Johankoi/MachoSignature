@@ -35,6 +35,7 @@ extension Process {
         return AppSignerTaskOutput(status: self.terminationStatus, output: output!)
     }
     
+    
     func execute(_ launchPath: String, workingDirectory: String?, arguments: [String]?) -> AppSignerTaskOutput {
         self.launchPath = launchPath
         if arguments != nil {

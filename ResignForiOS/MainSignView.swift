@@ -10,13 +10,13 @@
 import Cocoa
 
 public extension NSPasteboard.PasteboardType {
-    public static var kUrl: NSPasteboard.PasteboardType {
+    static var kUrl: NSPasteboard.PasteboardType {
         return self.init(kUTTypeURL as String)
     }
-    public static var kFilenames: NSPasteboard.PasteboardType {
+    static var kFilenames: NSPasteboard.PasteboardType {
         return self.init("NSFilenamesPboardType")
     }
-    public static var kFileUrl: NSPasteboard.PasteboardType {
+    static var kFileUrl: NSPasteboard.PasteboardType {
         return self.init(kUTTypeFileURL as String)
     }
 }

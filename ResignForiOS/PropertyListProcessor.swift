@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public enum PropertyListDictionaryValue: Hashable, Codable, Equatable {
     
     case string(String)
@@ -17,7 +16,6 @@ public enum PropertyListDictionaryValue: Hashable, Codable, Equatable {
     case unknown
     
     public init(from decoder: Decoder) throws {
-        
         let container = try decoder.singleValueContainer()
         
         if let string = try? container.decode(String.self) {
@@ -32,7 +30,6 @@ public enum PropertyListDictionaryValue: Hashable, Codable, Equatable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        
         var container = encoder.singleValueContainer()
         
         switch self {
@@ -53,89 +50,68 @@ public enum PropertyListDictionaryValue: Hashable, Codable, Equatable {
 
 
 public struct InfoPlist: Codable {
+        
     private enum CodingKeys: String, CodingKey {
-        case bundleName              = "CFBundleName"
-        case bundleVersionShort      = "CFBundleShortVersionString"
-        case bundleVersion           = "CFBundleVersion"
-        case bundleIdentifier        = "CFBundleIdentifier"
-        case minOSVersion            = "MinimumOSVersion"
-        case xcodeVersion            = "DTXcode"
-        case xcodeBuild              = "DTXcodeBuild"
-        case sdkName                 = "DTSDKName"
-        case buildSDK                = "DTSDKBuild"
-        case buildMachineOSBuild     = "BuildMachineOSBuild"
-        case buildType               = "method"
-        case platformVersion         = "DTPlatformVersion"
-        case supportedPlatforms      = "CFBundleSupportedPlatforms"
+        case bundleName                   = "CFBundleName"
+        case bundleVersionShort           = "CFBundleShortVersionString"
+        case bundleVersion                = "CFBundleVersion"
+        case bundleIdentifier             = "CFBundleIdentifier"
+        case minOSVersion                 = "MinimumOSVersion"
+        case xcodeVersion                 = "DTXcode"
+        case xcodeBuild                   = "DTXcodeBuild"
+        case sdkName                      = "DTSDKName"
+        case buildSDK                     = "DTSDKBuild"
+        case buildMachineOSBuild          = "BuildMachineOSBuild"
+        case platformVersion              = "DTPlatformVersion"
+        case supportedPlatforms           = "CFBundleSupportedPlatforms"
+        case bundleExecutable             = "CFBundleExecutable"
+        case bundleResourceSpecification  = "CFBundleResourceSpecification"
+        case companionAppBundleIdentifier = "WKCompanionAppBundleIdentifier"
     }
 
-    public var bundleName:           String
-    public var bundleVersionShort:   String
-    public var bundleVersion:        String
-    public var bundleIdentifier:     String
-    public var minOSVersion:         String
-    public var xcodeVersion:         String
-    public var xcodeBuild:           String
-    public var sdkName:              String
-    public var buildSDK:             String
-    public var buildMachineOSBuild:  String
-    // public var buildType:            String
-    public var platformVersion:      String
-    public var supportedPlatforms:   [String]
-
-    @DecodableDefault.EmptyString  var buildType: String
-
-    public func getBuildType() -> String {
-        return buildType
+    public var bundleName:                     String
+    public var bundleVersionShort:             String
+    public var bundleVersion:                  String
+    public var bundleIdentifier:               String
+    public var minOSVersion:                   String
+    public var xcodeVersion:                   String
+    public var xcodeBuild:                     String
+    public var sdkName:                        String
+    public var buildSDK:                       String
+    public var buildMachineOSBuild:            String
+    public var platformVersion:                String
+    public var supportedPlatforms:             [String]
+    public var bundleExecutable:               String
+    public var bundleResourceSpecification:    String
+    public var companionAppBundleIdentifier:   String
+    
+    func write(to path: String) throws {
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .xml
+        let data = try encoder.encode(self)
+        try! data.write(to: URL(fileURLWithPath: path))
     }
 }
 
-public extension InfoPlist {
-//    static func parse(from file: File) throws -> InfoPlist {
-//        let data = try! Data(contentsOf: file.url)
-//        let decoder = PropertyListDecoder()
-//        return try! decoder.decode(InfoPlist.self, from: data)
-//    }
-}
 
-
-
-
-
-public let RSCFBundleDisplayNameKey             = "CFBundleDisplayName"
-public let RSCFBundleIdentifierKey              = "CFBundleIdentifier"
-public let RSCFBundleVersionNameKey             = "CFBundleVersion"
-public let RSCFBundleShortBundleVersionKey      = "CFBundleShortBundleVersion"
-public let RSCFBundleExecutableKey              = "CFBundleExecutable"
-public let RSCFBundleResourceSpecificationKey   = "CFBundleResourceSpecification"
-public let RSWKCompanionAppBundleIdentifierKey  = "WKCompanionAppBundleIdentifier"
- 
-class PropertyListProcessor: NSObject {
+public final class PropertyListProcessor {
     
-    var plistPath: String
-    var dictContent: NSMutableDictionary
-
-    init(with plistPath: String) {
-        self.plistPath = plistPath
-        dictContent = NSMutableDictionary(contentsOfFile: plistPath) ?? NSMutableDictionary()
-    }
+    var content: InfoPlist
     
-    func update(with dict: Dictionary<String, String>) {
-        dictContent.addEntries(from: dict);
-        dictContent.write(toFile: plistPath, atomically: true);
+    private var plistPath: String
+    private var dictContent: NSMutableDictionary
+    
+    init(with path: String) {
+        dictContent = NSMutableDictionary(contentsOfFile: path) ?? NSMutableDictionary()
+        plistPath = path
+
+        let data = try! Data(contentsOf: URL(fileURLWithPath: path))
+        let decoder = PropertyListDecoder()
+        self.content = try! decoder.decode(InfoPlist.self, from: data)
     }
     
     func delete(key: String) {
         dictContent.removeObject(forKey: key);
         dictContent.write(toFile: plistPath, atomically: true);
     }
-    
-    func getValue(for key: String) -> String? {
-        dictContent.object(forKey: key) as? String
-    }
-    
-    func exsistValue(for key: String) -> Bool {
-        return getValue(for: key) != nil
-    }
-
 }

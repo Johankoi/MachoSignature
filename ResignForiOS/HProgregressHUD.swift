@@ -7,14 +7,14 @@ fileprivate let HDefaultDetailsLabelFontSize: CGFloat = 12.0;
 
 open class HProgregressHUD: NSView {
     
-    open static func showHUDAddedTo(view: NSView, animated: Bool) -> HProgregressHUD {
+    public static func showHUDAddedTo(view: NSView, animated: Bool) -> HProgregressHUD {
         let hud = HProgregressHUD(with: view)
         view.addSubview(hud)
         hud.showAnimated(animated)
         return hud
     }
     
-    open static func hideHUDFor(view: NSView, animated: Bool) -> Bool {
+    public static func hideHUDFor(view: NSView, animated: Bool) -> Bool {
         if let hud = HUDFor(view: view) {
             hud.hideAnimated(animated)
             return true
@@ -23,7 +23,7 @@ open class HProgregressHUD: NSView {
         }
     }
     
-    open static func HUDFor(view: NSView) -> HProgregressHUD? {
+    public static func HUDFor(view: NSView) -> HProgregressHUD? {
         for view in view.subviews.reversed() {
             if view is HProgregressHUD {
                 return view as? HProgregressHUD
@@ -49,13 +49,13 @@ open class HProgregressHUD: NSView {
     
     open var contentColor: NSColor = .white
     
-    open let backgroundView = HBackgroundView()
+    public let backgroundView = HBackgroundView()
     
-    open let bezelView = NSVisualEffectView()
+    public let bezelView = NSVisualEffectView()
     
     
-    open let label: NSTextField = createLabel()
-    open let detailsLabel: NSTextField = createLabel()
+    public let label: NSTextField = createLabel()
+    public let detailsLabel: NSTextField = createLabel()
 
     
     fileprivate func commonInit() {
@@ -195,7 +195,7 @@ extension HProgregressHUD {
 
 fileprivate extension NSView {
     
-    fileprivate func makeCenter(in superView: NSView? = nil) {
+    func makeCenter(in superView: NSView? = nil) {
         var x:CGFloat = 0
         var y:CGFloat = 0
         if let sv = superView {
@@ -207,7 +207,7 @@ fileprivate extension NSView {
         }
         self.setFrameOrigin(NSMakePoint(x, y))
     }
-    fileprivate var left: CGFloat {
+    var left: CGFloat {
         get {
             return self.frame.origin.x
         }
@@ -218,7 +218,7 @@ fileprivate extension NSView {
         }
     }
     
-    fileprivate var top:CGFloat {
+    var top:CGFloat {
         get {
             return self.frame.origin.y
         }
@@ -230,7 +230,7 @@ fileprivate extension NSView {
         }
     }
     
-    fileprivate var width:CGFloat {
+    var width:CGFloat {
         get {
             return self.frame.size.width
         }
@@ -242,7 +242,7 @@ fileprivate extension NSView {
         }
     }
     
-    fileprivate var height:CGFloat {
+    var height:CGFloat {
         get {
             return self.frame.size.height
         }
@@ -254,13 +254,13 @@ fileprivate extension NSView {
         }
     }
     
-    fileprivate var right:CGFloat {
+    var right:CGFloat {
         get {
             return self.left + self.width
         }
     }
     
-    fileprivate var bottom:CGFloat {
+    var bottom:CGFloat {
         get {
             return self.top + self.height
         }
