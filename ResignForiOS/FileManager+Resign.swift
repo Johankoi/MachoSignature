@@ -12,7 +12,6 @@ import Foundation
 extension FileManager {
     
     func createTemporaryDirectory(atPath path: String) throws -> URL {
-           // let fileManager = FileManager.default
            let tempDirectoryURL   = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
            let tempExtractionURL  = tempDirectoryURL.appendingPathComponent(path)
            let tempExtractionPath = tempExtractionURL.path
@@ -22,7 +21,6 @@ extension FileManager {
            }
 
            try self.createDirectory(atPath: tempExtractionPath, withIntermediateDirectories: false, attributes: nil)
-
            return tempExtractionURL
        }
     static var temporaryDirectoryPath: String {

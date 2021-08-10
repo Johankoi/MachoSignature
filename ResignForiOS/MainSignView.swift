@@ -62,7 +62,7 @@ class MainSignView: NSView {
     
     var currSelectCert: String? = nil
     var currSelectOutput: String?
-    fileprivate var openByTerminal = false
+
     
     //MARK: Drag / Drop
     fileprivate var fileTypes: [String] = ["ipa","app","mobileprovision", "xcarchive"]
@@ -230,19 +230,24 @@ class MainSignView: NSView {
             }
         }
         
-        let signer = CodeSigner()
-        signer.delegate = self
-        if currSelectProfile == nil {
-            DispatchQueue.main.sync {
-                currSelectProfile = provisioningProfiles[self.profileSelcetPop.indexOfSelectedItem - 1]
+        do {
+            let signer = try CodeSigner()
+            signer.delegate = self
+            if currSelectProfile == nil {
+                DispatchQueue.main.sync {
+                    currSelectProfile = provisioningProfiles[self.profileSelcetPop.indexOfSelectedItem - 1]
+                }
             }
-        }
-        if currSelectCert == nil {
-            DispatchQueue.main.sync {
-                currSelectCert = self.codeSignCertsPop.selectedItem?.title
+            if currSelectCert == nil {
+                DispatchQueue.main.sync {
+                    currSelectCert = self.codeSignCertsPop.selectedItem?.title
+                }
             }
+            try signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!)
+        } catch {
+            
         }
-        signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!,openByTerminal: openByTerminal)
+        
     }
     
     

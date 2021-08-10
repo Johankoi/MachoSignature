@@ -4,7 +4,9 @@
 //
 //  Created by hanxiaoqing on 2018/1/23.
 //  Copyright © 2018年 cheng. All rights reserved.
-//
+// https://gist.github.com/andreacipriani/8c3af3719da31c8fae2cdfa8c21e17ba
+// https://github.com/JohnSundell/ShellOut
+// https://github.com/kareman/SwiftShell
 import Foundation
 struct AppSignerTaskOutput {
     var output: String

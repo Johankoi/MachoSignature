@@ -6,45 +6,27 @@
 //  Copyright © 2018年 cheng. All rights reserved.
 
 import Cocoa
+import Files
 
 
-/**
-maybeCachedCheckingQueue.async {
-    do {
-        self.maybeCached = Set()
-        try self.config.fileManager.contentsOfDirectory(atPath: self.directoryURL.path).forEach { fileName in
-            self.maybeCached?.insert(fileName)
+
+public extension Folder {
+    /// Search for subfolders by providing the expected folder extensions
+    func findSubfolders(withExtension extensions: [String]) -> [Folder] {
+        let folders        = self.subfolders.recursive
+        var matchedFolders = [Folder]()
+
+        for folder in folders {
+            for suffix in extensions {
+                if folder.name.hasSuffix(suffix) {
+                    matchedFolders.append(folder)
+                }
+            }
         }
-    } catch {
-        // Just disable the functionality if we fail to initialize it properly. This will just revert to
-        // the behavior which is to check file existence on disk directly.
-        self.maybeCached = nil
+
+        return matchedFolders
     }
 }
- 
- 
- 
- public static func certificates(in bundle: Bundle = Bundle.main) -> [SecCertificate] {
-         var certificates: [SecCertificate] = []
-
-         let paths = Set([".cer", ".CER", ".crt", ".CRT", ".der", ".DER"].map { fileExtension in
-             bundle.paths(forResourcesOfType: fileExtension, inDirectory: nil)
-         }.joined())
-
-         for path in paths {
-             if
-                 let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
-                 let certificate = SecCertificateCreateWithData(nil, certificateData)
-             {
-                 certificates.append(certificate)
-             }
-         }
-
-         return certificates
-     }
-
-**/
-
 
 class Compress: NSObject {
     
@@ -103,140 +85,104 @@ public struct Signer {
         return true
     }
 **/
-class CodeSigner: NSObject {
+class CodeSigner {
     
-    let mktempPath = "/usr/bin/mktemp"
+    var delegate: CodeSignDelegate?
+
     let chmodPath = "/bin/chmod"
     let codesignPath = "/usr/bin/codesign"
     
-    let fileManager = FileManager.default
     
-    var delegate: CodeSignDelegate?
-    
-    func makeTempFolder() -> String? {
-        let bundleID = Bundle.main.bundleIdentifier ?? "com.chengcheng.ResignForiOS"
-        let tempTask = Process().execute(mktempPath, workingDirectory: nil, arguments: ["-d", "-t", bundleID])
-        return tempTask.output
-    }
-    
-    func checkInputAndHandel(_ input: String, _ workingDir: String) -> Bool {
-        let payloadDir = workingDir.appendPathComponent("Payload/")
-        let dstAppPath = payloadDir.appendPathComponent(input.lastPathComponent)
-        
-        let inputFormat = input.pathExtension.pathExtentionFormat;
-        switch inputFormat {
-        case .IPA: do {
-            delegate?.codeSignLogRecord(logDes: "Unzip \(input) to \(workingDir)")
-            Compress.shared.unzip(input, outputPath: workingDir)
-        }
-        case .APP: do {
-            FileManager.createDirectory(atPath: payloadDir)
-            FileManager.copyItem(atPath: input, toPath: dstAppPath)
-        }
-        case .XCARCHIVE: do {
-            FileManager.createDirectory(atPath: payloadDir)
-            FileManager.copyItem(atPath: input.appendPathComponent("Products/Applications/"), toPath: dstAppPath)
-        }
-        case .unknown: return false
-        }
-        
-        return true
-    }
+    public var baseFolder   : Folder
+    public var outputFolder : Folder
+    public var inputFolder  : Folder
+    public var tempFolder   : Folder
 
-    func sign(inputFile: String, provisioningFile: ProvisioningProfile?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String, openByTerminal: Bool) {
+    init() throws {
+        let budleId = Bundle.main.bundleIdentifier ?? "resign.working.place"
+        baseFolder   = try Folder.temporary.createSubfolder(named: budleId + "/\(UUID().uuidString)")
+        tempFolder   = try baseFolder.createSubfolder(named: "temp")
+        outputFolder = try baseFolder.createSubfolder(named: "out")
+        inputFolder  = try baseFolder.createSubfolder(named: "in")
+    }
+    
+/// 错误判断： 1. 描述文件，证书信息不匹配
+    func sign(inputFile: String, provisioningFile: ProvisioningProfile?, newBundleID: String, newDisplayName: String, newVersion: String, newShortVersion: String, signingCertificate : String, outputFile: String) throws {
         
-        let tempFolder: String = makeTempFolder()!
-        
-        let workingDirectory = tempFolder.appendPathComponent("out");
-        delegate?.codeSignBegin(workingDir: workingDirectory);
-        if FileManager.createDirectory(atPath: workingDirectory) == false {
-            delegate?.codeSignError(errDes: "Create workingDir error", tempDir: tempFolder)
-            return
+        let payloadFolder = try outputFolder.createSubfolder(named: "Payload")
+
+        switch inputFile.pathExtension.pathExtentionFormat {
+        case .IPA:
+            Compress.shared.unzip(inputFile, outputPath: outputFolder.path)
+        case .APP:
+            let appFolder = try Folder(path: inputFile)
+            try appFolder.copy(to: payloadFolder)
+        case .XCARCHIVE:
+            let products = try Folder(path: inputFile + "/Products/Applications/")
+            let appFolder = products.findSubfolders(withExtension: ["app"]).last
+            try appFolder?.copy(to: payloadFolder)
+        case .unknown: break
         }
+        
+        
+        let entitlementsPath = tempFolder.path + "entitlements.plist"
+        try provisioningFile?.writeEntitlementsPlist(to: entitlementsPath)
+ 
+
+        var foldersToSign = payloadFolder.findSubfolders(withExtension: ["app", "appex", "framework"])
+        foldersToSign.append(foldersToSign.filter { $0.url.pathExtension == "app" }.last!)
+        let firstIndex = foldersToSign.firstIndex{ $0.url.pathExtension == "app" }!
+        foldersToSign.remove(at: firstIndex);
+        
+        
+        for folder in foldersToSign {
+            print(folder.path)
+            
+            if folder.containsFile(named: "Info.plist") {
+                let plistFile = try folder.file(named: "Info.plist")
+                print(plistFile.path)
+                
+                let plistProcessor = PropertyListProcessor(with: plistFile.path)
+                plistProcessor.delete(key: InfoPlist.CodingKeys.bundleResourceSpecification.rawValue)
+                //            plistProcessor.modifyBundleIdentifier(with: newBundleID)
+                //            plistProcessor.modifyBundleName(with: newDisplayName)
+                //            plistProcessor.modifyBundleVersion(with: newVersion)
+                //            plistProcessor.modifyBundleVersionShort(with: newShortVersion)
+                //
+                
+                // Make sure that the executable is well executable.
+                let bundleExecutable = plistProcessor.content.bundleExecutable
+                let executablePath = folder.path.appendPathComponent(bundleExecutable)
+                
+                _ = Process().execute(chmodPath, workingDirectory: nil, arguments: ["755", executablePath])
+                
+                print("bundleExecutable: \(bundleExecutable)")
+                
+                codeSign(executablePath, certificate: signingCertificate, entitlements: entitlementsPath)
+                
+                let verificationTask = Process().execute(codesignPath, workingDirectory: nil, arguments: ["-v", executablePath])
+                          if verificationTask.status != 0 {
+                              //MARK: alert if certificate  expired
+//                              self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
+                              DispatchQueue.main.async(execute: {
+                                  let alert = NSAlert()
+                                  alert.addButton(withTitle: "OK")
+                                  alert.messageText = "Error verifying code signature!"
+                                  alert.informativeText = verificationTask.output
+                                  alert.alertStyle = .critical
+                                  alert.runModal()
+                              })
+                              return
+                          }
       
-        let payloadDirectory = workingDirectory.appendPathComponent("Payload/")
-        
-        
-        if checkInputAndHandel(inputFile, workingDirectory) == false {
-            delegate?.codeSignError(errDes: "CheckInput: \(inputFile) fail", tempDir: tempFolder)
-            return
+            }
+
         }
-        
-        
-        // Loop through app bundles in payload directory
-        let files = try? fileManager.contentsOfDirectory(atPath: payloadDirectory)
-        var isDirectory: ObjCBool = true
-        
-        for file in files! {
-            fileManager.fileExists(atPath: payloadDirectory.appendPathComponent(file), isDirectory: &isDirectory)
-            if !isDirectory.boolValue { continue }
-            
-            //MARK: Bundle variables setup
-            let appFilePath = payloadDirectory.appendPathComponent(file)
-
-            let entitlementsPlist = tempFolder.appendPathComponent("entitlements.plist")
-            do {
-                try provisioningFile?.writeEntitlementsPlist(to: entitlementsPlist)
-            } catch {
-                delegate?.codeSignError(errDes: "writeEntitlements error", tempDir: tempFolder)
-            }
-
-            
-            let infoPlistPath = appFilePath.appendPathComponent("Info.plist")
-            let plistProcessor = PropertyListProcessor(with: infoPlistPath)
-            
-            plistProcessor.delete(key: "CFBundleResourceSpecification")
-            
-          
-            // Make sure that the executable is well executable.
-            let bundleExecutable = plistProcessor.content.bundleExecutable
-            _ = Process().execute(chmodPath, workingDirectory: nil, arguments: ["755", appFilePath.appendPathComponent(bundleExecutable)])
-
-//            updatePlist(dict: [:])
-//            do {
-//                var plist = plistProcessor.content
-//                plist.bundleIdentifier = "com.han.132"
-//                try plist.write(to: infoPlistPath)
-//            } catch {
-//
-//            }
-            
-            
-            
-            
-            //MARK: Codesigning - App
-            let signableExts = ["dylib","so","0","vis","pvr","framework","appex","app"]
-            recursiveDirectorySearch(appFilePath, extensions: signableExts) { file  in
-                codeSign(file, certificate: signingCertificate, entitlements: entitlementsPlist)
-            }
-            codeSign(appFilePath, certificate: signingCertificate, entitlements: entitlementsPlist)
-            
-            //MARK: Codesigning - Verification
-            let verificationTask = Process().execute(codesignPath, workingDirectory: nil, arguments: ["-v", appFilePath])
-            if verificationTask.status != 0 {
-                //MARK: alert if certificate  expired
-                self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
-                DispatchQueue.main.async(execute: {
-                    let alert = NSAlert()
-                    alert.addButton(withTitle: "OK")
-                    alert.messageText = "Error verifying code signature!"
-                    alert.informativeText = verificationTask.output
-                    alert.alertStyle = .critical
-                    alert.runModal()
-                })
-                return
-            }
-        }
-        
-        //MARK: Packaging
-        //Check if output already exists and delete if so
-        FileManager.removeItem(atPath: outputFile)
-        
         delegate?.codeSignLogRecord(logDes: "Packaging IPA: \(outputFile)")
         
-        Compress.shared.zip(workingDirectory, outputFile: outputFile)
+        Compress.shared.zip(outputFolder.path, outputFile: outputFile)
         
-        delegate?.codeSigneEndSuccessed(outPutPath: outputFile, tempDir: tempFolder)
+        try baseFolder.empty()
     }
     
     
@@ -244,6 +190,7 @@ class CodeSigner: NSObject {
     func codeSign(_ file: String, certificate: String, entitlements: String?) {
         delegate?.codeSignLogRecord(logDes: "codeSign:\(file)")
         var arguments = ["-vvv","-fs",certificate,"--no-strict"]
+        let fileManager = FileManager.default
         if fileManager.fileExists(atPath: entitlements!) {
             arguments.append("--entitlements=\(entitlements!)")
         }
@@ -255,62 +202,4 @@ class CodeSigner: NSObject {
             delegate?.codeSignLogRecord(logDes: "Error codesigning \(file) error:\(codesignTask.output)")
         }
     }
-    
-
-    func updatePlist(dict: Dictionary<String, Any>)  {
-        /**
-        //MARK: Change Application ID
-        if newBundleID != "" {
-            if let oldAppID = currInfoPlist.bundleIdentifier {
-                //  recursive func
-                func changeAppexID(_ appexFile: String) {
-                    let appexPlist = PlistHelper(plistPath: appexFile + "/Info.plist")
-                    if let appexBundleID = appexPlist.bundleIdentifier {
-                        let newAppexID = "\(newBundleID)\(appexBundleID.substring(from: oldAppID.endIndex))"
-                        delegate?.codeSignLogRecord(logDes: "Changing \(appexFile) bundleId to \(newAppexID)")
-                        appexPlist.bundleIdentifier = newAppexID
-                    }
-                    if let _ = appexPlist.wkAppBundleIdentifier {
-                        appexPlist.wkAppBundleIdentifier = newBundleID
-                    }
-                    recursiveDirectorySearch(appexFile, extensions: ["app"], found: changeAppexID)
-                }
-                // Search appex in current app file to changeAppID
-                recursiveDirectorySearch(appFilePath, extensions: ["appex"], found: changeAppexID)
-            }
-            currInfoPlist.bundleIdentifier = newBundleID
-        }
-        
-        //MARK: Change Display Name
-        if newDisplayName != "" {
-            currInfoPlist.bundleDisplayName = newDisplayName
-        }
-        
-        //MARK: Change Version
-        if newVersion != "" {
-            currInfoPlist.bundleVersion = newVersion
-        }
-        
-        //MARK: Change Short Version
-        if newShortVersion != "" {
-            currInfoPlist.shortBundleVersion = newShortVersion
-        }
-         **/
-    }
-    func recursiveDirectorySearch(_ path: String, extensions: [String], found: ((_ file: String) -> Void)) {
-        if let files = try? fileManager.contentsOfDirectory(atPath: path) {
-            var isDirectory: ObjCBool = true
-            for file in files {
-                let currentFile = path.appendPathComponent(file)
-                fileManager.fileExists(atPath: currentFile, isDirectory: &isDirectory)
-                if isDirectory.boolValue {
-                    recursiveDirectorySearch(currentFile, extensions: extensions, found: found)
-                }
-                if extensions.contains(file.pathExtension) {
-                    found(currentFile)
-                }
-            }
-        }
-    }
-    
 }

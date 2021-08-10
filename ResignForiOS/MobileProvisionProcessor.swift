@@ -77,34 +77,21 @@ public struct ProvisioningProfile: Equatable, Codable {
     /// The provisioning profiles version number, currently set to 1.
     public var version: Int
     
+    
     public var isExpired: Bool {
         let now = Date()
         return expirationDate <= now
     }
     
-    // UNDO:
-    public var isWildcard: Bool {
-        //   return entitlements.applicationIdentifer.hasSuffix("*")
-        return true
+    public var isAppIdentifierWildcard: Bool {
+        switch entitlements["application-identifier"] {
+        case .string(let value):
+            return value.hasSuffix("*")
+        default:
+            return false
+        }
     }
-    
-    
-    // UNDO:
-    public func matches(_ bundleID: String) -> Bool {
-        //        var appID = self.entitlements.applicationIdentifer
-        //        if let dotRange = appID?.range(of: ".") {
-        //            appID = String(describing: appID?[(appID?.startIndex)! ..< dotRange.upperBound])
-        //        }
-        //        if !isWildcard {
-        //            return bundleID == appID
-        //        }
-        //        return bundleID.hasPrefix(appID!.substring(to: appID!.index(before: appID!.endIndex))) || appID == "*"
-        return true
-    }
-    
-    // UNDO:
-    // public var buildType: String
-    
+
     
     var bundleIdentifier: String {
         switch entitlements["application-identifier"] {
@@ -137,49 +124,11 @@ public struct ProvisioningProfile: Equatable, Codable {
             return ""
         }
     }
-    
-//    public init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        appIdName = try values.decode(String.self, forKey: .appIdName)
-//        applicationIdentifierPrefixs = try values.decode([String].self, forKey: .applicationIdentifierPrefixs)
-//        creationDate = try values.decode(Date.self, forKey: .creationDate)
-//        platforms = try values.decode([String].self, forKey: .platforms)
-//        developerCertificates = try values.decode([BaseCertificate].self, forKey: .developerCertificates)
-//        entitlements = try values.decode([String: PropertyListDictionaryValue].self, forKey: .entitlements)
-//        expirationDate = try values.decode(Date.self, forKey: .expirationDate)
-//        name = try values.decode(String.self, forKey: .name)
-//        provisionedDevices = try values.decode([String].self, forKey: .provisionedDevices)
-//        teamIdentifiers = try values.decode([String].self, forKey: .teamIdentifiers)
-//        teamName = try values.decode(String.self, forKey: .teamName)
-//        timeToLive = try values.decode(Int.self, forKey: .timeToLive)
-//        uuid = try values.decode(String.self, forKey: .uuid)
-//        version = try values.decode(Int.self, forKey: .version)
-//    }
-//    
-//    public func encode(to encoder: Encoder) throws {
-//        var container = encoder.container(keyedBy: CodingKeys.self)
-//        try container.encode(appIdName, forKey: .appIdName)
-//        try container.encode(applicationIdentifierPrefixs, forKey: .applicationIdentifierPrefixs)
-//        try container.encode(creationDate, forKey: .creationDate)
-//        try container.encode(platforms, forKey: .platforms)
-//        try container.encode(developerCertificates, forKey: .developerCertificates)
-//        try container.encode(entitlements, forKey: .entitlements)
-//        try container.encode(expirationDate, forKey: .expirationDate)
-//        try container.encode(name, forKey: .name)
-//        try container.encode(provisionedDevices, forKey: .provisionedDevices)
-//        try container.encode(teamIdentifiers, forKey: .teamIdentifiers)
-//        try container.encode(teamName, forKey: .teamName)
-//        try container.encode(timeToLive, forKey: .timeToLive)
-//        try container.encode(uuid, forKey: .uuid)
-//        try container.encode(version, forKey: .version)
-//    }
-    
-    
+
     public static func == (lhs: ProvisioningProfile, rhs: ProvisioningProfile) -> Bool {
         return true
     }
-    
-    
+
 }
 
 
@@ -219,7 +168,7 @@ public extension ProvisioningProfile {
 }
 
 
-public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equatable {
+public final class MobileProvisionProcessor {
     
     private var uuidProvisons = [String: ProvisioningProfile]()
     var loading = false
@@ -252,9 +201,8 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
         //        }
     }
     
-    /**
-     Returns all the `ProvisioningProfile` in uuidProvisons.
-     */
+    
+    /// Returns all the `ProvisioningProfile` .
     func filterAll() -> [ProvisioningProfile] {
         return uuidProvisons.map{ $1 }
     }
@@ -270,6 +218,7 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
             }
         }
     }
+    
     
     // UNDO:
     func profilesMatching(_ bundleID: String, acceptWildcardMatches: Bool = false) -> [ProvisioningProfile] {
@@ -298,15 +247,10 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
     // UNDO:
     //有效的未过期mobileProvision[] collection成 -> 名字数组
     //从mobileProvision名字获取mobileProvision 进而 得到 包含的证书信息类
-    func installedMobileProvisions() -> [String] { return [""] }
     
     func mapProvisionToStringArray() -> [String] { return [""] }
     
-    func developerCertificates(in: [String:String]) -> [String] { return [""] }
-    
-    
-    
-    //
+
     //    public static func getUUID(from file: File) throws -> String {
     //           let profile = try parseProfile(from: file)
     //           return profile.UUID
@@ -422,24 +366,11 @@ public final class MobileProvisionProcessor: CustomDebugStringConvertible, Equat
     //       }
     //
     
-    
-    
-    
-    
-    public var debugDescription: String = ""
-    
-    public static func == (lhs: MobileProvisionProcessor, rhs: MobileProvisionProcessor) -> Bool {
-        return true
-    }
-    
-    
-    
     enum ParserError: Error {
         case decoderCreationFailed
         case dataCreationFailed
     }
-    
-    
+
     private func parse(url: URL) -> ProvisioningProfile? {
         var profile: ProvisioningProfile? = nil
         do {

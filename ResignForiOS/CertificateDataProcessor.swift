@@ -228,3 +228,24 @@ public struct BaseCertificate: Codable, Equatable {
         return data.base64EncodedString()
     }
 }
+
+/**
+ public static func certificates(in bundle: Bundle = Bundle.main) -> [SecCertificate] {
+         var certificates: [SecCertificate] = []
+
+         let paths = Set([".cer", ".CER", ".crt", ".CRT", ".der", ".DER"].map { fileExtension in
+             bundle.paths(forResourcesOfType: fileExtension, inDirectory: nil)
+         }.joined())
+
+         for path in paths {
+             if
+                 let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
+                 let certificate = SecCertificateCreateWithData(nil, certificateData)
+             {
+                 certificates.append(certificate)
+             }
+         }
+
+         return certificates
+     }
+**/

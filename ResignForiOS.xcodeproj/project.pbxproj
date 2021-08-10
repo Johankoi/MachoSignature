@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -33,6 +33,7 @@
 		A5F24E1926B7C6D9003B114E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A5F24E1826B7C6D9003B114E /* libz.tbd */; };
 		A5F24E2C26B7D893003B114E /* InputFileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F24E2B26B7D893003B114E /* InputFileFormat.swift */; };
 		A5F24E3226B7E132003B114E /* FileManager+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F24E3126B7E132003B114E /* FileManager+Resign.swift */; };
+		D37205BC26C23217003C8224 /* Files in Frameworks */ = {isa = PBXBuildFile; productRef = D37205BB26C23217003C8224 /* Files */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -80,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D37205BC26C23217003C8224 /* Files in Frameworks */,
 				A5F24E1926B7C6D9003B114E /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -173,6 +175,9 @@
 			dependencies = (
 			);
 			name = ResignForiOS;
+			packageProductDependencies = (
+				D37205BB26C23217003C8224 /* Files */,
+			);
 			productName = ResignForiOS;
 			productReference = 8A4B79822016D5E2007ACEA4 /* ResignForiOS.app */;
 			productType = "com.apple.product-type.application";
@@ -228,6 +233,9 @@
 				Base,
 			);
 			mainGroup = 8A4B79792016D5E2007ACEA4;
+			packageReferences = (
+				D37205BA26C23217003C8224 /* XCRemoteSwiftPackageReference "Files" */,
+			);
 			productRefGroup = 8A4B79832016D5E2007ACEA4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -404,7 +412,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -417,7 +426,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ResignForiOS/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.chengcheng.ResignForiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -434,7 +446,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ResignForiOS/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.chengcheng.ResignForiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -499,6 +514,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D37205BA26C23217003C8224 /* XCRemoteSwiftPackageReference "Files" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JohnSundell/Files";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D37205BB26C23217003C8224 /* Files */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D37205BA26C23217003C8224 /* XCRemoteSwiftPackageReference "Files" */;
+			productName = Files;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8A4B797A2016D5E2007ACEA4 /* Project object */;
 }

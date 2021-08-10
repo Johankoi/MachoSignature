@@ -50,8 +50,8 @@ public enum PropertyListDictionaryValue: Hashable, Codable, Equatable {
 
 
 public struct InfoPlist: Codable {
-        
-    private enum CodingKeys: String, CodingKey {
+    
+    enum CodingKeys: String, CodingKey {
         case bundleName                   = "CFBundleName"
         case bundleVersionShort           = "CFBundleShortVersionString"
         case bundleVersion                = "CFBundleVersion"
@@ -68,7 +68,7 @@ public struct InfoPlist: Codable {
         case bundleResourceSpecification  = "CFBundleResourceSpecification"
         case companionAppBundleIdentifier = "WKCompanionAppBundleIdentifier"
     }
-
+    
     public var bundleName:                     String
     public var bundleVersionShort:             String
     public var bundleVersion:                  String
@@ -82,8 +82,8 @@ public struct InfoPlist: Codable {
     public var platformVersion:                String
     public var supportedPlatforms:             [String]
     public var bundleExecutable:               String
-    public var bundleResourceSpecification:    String
-    public var companionAppBundleIdentifier:   String
+    public var bundleResourceSpecification:    String?
+    public var companionAppBundleIdentifier:   String?
     
     func write(to path: String) throws {
         let encoder = PropertyListEncoder()
@@ -104,14 +104,43 @@ public final class PropertyListProcessor {
     init(with path: String) {
         dictContent = NSMutableDictionary(contentsOfFile: path) ?? NSMutableDictionary()
         plistPath = path
-
+        
         let data = try! Data(contentsOf: URL(fileURLWithPath: path))
         let decoder = PropertyListDecoder()
         self.content = try! decoder.decode(InfoPlist.self, from: data)
     }
     
+    func modifyBundleName(with new: String) {
+        if !new.isEmpty {
+            content.bundleName = new
+            try! content.write(to: plistPath)
+        }
+    }
+    
+    func modifyBundleIdentifier(with new: String) {
+        if !new.isEmpty {
+            content.bundleIdentifier = new
+            try! content.write(to: plistPath)
+        }
+    }
+    
+    func modifyBundleVersionShort(with new: String) {
+        if !new.isEmpty {
+            content.bundleVersionShort = new
+            try! content.write(to: plistPath)
+        }
+    }
+    
+    func modifyBundleVersion(with new: String) {
+        if !new.isEmpty {
+            content.bundleVersion = new
+            try! content.write(to: plistPath)
+        }
+    }
     func delete(key: String) {
-        dictContent.removeObject(forKey: key);
-        dictContent.write(toFile: plistPath, atomically: true);
+        if !key.isEmpty {
+            dictContent.removeObject(forKey: key);
+            dictContent.write(toFile: plistPath, atomically: true);
+        }
     }
 }
