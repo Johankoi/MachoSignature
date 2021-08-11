@@ -4,7 +4,7 @@
 //
 //  Created by hanxiaoqing on 2018/1/23.
 //  Copyright © 2018年 cheng. All rights reserved.
-//
+// https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW1
 
 import Foundation
 
@@ -46,7 +46,15 @@ public enum PropertyListDictionaryValue: Hashable, Codable, Equatable {
     }
 }
 
-
+//// 修复微信改bundleid后安装失败问题
+//let pluginInfoPlist = NSMutableDictionary(contentsOfFile: appexPlist)
+//if let dictionaryArray = pluginInfoPlist?["NSExtension"] as? [String:AnyObject],
+//    let attributes : NSMutableDictionary = dictionaryArray["NSExtensionAttributes"] as? NSMutableDictionary,
+//    let wkAppBundleIdentifier = attributes["WKAppBundleIdentifier"] as? String{
+//    let newAppesID = wkAppBundleIdentifier.replacingOccurrences(of:oldAppID, with:newApplicationID);
+//    attributes["WKAppBundleIdentifier"] = newAppesID;
+//    pluginInfoPlist!.write(toFile: appexPlist, atomically: true);
+//}
 
 
 public struct InfoPlist: Codable {
@@ -89,15 +97,13 @@ public struct InfoPlist: Codable {
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .xml
         let data = try encoder.encode(self)
-        try! data.write(to: URL(fileURLWithPath: path))
+        try! data .write(to: URL(fileURLWithPath: path), options: .atomic)
     }
 }
 
 
 public final class PropertyListProcessor {
-    
-    var content: InfoPlist
-    
+    public var content: InfoPlist
     private var plistPath: String
     private var dictContent: NSMutableDictionary
     
@@ -113,27 +119,34 @@ public final class PropertyListProcessor {
     func modifyBundleName(with new: String) {
         if !new.isEmpty {
             content.bundleName = new
-            try! content.write(to: plistPath)
+            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleName.rawValue as NSCopying)
+            dictContent.write(toFile: plistPath, atomically: true);
         }
     }
     
     func modifyBundleIdentifier(with new: String) {
         if !new.isEmpty {
             content.bundleIdentifier = new
-            try! content.write(to: plistPath)
+            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleIdentifier.rawValue as NSCopying)
+            if let _ = content.companionAppBundleIdentifier {
+                dictContent.setObject(new, forKey: InfoPlist.CodingKeys.companionAppBundleIdentifier.rawValue as NSCopying)
+            }
+            dictContent.write(toFile: plistPath, atomically: true);
         }
     }
     
     func modifyBundleVersionShort(with new: String) {
         if !new.isEmpty {
             content.bundleVersionShort = new
-            try! content.write(to: plistPath)
+            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleVersionShort.rawValue as NSCopying)
+            dictContent.write(toFile: plistPath, atomically: true);
         }
     }
     
     func modifyBundleVersion(with new: String) {
         if !new.isEmpty {
             content.bundleVersion = new
+            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleVersion.rawValue as NSCopying)
             try! content.write(to: plistPath)
         }
     }

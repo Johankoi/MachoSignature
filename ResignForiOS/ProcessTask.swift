@@ -7,6 +7,7 @@
 // https://gist.github.com/andreacipriani/8c3af3719da31c8fae2cdfa8c21e17ba
 // https://github.com/JohnSundell/ShellOut
 // https://github.com/kareman/SwiftShell
+// https://www.objc.io/issues/14-mac/xpc/
 import Foundation
 struct AppSignerTaskOutput {
     var output: String

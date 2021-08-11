@@ -244,8 +244,8 @@ class MainSignView: NSView {
     
     @IBAction func doSign(_ sender: NSButton) {
         
-        myMenu.show(from: sender)
-        return
+//        myMenu.show(from: sender)
+//        return
         
         
         if codesigningCerts.count == 0 {
@@ -306,7 +306,7 @@ class MainSignView: NSView {
         }
         
         do {
-            let signer = try CodeSigner()
+            let signer = try CodeSignProcessor()
             signer.delegate = self
             if currSelectProfile == nil {
                 DispatchQueue.main.sync {

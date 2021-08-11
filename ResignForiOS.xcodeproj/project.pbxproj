@@ -11,7 +11,7 @@
 		8A4B79882016D5E2007ACEA4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79872016D5E2007ACEA4 /* ViewController.swift */; };
 		8A4B798A2016D5E2007ACEA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A4B79892016D5E2007ACEA4 /* Assets.xcassets */; };
 		8A4B798D2016D5E2007ACEA4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A4B798B2016D5E2007ACEA4 /* Main.storyboard */; };
-		8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */; };
+		8A4B799C2016D6F5007ACEA4 /* CodeSignProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSignProcessor.swift */; };
 		8A4B799D2016D6F5007ACEA4 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* String+Resign.swift */; };
 		8A4B799E2016D6F5007ACEA4 /* PropertyListProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */; };
 		8A4B799F2016D6F5007ACEA4 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */; };
@@ -20,7 +20,7 @@
 		8A4B79A42016DBB6007ACEA4 /* MainSignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79A32016DBB6007ACEA4 /* MainSignView.swift */; };
 		8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A66D1F7203ECAE200A6D27A /* HProgregressHUD.swift */; };
 		8AF9995F20AD85EB00661F05 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9995E20AD85EB00661F05 /* main.swift */; };
-		8AF9996320AD868F00661F05 /* CodeSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */; };
+		8AF9996320AD868F00661F05 /* CodeSignProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79962016D6F5007ACEA4 /* CodeSignProcessor.swift */; };
 		8AF9996420AD869100661F05 /* PropertyListProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */; };
 		8AF9996520AD869800661F05 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */; };
 		8AF9996720AD86A000661F05 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B79972016D6F5007ACEA4 /* String+Resign.swift */; };
@@ -57,7 +57,7 @@
 		8A4B798C2016D5E2007ACEA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8A4B798E2016D5E2007ACEA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A4B798F2016D5E2007ACEA4 /* ResignForiOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ResignForiOS.entitlements; sourceTree = "<group>"; };
-		8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeSigner.swift; sourceTree = "<group>"; };
+		8A4B79962016D6F5007ACEA4 /* CodeSignProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeSignProcessor.swift; sourceTree = "<group>"; };
 		8A4B79972016D6F5007ACEA4 /* String+Resign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Resign.swift"; sourceTree = "<group>"; };
 		8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyListProcessor.swift; sourceTree = "<group>"; };
 		8A4B79992016D6F5007ACEA4 /* ProcessTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessTask.swift; sourceTree = "<group>"; };
@@ -126,7 +126,7 @@
 				A5F24E3126B7E132003B114E /* FileManager+Resign.swift */,
 				A5F24E2B26B7D893003B114E /* InputFileFormat.swift */,
 				8A4B79A12016D71E007ACEA4 /* UpdateAppleCer.sh */,
-				8A4B79962016D6F5007ACEA4 /* CodeSigner.swift */,
+				8A4B79962016D6F5007ACEA4 /* CodeSignProcessor.swift */,
 				8A4B79982016D6F5007ACEA4 /* PropertyListProcessor.swift */,
 				A34FB89B26BEFBB500839439 /* CertificateDataProcessor.swift */,
 				A56205E126BA850B000A92E7 /* MobileProvisionProcessor.swift */,
@@ -277,7 +277,7 @@
 				A34FB89C26BEFBB500839439 /* CertificateDataProcessor.swift in Sources */,
 				8A66D1F8203ECAE200A6D27A /* HProgregressHUD.swift in Sources */,
 				8A4B799D2016D6F5007ACEA4 /* String+Resign.swift in Sources */,
-				8A4B799C2016D6F5007ACEA4 /* CodeSigner.swift in Sources */,
+				8A4B799C2016D6F5007ACEA4 /* CodeSignProcessor.swift in Sources */,
 				8A4B799E2016D6F5007ACEA4 /* PropertyListProcessor.swift in Sources */,
 				A5F24E3226B7E132003B114E /* FileManager+Resign.swift in Sources */,
 				8A4B79862016D5E2007ACEA4 /* AppDelegate.swift in Sources */,
@@ -290,7 +290,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AF9996320AD868F00661F05 /* CodeSigner.swift in Sources */,
+				8AF9996320AD868F00661F05 /* CodeSignProcessor.swift in Sources */,
 				8AF9996720AD86A000661F05 /* String+Resign.swift in Sources */,
 				8AF9996420AD869100661F05 /* PropertyListProcessor.swift in Sources */,
 				8AF9996820AD86A900661F05 /* Tools.swift in Sources */,
