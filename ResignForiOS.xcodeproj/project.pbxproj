@@ -27,6 +27,7 @@
 		8AF9996820AD86A900661F05 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B799A2016D6F5007ACEA4 /* Tools.swift */; };
 		8AF9996A20AD8E7000661F05 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9996920AD8E7000661F05 /* Core.swift */; };
 		A34FB89C26BEFBB500839439 /* CertificateDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB89B26BEFBB500839439 /* CertificateDataProcessor.swift */; };
+		A34FB8B226C2F1AE00839439 /* Menu in Frameworks */ = {isa = PBXBuildFile; productRef = A34FB8B126C2F1AE00839439 /* Menu */; };
 		A56205E226BA850B000A92E7 /* MobileProvisionProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56205E126BA850B000A92E7 /* MobileProvisionProcessor.swift */; };
 		A56205E926BBD1E1000A92E7 /* DecodableDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56205E826BBD1E1000A92E7 /* DecodableDefault.swift */; };
 		A56205FB26BBF33F000A92E7 /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56205FA26BBF33F000A92E7 /* Entitlements.swift */; };
@@ -83,6 +84,7 @@
 			files = (
 				D37205BC26C23217003C8224 /* Files in Frameworks */,
 				A5F24E1926B7C6D9003B114E /* libz.tbd in Frameworks */,
+				A34FB8B226C2F1AE00839439 /* Menu in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +179,7 @@
 			name = ResignForiOS;
 			packageProductDependencies = (
 				D37205BB26C23217003C8224 /* Files */,
+				A34FB8B126C2F1AE00839439 /* Menu */,
 			);
 			productName = ResignForiOS;
 			productReference = 8A4B79822016D5E2007ACEA4 /* ResignForiOS.app */;
@@ -235,6 +238,7 @@
 			mainGroup = 8A4B79792016D5E2007ACEA4;
 			packageReferences = (
 				D37205BA26C23217003C8224 /* XCRemoteSwiftPackageReference "Files" */,
+				A34FB8B026C2F1AE00839439 /* XCRemoteSwiftPackageReference "Menu" */,
 			);
 			productRefGroup = 8A4B79832016D5E2007ACEA4 /* Products */;
 			projectDirPath = "";
@@ -358,7 +362,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -409,7 +413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -516,6 +520,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A34FB8B026C2F1AE00839439 /* XCRemoteSwiftPackageReference "Menu" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/iSapozhnik/Menu";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.10.2;
+			};
+		};
 		D37205BA26C23217003C8224 /* XCRemoteSwiftPackageReference "Files" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JohnSundell/Files";
@@ -527,6 +539,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A34FB8B126C2F1AE00839439 /* Menu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A34FB8B026C2F1AE00839439 /* XCRemoteSwiftPackageReference "Menu" */;
+			productName = Menu;
+		};
 		D37205BB26C23217003C8224 /* Files */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D37205BA26C23217003C8224 /* XCRemoteSwiftPackageReference "Files" */;

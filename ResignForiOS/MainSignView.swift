@@ -8,7 +8,7 @@
 
 
 import Cocoa
-
+import Menu
 public extension NSPasteboard.PasteboardType {
     static var kUrl: NSPasteboard.PasteboardType {
         return self.init(kUTTypeURL as String)
@@ -20,7 +20,39 @@ public extension NSPasteboard.PasteboardType {
         return self.init(kUTTypeFileURL as String)
     }
 }
+class Config: MenuConfiguration {
+    override var cornerRadius: CGFloat {
+        return 15.0
+    }
+    
+    override var menuItemTextColor: NSColor {
+        return NSColor.black
+    }
 
+    override var backgroundColor: NSColor {
+        return NSColor.white
+    }
+
+    override var menuItemHoverBackgroundColor: NSColor {
+        return NSColor.gray
+    }
+
+    override var menuItemHoverCornerRadius: CGFloat {
+        return 10.0
+    }
+
+    override var contentEdgeInsets: NSEdgeInsets {
+        return NSEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+    }
+
+    override var menuItemHeight: CGFloat {
+        return 40.0
+    }
+
+    override var menuItemHoverEdgeInsets: NSEdgeInsets {
+        return NSEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+    }
+}
 
 class MainSignView: NSView {
 
@@ -68,6 +100,8 @@ class MainSignView: NSView {
     fileprivate var fileTypes: [String] = ["ipa","app","mobileprovision", "xcarchive"]
     fileprivate var fileTypeIsOk = false
     
+    private let myMenu = Menu(with: "Select a search engine:",configuration: Config())
+
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         if checkExtension(sender) == true {
@@ -131,6 +165,42 @@ class MainSignView: NSView {
             NSApplication.shared.terminate(self)
         }
         setStatus("check XCode Task over")
+        
+        
+        let bing = MenuItem("Bing search", action: { [weak self] in
+//                   self?.showMenuButton.title = "Bing"
+               })
+               let item = MenuItem("DuckDuckGo search", action: { [weak self] in
+//                   self?.showMenuButton.title = "DuckDuckGo"
+               })
+               let google = MenuItem("Google search", action: { [weak self] in
+//                   self?.showMenuButton.title = "Google"
+               })
+               let longText = MenuItem("Some very-very-very long text with no icon", action: { [weak self] in
+//                   self?.showMenuButton.title = "Some very long text"
+               })
+               let emojiItem = MenuItem("Emojis are here 😎🚀", action: { [weak self] in
+//                   self?.showMenuButton.title = "Emojis are here 😎🚀"
+               })
+               let exit = MenuItem("Exit", action: {
+//                   NSApplication.shared.terminate(nil)
+               })
+               let separator = MenuItem.separator()
+               let menuItems = [
+                   bing,
+                   item,
+                   google,
+                   separator,
+                   longText,
+                   emojiItem,
+                   separator,
+                   exit
+               ]
+
+               myMenu.addItems(menuItems)
+        
+        
+        
     }
     
     
@@ -173,6 +243,11 @@ class MainSignView: NSView {
     
     
     @IBAction func doSign(_ sender: NSButton) {
+        
+        myMenu.show(from: sender)
+        return
+        
+        
         if codesigningCerts.count == 0 {
             showCodesignCertsErrorAlert()
         } else {
