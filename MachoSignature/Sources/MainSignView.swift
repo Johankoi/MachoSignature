@@ -122,7 +122,7 @@ class MainSignView: NSView {
     }
     
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        let pasteboard = sender.draggingPasteboard()
+        let pasteboard = sender.draggingPasteboard
         if let board = pasteboard.propertyList(forType: .kFilenames) as? NSArray {
             if let filePath = board[0] as? String {
                 fileDropped(filePath)
@@ -133,7 +133,7 @@ class MainSignView: NSView {
     }
     
     func checkExtension(_ drag: NSDraggingInfo) -> Bool {
-        if let board = drag.draggingPasteboard().propertyList(forType: .kFilenames) as? NSArray,
+        if let board = drag.draggingPasteboard.propertyList(forType: .kFilenames) as? NSArray,
             let path = board[0] as? String {
             return fileTypes.contains(path.pathExtension.lowercased())
         }

@@ -1,0 +1,443 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A34FB8DC26C584B500839439 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8DB26C584B500839439 /* AppDelegate.swift */; };
+		A34FB8DE26C584B500839439 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8DD26C584B500839439 /* ViewController.swift */; };
+		A34FB8E026C584B700839439 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A34FB8DF26C584B700839439 /* Assets.xcassets */; };
+		A34FB8E326C584B700839439 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A34FB8E126C584B700839439 /* Main.storyboard */; };
+		A34FB90026C5851800839439 /* FileManager+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EC26C5851800839439 /* FileManager+Resign.swift */; };
+		A34FB90226C5851800839439 /* CertificateDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */; };
+		A34FB90326C5851800839439 /* InputFileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EF26C5851800839439 /* InputFileFormat.swift */; };
+		A34FB90426C5851800839439 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F026C5851800839439 /* ProcessTask.swift */; };
+		A34FB90526C5851800839439 /* PropertyListProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F126C5851800839439 /* PropertyListProcessor.swift */; };
+		A34FB90626C5851800839439 /* UpdateAppleCer.sh in Resources */ = {isa = PBXBuildFile; fileRef = A34FB8F226C5851800839439 /* UpdateAppleCer.sh */; };
+		A34FB90726C5851800839439 /* MainSignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F326C5851800839439 /* MainSignView.swift */; };
+		A34FB90826C5851800839439 /* HProgregressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F426C5851800839439 /* HProgregressHUD.swift */; };
+		A34FB90926C5851800839439 /* CodeSignProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F526C5851800839439 /* CodeSignProcessor.swift */; };
+		A34FB90A26C5851800839439 /* MobileProvisionProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F626C5851800839439 /* MobileProvisionProcessor.swift */; };
+		A34FB90E26C5851800839439 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FB26C5851800839439 /* Tools.swift */; };
+		A34FB91026C5851800839439 /* DecodableDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FD26C5851800839439 /* DecodableDefault.swift */; };
+		A34FB91126C5851800839439 /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FE26C5851800839439 /* Entitlements.swift */; };
+		A34FB91226C5851800839439 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FF26C5851800839439 /* String+Resign.swift */; };
+		A34FB91526C585EC00839439 /* Files in Frameworks */ = {isa = PBXBuildFile; productRef = A34FB91426C585EC00839439 /* Files */; };
+		A34FB91826C5860300839439 /* Menu in Frameworks */ = {isa = PBXBuildFile; productRef = A34FB91726C5860300839439 /* Menu */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A34FB8D826C584B500839439 /* MachoSignature.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MachoSignature.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A34FB8DB26C584B500839439 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A34FB8DD26C584B500839439 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A34FB8DF26C584B700839439 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A34FB8E226C584B700839439 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A34FB8E426C584B700839439 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A34FB8E526C584B700839439 /* MachoSignature.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MachoSignature.entitlements; sourceTree = "<group>"; };
+		A34FB8EC26C5851800839439 /* FileManager+Resign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Resign.swift"; sourceTree = "<group>"; };
+		A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateDataProcessor.swift; sourceTree = "<group>"; };
+		A34FB8EF26C5851800839439 /* InputFileFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputFileFormat.swift; sourceTree = "<group>"; };
+		A34FB8F026C5851800839439 /* ProcessTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessTask.swift; sourceTree = "<group>"; };
+		A34FB8F126C5851800839439 /* PropertyListProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyListProcessor.swift; sourceTree = "<group>"; };
+		A34FB8F226C5851800839439 /* UpdateAppleCer.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = UpdateAppleCer.sh; sourceTree = "<group>"; };
+		A34FB8F326C5851800839439 /* MainSignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSignView.swift; sourceTree = "<group>"; };
+		A34FB8F426C5851800839439 /* HProgregressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HProgregressHUD.swift; sourceTree = "<group>"; };
+		A34FB8F526C5851800839439 /* CodeSignProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeSignProcessor.swift; sourceTree = "<group>"; };
+		A34FB8F626C5851800839439 /* MobileProvisionProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileProvisionProcessor.swift; sourceTree = "<group>"; };
+		A34FB8FB26C5851800839439 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		A34FB8FD26C5851800839439 /* DecodableDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecodableDefault.swift; sourceTree = "<group>"; };
+		A34FB8FE26C5851800839439 /* Entitlements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entitlements.swift; sourceTree = "<group>"; };
+		A34FB8FF26C5851800839439 /* String+Resign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Resign.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A34FB8D526C584B500839439 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A34FB91526C585EC00839439 /* Files in Frameworks */,
+				A34FB91826C5860300839439 /* Menu in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A34FB8CF26C584B500839439 = {
+			isa = PBXGroup;
+			children = (
+				A34FB8DA26C584B500839439 /* MachoSignature */,
+				A34FB8D926C584B500839439 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A34FB8D926C584B500839439 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8D826C584B500839439 /* MachoSignature.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A34FB8DA26C584B500839439 /* MachoSignature */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8EB26C5851800839439 /* Sources */,
+				A34FB8DB26C584B500839439 /* AppDelegate.swift */,
+				A34FB8DD26C584B500839439 /* ViewController.swift */,
+				A34FB8DF26C584B700839439 /* Assets.xcassets */,
+				A34FB8E126C584B700839439 /* Main.storyboard */,
+				A34FB8E426C584B700839439 /* Info.plist */,
+				A34FB8E526C584B700839439 /* MachoSignature.entitlements */,
+			);
+			path = MachoSignature;
+			sourceTree = "<group>";
+		};
+		A34FB8EB26C5851800839439 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8EC26C5851800839439 /* FileManager+Resign.swift */,
+				A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */,
+				A34FB8EF26C5851800839439 /* InputFileFormat.swift */,
+				A34FB8F026C5851800839439 /* ProcessTask.swift */,
+				A34FB8F126C5851800839439 /* PropertyListProcessor.swift */,
+				A34FB8F226C5851800839439 /* UpdateAppleCer.sh */,
+				A34FB8F326C5851800839439 /* MainSignView.swift */,
+				A34FB8F426C5851800839439 /* HProgregressHUD.swift */,
+				A34FB8F526C5851800839439 /* CodeSignProcessor.swift */,
+				A34FB8F626C5851800839439 /* MobileProvisionProcessor.swift */,
+				A34FB8FB26C5851800839439 /* Tools.swift */,
+				A34FB8FD26C5851800839439 /* DecodableDefault.swift */,
+				A34FB8FE26C5851800839439 /* Entitlements.swift */,
+				A34FB8FF26C5851800839439 /* String+Resign.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A34FB8D726C584B500839439 /* MachoSignature */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A34FB8E826C584B700839439 /* Build configuration list for PBXNativeTarget "MachoSignature" */;
+			buildPhases = (
+				A34FB8D426C584B500839439 /* Sources */,
+				A34FB8D526C584B500839439 /* Frameworks */,
+				A34FB8D626C584B500839439 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MachoSignature;
+			packageProductDependencies = (
+				A34FB91426C585EC00839439 /* Files */,
+				A34FB91726C5860300839439 /* Menu */,
+			);
+			productName = MachoSignature;
+			productReference = A34FB8D826C584B500839439 /* MachoSignature.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A34FB8D026C584B500839439 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					A34FB8D726C584B500839439 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+				};
+			};
+			buildConfigurationList = A34FB8D326C584B500839439 /* Build configuration list for PBXProject "MachoSignature" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A34FB8CF26C584B500839439;
+			packageReferences = (
+				A34FB91326C585EC00839439 /* XCRemoteSwiftPackageReference "Files" */,
+				A34FB91626C5860300839439 /* XCRemoteSwiftPackageReference "Menu" */,
+			);
+			productRefGroup = A34FB8D926C584B500839439 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A34FB8D726C584B500839439 /* MachoSignature */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A34FB8D626C584B500839439 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A34FB90626C5851800839439 /* UpdateAppleCer.sh in Resources */,
+				A34FB8E026C584B700839439 /* Assets.xcassets in Resources */,
+				A34FB8E326C584B700839439 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A34FB8D426C584B500839439 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A34FB90026C5851800839439 /* FileManager+Resign.swift in Sources */,
+				A34FB91126C5851800839439 /* Entitlements.swift in Sources */,
+				A34FB90426C5851800839439 /* ProcessTask.swift in Sources */,
+				A34FB90326C5851800839439 /* InputFileFormat.swift in Sources */,
+				A34FB90226C5851800839439 /* CertificateDataProcessor.swift in Sources */,
+				A34FB90826C5851800839439 /* HProgregressHUD.swift in Sources */,
+				A34FB8DE26C584B500839439 /* ViewController.swift in Sources */,
+				A34FB90A26C5851800839439 /* MobileProvisionProcessor.swift in Sources */,
+				A34FB91026C5851800839439 /* DecodableDefault.swift in Sources */,
+				A34FB90E26C5851800839439 /* Tools.swift in Sources */,
+				A34FB90726C5851800839439 /* MainSignView.swift in Sources */,
+				A34FB8DC26C584B500839439 /* AppDelegate.swift in Sources */,
+				A34FB90526C5851800839439 /* PropertyListProcessor.swift in Sources */,
+				A34FB91226C5851800839439 /* String+Resign.swift in Sources */,
+				A34FB90926C5851800839439 /* CodeSignProcessor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A34FB8E126C584B700839439 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A34FB8E226C584B700839439 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A34FB8E626C584B700839439 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A34FB8E726C584B700839439 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		A34FB8E926C584B700839439 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MachoSignature/MachoSignature.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = MachoSignature/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.johankoi.MachoSignature;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A34FB8EA26C584B700839439 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MachoSignature/MachoSignature.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = MachoSignature/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.johankoi.MachoSignature;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A34FB8D326C584B500839439 /* Build configuration list for PBXProject "MachoSignature" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A34FB8E626C584B700839439 /* Debug */,
+				A34FB8E726C584B700839439 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A34FB8E826C584B700839439 /* Build configuration list for PBXNativeTarget "MachoSignature" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A34FB8E926C584B700839439 /* Debug */,
+				A34FB8EA26C584B700839439 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A34FB91326C585EC00839439 /* XCRemoteSwiftPackageReference "Files" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JohnSundell/Files";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.0;
+			};
+		};
+		A34FB91626C5860300839439 /* XCRemoteSwiftPackageReference "Menu" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/iSapozhnik/Menu";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A34FB91426C585EC00839439 /* Files */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A34FB91326C585EC00839439 /* XCRemoteSwiftPackageReference "Files" */;
+			productName = Files;
+		};
+		A34FB91726C5860300839439 /* Menu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A34FB91626C5860300839439 /* XCRemoteSwiftPackageReference "Menu" */;
+			productName = Menu;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A34FB8D026C584B500839439 /* Project object */;
+}

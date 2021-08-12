@@ -35,9 +35,9 @@ class ViewController: NSViewController {
              cers.map({ cer  in
                 
 //                print(cer)
-               let cinfo = try? Certificate.parse(from: cer)
+//               let cinfo = try? Certificate.parse(from: cer)
                 
-                print(cinfo)
+//                print(cinfo)
 //                let cfValDic = SecCertificateCopyValues(cer, [kSecOIDX509V1SerialNumber] as CFArray, nil)!
 //                let valDic: [String : [String: Any]] = cfValDic as! [String : [String: Any]]
 //                let kValKey = kSecPropertyKeyValue as String

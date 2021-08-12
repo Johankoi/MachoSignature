@@ -186,7 +186,7 @@ public extension Certificate {
     static func parse(from certificate: SecCertificate) throws -> Certificate {
         
         
-        var error: Unmanaged<CFError>?
+        var error: Unmanaged<CFError>? = nil
         let values = SecCertificateCopyValues(certificate, nil, &error)
         
         if let error = error {
