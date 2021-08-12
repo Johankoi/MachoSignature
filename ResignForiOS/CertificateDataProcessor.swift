@@ -178,6 +178,13 @@ public extension Certificate {
     
     static func parse(from data: Data) throws -> Certificate {
         let certificate = try getSecCertificate(data: data)
+        return try self.parse(from: certificate)
+    }
+    
+    
+    
+    static func parse(from certificate: SecCertificate) throws -> Certificate {
+        
         
         var error: Unmanaged<CFError>?
         let values = SecCertificateCopyValues(certificate, nil, &error)
@@ -193,6 +200,7 @@ public extension Certificate {
         var commonName: CFString?
         SecCertificateCopyCommonName(certificate, &commonName)
         
+        error = nil
         return try Certificate(results: valuesDict, commonName: commonName as String?)
     }
     
