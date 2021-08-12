@@ -88,6 +88,7 @@
 				A34FB8EB26C5851800839439 /* Sources */,
 				A34FB8DB26C584B500839439 /* AppDelegate.swift */,
 				A34FB8DD26C584B500839439 /* ViewController.swift */,
+				A34FB8F326C5851800839439 /* MainSignView.swift */,
 				A34FB8DF26C584B700839439 /* Assets.xcassets */,
 				A34FB8E126C584B700839439 /* Main.storyboard */,
 				A34FB8E426C584B700839439 /* Info.plist */,
@@ -99,22 +100,77 @@
 		A34FB8EB26C5851800839439 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				A34FB8EC26C5851800839439 /* FileManager+Resign.swift */,
-				A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */,
-				A34FB8EF26C5851800839439 /* InputFileFormat.swift */,
-				A34FB8F026C5851800839439 /* ProcessTask.swift */,
-				A34FB8F126C5851800839439 /* PropertyListProcessor.swift */,
-				A34FB8F226C5851800839439 /* UpdateAppleCer.sh */,
-				A34FB8F326C5851800839439 /* MainSignView.swift */,
-				A34FB8F426C5851800839439 /* HProgregressHUD.swift */,
-				A34FB8F526C5851800839439 /* CodeSignProcessor.swift */,
-				A34FB8F626C5851800839439 /* MobileProvisionProcessor.swift */,
-				A34FB8FB26C5851800839439 /* Tools.swift */,
-				A34FB8FD26C5851800839439 /* DecodableDefault.swift */,
-				A34FB8FE26C5851800839439 /* Entitlements.swift */,
-				A34FB8FF26C5851800839439 /* String+Resign.swift */,
+				A3D0774226C58C00007C1B61 /* View */,
+				A3D0774126C58BE0007C1B61 /* PropertyList */,
+				A3D0774026C58BA5007C1B61 /* Extention */,
+				A3D0773F26C58AFB007C1B61 /* MobileProvision */,
+				A3D0773E26C58ABD007C1B61 /* ShellProcess */,
+				A3D0773D26C58A93007C1B61 /* Certificate */,
+				A3D0774326C58C1B007C1B61 /* Resign */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		A3D0773D26C58A93007C1B61 /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */,
+			);
+			path = Certificate;
+			sourceTree = "<group>";
+		};
+		A3D0773E26C58ABD007C1B61 /* ShellProcess */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8F026C5851800839439 /* ProcessTask.swift */,
+			);
+			path = ShellProcess;
+			sourceTree = "<group>";
+		};
+		A3D0773F26C58AFB007C1B61 /* MobileProvision */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8F626C5851800839439 /* MobileProvisionProcessor.swift */,
+				A34FB8FD26C5851800839439 /* DecodableDefault.swift */,
+				A34FB8FE26C5851800839439 /* Entitlements.swift */,
+			);
+			path = MobileProvision;
+			sourceTree = "<group>";
+		};
+		A3D0774026C58BA5007C1B61 /* Extention */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8EC26C5851800839439 /* FileManager+Resign.swift */,
+				A34FB8FF26C5851800839439 /* String+Resign.swift */,
+			);
+			path = Extention;
+			sourceTree = "<group>";
+		};
+		A3D0774126C58BE0007C1B61 /* PropertyList */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8F126C5851800839439 /* PropertyListProcessor.swift */,
+			);
+			path = PropertyList;
+			sourceTree = "<group>";
+		};
+		A3D0774226C58C00007C1B61 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8F426C5851800839439 /* HProgregressHUD.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A3D0774326C58C1B007C1B61 /* Resign */ = {
+			isa = PBXGroup;
+			children = (
+				A34FB8EF26C5851800839439 /* InputFileFormat.swift */,
+				A34FB8F226C5851800839439 /* UpdateAppleCer.sh */,
+				A34FB8F526C5851800839439 /* CodeSignProcessor.swift */,
+				A34FB8FB26C5851800839439 /* Tools.swift */,
+			);
+			path = Resign;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

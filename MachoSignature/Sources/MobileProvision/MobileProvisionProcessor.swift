@@ -232,23 +232,16 @@ public final class MobileProvisionProcessor {
     }
     
     /**
-     Returns the `Response` if it has the specified `statusCode`.
+     Returns the `ProvisioningProfile` with `name`.
      
      - parameters:
-     - statusCode: The acceptable status code.
-     - throws: `MoyaError.statusCode` when others are encountered.
+     - name: The name of the profile you provided in the provisioning portal
+     - throws:
      */
-    func filter(statusCode: Int) throws -> ProvisioningProfile? {
+    func filter(name: String) throws -> ProvisioningProfile? {
         //        return try filter(statusCodes: statusCode...statusCode)
         return nil
     }
-    
-    
-    // UNDO:
-    //有效的未过期mobileProvision[] collection成 -> 名字数组
-    //从mobileProvision名字获取mobileProvision 进而 得到 包含的证书信息类
-    
-    func mapProvisionToStringArray() -> [String] { return [""] }
     
 
     //    public static func getUUID(from file: File) throws -> String {
