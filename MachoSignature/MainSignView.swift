@@ -217,14 +217,10 @@ class MainSignView: NSView {
     
     func populateCodesigningCerts() {
         codeSignCertsPop.removeAllItems()
-        let securityResult = Process().execute(securityPath, workingDirectory: nil, arguments: ["find-identity","-v","-p","codesigning"])
-        if securityResult.output.count < 1 {
-            showCodesignCertsErrorAlert()
-            return
-        }        
-        codesigningCerts = securityResult.output.split(separator: "\"").map{String($0)}.filter({ $0.contains("iPhone") || $0.contains("Apple Development") })
-        for cert in self.codesigningCerts {
-            codeSignCertsPop.addItem(withTitle: cert)
+        if let certs = try? CertificateDataProcessor.findIdentityForCodeSign() {
+            for cert in certs {
+                codeSignCertsPop.addItem(withTitle: cert.summary)
+            }
         }
     }
     

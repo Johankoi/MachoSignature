@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A34A97B126C82BE900B259AC /* PropertyListDictionaryValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A97B026C82BE900B259AC /* PropertyListDictionaryValue.swift */; };
 		A34FB8DC26C584B500839439 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8DB26C584B500839439 /* AppDelegate.swift */; };
 		A34FB8DE26C584B500839439 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8DD26C584B500839439 /* ViewController.swift */; };
 		A34FB8E026C584B700839439 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A34FB8DF26C584B700839439 /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A34A97B026C82BE900B259AC /* PropertyListDictionaryValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListDictionaryValue.swift; sourceTree = "<group>"; };
 		A34FB8D826C584B500839439 /* MachoSignature.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MachoSignature.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A34FB8DB26C584B500839439 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A34FB8DD26C584B500839439 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				A34FB8F126C5851800839439 /* PropertyListProcessor.swift */,
+				A34A97B026C82BE900B259AC /* PropertyListDictionaryValue.swift */,
 			);
 			path = PropertyList;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A34A97B126C82BE900B259AC /* PropertyListDictionaryValue.swift in Sources */,
 				A34FB90026C5851800839439 /* FileManager+Resign.swift in Sources */,
 				A34FB91126C5851800839439 /* Entitlements.swift in Sources */,
 				A34FB90426C5851800839439 /* ProcessTask.swift in Sources */,

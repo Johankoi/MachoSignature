@@ -9,7 +9,14 @@
 import Foundation
 import Security
 /*
-https://github.com/slarew/AppleOSS-Security/blob/e1c79a556eb82f18e2c72f2fcab7878d9ecabf5e/OSX/libsecurity_cms/regressions/cms-hashagility-test.c
+ https://github.com/slarew/AppleOSS-Security/blob/e1c79a556eb82f18e2c72f2fcab7878d9ecabf5e/OSX/libsecurity_cms/regressions/cms-hashagility-test.c
+ Github search "SecCertificateCopyValues", filter by codes:
+ 
+ https://github.com/soduto/Soduto/blob/7e3e9a978411c0c572c150493a121339b665b3df/Soduto/Core/CertificateUtils.swift
+ https://github.com/abhishekmunie/NIMessages/blob/ddee3d92551b2dcf1e0bc7ff76a192463243eba5/TLSValidation.playground/section-1.swift
+ 
+ https://github.com/KeyTalkInterraIT/macOS_client/blob/b56788018d0b2b0164ab723e9d402f6c0f54bf8c/KeyTalk%20client/Keychain/KeychainCertificate.swift
+ 
  **/
 public struct SecureCertificate: CustomStringConvertible, Equatable {
     
@@ -22,16 +29,7 @@ public struct SecureCertificate: CustomStringConvertible, Equatable {
     public let summary: String
     public let expiryDate: Date?
     
-    public init(base64EncodedData: Data) throws {
-        
-        // Create Certificate
-        
-        guard let certificate = SecCertificateCreateWithData(nil, base64EncodedData as CFData) else {
-            throw CertificateError.failedToCreate
-        }
-        
-        // Error
-        
+    public init(certificate: SecCertificate) throws {
         var error: Unmanaged<CFError>?
         
         func checkError() throws {
@@ -39,16 +37,11 @@ public struct SecureCertificate: CustomStringConvertible, Equatable {
                 throw error.takeUnretainedValue()
             }
         }
-        
-        // Summary
-        
         guard let summary = SecCertificateCopySubjectSummary(certificate) else {
             throw CertificateError.failedToObtainSummary
         }
         
         self.summary = summary as String
-        
-        // Values (Expiry)
         
         let valuesKeys = [
             kSecOIDInvalidityDate
@@ -69,10 +62,84 @@ public struct SecureCertificate: CustomStringConvertible, Equatable {
     public var description: String {
         return "\(summary), Expires: \(expiryDate?.description ?? "No Expiry Date")"
     }
-    
 }
 
 
+public class CertificateDataProcessor {
+    
+    static func findIdentityForCodeSign() throws -> [SecureCertificate]? {
+        var result: CFTypeRef?
+        let query: CFDictionary = [
+            kSecClass as String: kSecClassIdentity as String,
+            kSecMatchLimit as String: kSecMatchLimitAll as String,
+            kSecReturnAttributes as String: kSecReturnRef
+        ] as CFDictionary
+        SecItemCopyMatching(query,&result)
+        
+        let ids: [SecIdentity]? = result as? [SecIdentity]
+        guard let idsArray = ids else {
+            return nil
+        }
+        
+        var certificates = [SecureCertificate]()
+        for identity in idsArray {
+            var cerRef: SecCertificate?
+            if SecIdentityCopyCertificate(identity, &cerRef) == noErr {
+                guard let cer = cerRef else {
+                    return nil
+                }
+                let certificate = try SecureCertificate(certificate: cer)
+                certificates.append(certificate)
+            }
+        }
+        return certificates
+    }
+    
+    static func findCertificates() throws -> [SecureCertificate]? {
+        var result: CFTypeRef?
+        let query: CFDictionary = [
+            kSecClass as String: kSecClassCertificate as String,
+            kSecMatchLimit as String: kSecMatchLimitAll as String,
+            kSecReturnAttributes as String: kSecReturnRef
+        ] as CFDictionary
+        SecItemCopyMatching(query,&result)
+        
+        let cers: [SecCertificate]? = result as? [SecCertificate]
+        guard let cersArray = cers else {
+            return nil
+        }
+        var certificates = [SecureCertificate]()
+        for cer in cersArray {
+            let certificate = try SecureCertificate(certificate: cer)
+            certificates.append(certificate)
+        }
+        return certificates
+    }
+}
+
+
+
+
+// MARK: - Certificate Encoder/Decoder
+public struct CertificateWrapper: Codable, Equatable {
+    public let data: Data
+    public let certificate: Certificate?
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        data = try container.decode(Data.self)
+        certificate = try? Certificate.parse(from: data)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(data)
+    }
+    
+    public var base64Encoded: String {
+        return data.base64EncodedString()
+    }
+}
 
 public struct Certificate: Encodable, Equatable {
     
@@ -80,6 +147,12 @@ public struct Certificate: Encodable, Equatable {
         case failedToFindValue(key: String)
         case failedToCastValue(expected: String, actual: String)
         case failedToFindLabel(label: String)
+    }
+
+    enum ParseError: Error {
+        case failedToCreateCertificate
+        case failedToCreateTrust
+        case failedToExtractValues
     }
     
     public let notValidBefore: Date
@@ -98,6 +171,34 @@ public struct Certificate: Encodable, Equatable {
     public let orgName:     String?
     public let orgUnit:     String
     
+    
+    static func parse(from data: Data) throws -> Certificate {
+        let certificate = try getSecCertificate(data: data)
+        return try self.parse(from: certificate)
+    }
+    
+    static func parse(from certificate: SecCertificate) throws -> Certificate {
+        var error: Unmanaged<CFError>? = nil
+        let values = SecCertificateCopyValues(certificate, nil, &error)
+        if let e = error {
+            throw e.takeRetainedValue() as Error
+        }
+        
+        guard let valuesDict = values as? [CFString: Any] else {
+            throw ParseError.failedToExtractValues
+        }
+        var commonName: CFString?
+        SecCertificateCopyCommonName(certificate, &commonName)
+        return try Certificate(results: valuesDict, commonName: commonName as String?)
+    }
+    
+    private static func getSecCertificate(data: Data) throws -> SecCertificate {
+        guard let certificate = SecCertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
+            throw ParseError.failedToCreateCertificate
+        }
+        return certificate
+    }
+    
     public init(results: [CFString: Any], commonName: String?) throws {
         self.commonName = commonName
         
@@ -105,6 +206,7 @@ public struct Certificate: Encodable, Equatable {
         notValidAfter = try Certificate.getValue(for: kSecOIDX509V1ValidityNotAfter, from: results)
         
         let issuerName: [[CFString: Any]] = try Certificate.getValue(for: kSecOIDX509V1IssuerName, from: results)
+        
         issuerCommonName = try Certificate.getValue(for: kSecOIDCommonName, fromDict: issuerName)
         issuerCountryName = try Certificate.getValue(for: kSecOIDCountryName, fromDict: issuerName)
         issuerOrgName = try Certificate.getValue(for: kSecOIDOrganizationName, fromDict: issuerName)
@@ -126,6 +228,22 @@ public struct Certificate: Encodable, Equatable {
         countryName = try Certificate.getValue(for: kSecOIDCountryName, fromDict: subjectName)
         orgName = try? Certificate.getValue(for: kSecOIDOrganizationName, fromDict: subjectName)
         orgUnit = try Certificate.getValue(for: kSecOIDOrganizationalUnitName, fromDict: subjectName)
+    }
+    
+    
+    static func validate(certificate: SecCertificate) -> Bool {
+        let oids: [CFString] = [
+            kSecOIDX509V1ValidityNotAfter,
+            kSecOIDX509V1ValidityNotBefore,
+            kSecOIDCommonName
+        ]
+        let values = SecCertificateCopyValues(certificate, oids as CFArray?, nil) as? [String:[String:AnyObject]]
+        return relativeTime(forOID: kSecOIDX509V1ValidityNotAfter, values: values) >= 0.0
+            && relativeTime(forOID: kSecOIDX509V1ValidityNotBefore, values: values) <= 0.0
+    }
+    static func relativeTime(forOID oid: CFString, values: [String:[String:AnyObject]]?) -> Double {
+        guard let dateNumber = values?[oid as String]?[kSecPropertyKeyValue as String] as? NSNumber else { return 0.0 }
+        return dateNumber.doubleValue - CFAbsoluteTimeGetCurrent();
     }
     
     static func getValue<T>(for key: CFString, from values: [CFString: Any]) throws -> T {
@@ -168,92 +286,23 @@ public struct Certificate: Encodable, Equatable {
     }
 }
 
-
-public extension Certificate {
-    enum ParseError: Error {
-        case failedToCreateCertificate
-        case failedToCreateTrust
-        case failedToExtractValues
-    }
-    
-    static func parse(from data: Data) throws -> Certificate {
-        let certificate = try getSecCertificate(data: data)
-        return try self.parse(from: certificate)
-    }
-    
-    
-    
-    static func parse(from certificate: SecCertificate) throws -> Certificate {
-        
-        
-        var error: Unmanaged<CFError>? = nil
-        let values = SecCertificateCopyValues(certificate, nil, &error)
-        
-        if let error = error {
-            throw error.takeRetainedValue() as Error
-        }
-        
-        guard let valuesDict = values as? [CFString: Any] else {
-            throw ParseError.failedToExtractValues
-        }
-        
-        var commonName: CFString?
-        SecCertificateCopyCommonName(certificate, &commonName)
-        
-        error = nil
-        return try Certificate(results: valuesDict, commonName: commonName as String?)
-    }
-    
-    private static func getSecCertificate(data: Data) throws -> SecCertificate {
-        guard let certificate = SecCertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
-            throw ParseError.failedToCreateCertificate
-        }
-        
-        return certificate
-    }
-}
-
-// MARK: - Certificate Encoder/Decoder
-public struct BaseCertificate: Codable, Equatable {
-    public let data: Data
-    public let certificate: Certificate?
-    
-    // MARK: - Codable
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        data = try container.decode(Data.self)
-        certificate = try? Certificate.parse(from: data)
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(data)
-    }
-    
-    // MARK: - Convenience
-    public var base64Encoded: String {
-        return data.base64EncodedString()
-    }
-}
-
 /**
  public static func certificates(in bundle: Bundle = Bundle.main) -> [SecCertificate] {
-         var certificates: [SecCertificate] = []
-
-         let paths = Set([".cer", ".CER", ".crt", ".CRT", ".der", ".DER"].map { fileExtension in
-             bundle.paths(forResourcesOfType: fileExtension, inDirectory: nil)
-         }.joined())
-
-         for path in paths {
-             if
-                 let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
-                 let certificate = SecCertificateCreateWithData(nil, certificateData)
-             {
-                 certificates.append(certificate)
-             }
-         }
-
-         return certificates
-     }
-**/
+ var certificates: [SecCertificate] = []
+ 
+ let paths = Set([".cer", ".CER", ".crt", ".CRT", ".der", ".DER"].map { fileExtension in
+ bundle.paths(forResourcesOfType: fileExtension, inDirectory: nil)
+ }.joined())
+ 
+ for path in paths {
+ if
+ let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
+ let certificate = SecCertificateCreateWithData(nil, certificateData)
+ {
+ certificates.append(certificate)
+ }
+ }
+ 
+ return certificates
+ }
+ **/

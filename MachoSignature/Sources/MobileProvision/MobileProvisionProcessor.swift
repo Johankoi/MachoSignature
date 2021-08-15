@@ -48,7 +48,7 @@ public struct ProvisioningProfile: Equatable, Codable {
     public var platforms: [String]
     
     /// The array of Base64 encoded developer certificates
-    public var developerCertificates: [BaseCertificate]
+    public var developerCertificates: [CertificateWrapper]
     
     /// The key value pair of entitlements assosciated with this profile
     public var entitlements: [String: PropertyListDictionaryValue]
@@ -171,18 +171,12 @@ public extension ProvisioningProfile {
 public final class MobileProvisionProcessor {
     
     private var uuidProvisons = [String: ProvisioningProfile]()
-    var loading = false
     
     init() {
-        reload()
-    }
-    
-    func reload() {
         guard let libraryDirectoryURL = libraryDirectoryURL() else {
             return
         }
-        loading = true
-        //        DispatchQueue.global().async {
+  
         let fileManager = FileManager.default
         let profilesDirectoryURL = libraryDirectoryURL.appendingPathComponent("/MobileDevice/Provisioning Profiles")
         let enumerator = fileManager.enumerator(at: profilesDirectoryURL,
@@ -195,11 +189,8 @@ public final class MobileProvisionProcessor {
                 uuidProvisons[profile.uuid] = profile
             }
         }
-        DispatchQueue.main.async {
-            self.loading = false
-        }
-        //        }
     }
+    
     
     
     /// Returns all the `ProvisioningProfile` .
