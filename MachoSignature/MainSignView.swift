@@ -76,7 +76,7 @@ class MainSignView: NSView {
     
 
     var provisioningProfiles: [ProvisioningProfile] = MobileProvisionProcessor().filterAll()
-    var codesigningCerts: [String] = []
+    var codesigningCerts: [SecureCertificate] = []
     
     var currSelectInput: String? = nil {
         didSet {
@@ -218,6 +218,7 @@ class MainSignView: NSView {
     func populateCodesigningCerts() {
         codeSignCertsPop.removeAllItems()
         if let certs = try? CertificateDataProcessor.findIdentityForCodeSign() {
+            codesigningCerts = certs
             for cert in certs {
                 codeSignCertsPop.addItem(withTitle: cert.summary)
             }
