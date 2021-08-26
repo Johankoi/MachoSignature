@@ -16,10 +16,10 @@
 
 ### 安装方法
 1.直接下载源码使用xcode运行  
-2.从[GitHub仓库releases](https://github.com/HanProjectCoder/ResignForiOS/releases)找最新发布的dmg安装包，下载安装即可
+
 
 ### 命令行模式：
-支持使用命令行调起签名功能：(前提是要通过dmg安装到应用目录下)
+支持使用命令行调起签名功能：(打开源码工程运行macho-sign target，从Products目录拷贝出同名的可执行二进制文件)
 命令：  
 ```
 open -a ResignForiOS --args 
@@ -28,18 +28,20 @@ open -a ResignForiOS --args
 
 | 参数 | 说明 | 
 | :---------------: | ------ |
-| -i  | 要重签名的ipa/app/xcarchive文件路径  | 
-|-p |  描述文件路径  | 
-|-c |  证书名字，可以在终端使用security find-identity -v -p codesigning命令列出所有在钥匙串的证书，可以挑选出所需签名的证书名字    | 
-|-o |  输出ipa路径  | 
-
+|--filepath|要重签名的ipa/app/xcarchive文件路径| 
+|--provisionPath|描述文件路径| 
+|--certificate|证书名字，可以在终端使用security find-identity -v -p codesigning命令列出所有在钥匙串的证书，可以挑选出所需签名的证书名字| 
+|--outputPath|输出ipa路径| 
+|--bundleid|设置一个新的BundleID| 
+|--displayName|设置一个新的displayName| 
+|--bundleVersion|设置一个新的bundleVersion| 
+|--bundleShortVersion|设置一个新的bundleShortVersion| 
 
 使用举例：
 ```
-open -a ResignForiOS  --args  -i /xxx/xxx.ipa  -p /xxx/xxx.mobileprovision -c "xxx: xx."  -o /xxx/xxx.ipa 
+./macho-sign resign --filepath /xxx/xxx.ipa --provisionPath /xxx/xxx.mobileprovision --certificate "xxx: xx." --outputPath /xxx/xxx.ipa
 ```
 **注意使用此命令行模式，执行命令之前，要关闭退出之前打开的窗口。**
-
 
 ### 签名失败可能的问题以及解决方案
 #### 1.目标机有多个版本xcode，命令行环境下没有select对应的当前的xcode版本：
