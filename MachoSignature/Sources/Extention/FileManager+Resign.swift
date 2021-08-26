@@ -1,6 +1,6 @@
 //
 //  FileManager+Resign.swift
-//  ResignForiOS
+//  MachoSignature
 //
 //  Created by hxq on 2021/8/2.
 //  Copyright © 2021 cheng. All rights reserved.

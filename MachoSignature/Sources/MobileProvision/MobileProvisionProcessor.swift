@@ -1,6 +1,6 @@
 //
 //  MobileProvisionProcessor.swift
-//  ResignForiOS
+//  MachoSignature
 //
 //  Created by hxq on 2021/8/4.
 //  Copyright © 2021 cheng. All rights reserved.
@@ -137,23 +137,11 @@ public extension ProvisioningProfile {
     var simpleOutput: String {
         return "\(uuid) \(name)"
     }
-    
     var verboseOutput: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd,yyyy"
-        
         let expiry = "\(dateFormatter.string(from: expirationDate))"
-        let lines = ["Profile Name: \(name)",
-                     "UUID: \(uuid)",
-                     "App ID Name: \(appIdName)",
-                     "Team Name: \(teamName)",
-                     "Expire: \(expiry)"]
         return "\(name) (Expire: \(expiry))"
-        
-    }
-    // UNDO:
-    private func formatExpired(_ string: String) -> String {
-        return string
     }
 }
 

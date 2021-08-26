@@ -1,14 +1,15 @@
 //
 //  MainSignView.swift
-//  ResignForiOS
+//  MachoSignature
 //
 //  Created by hanxiaoqing on 2018/1/23.
 //  Copyright © 2018年 cheng. All rights reserved.
-//
+//  https://github.com/iSapozhnik/Menu
 
 
 import Cocoa
-import Menu
+import SwiftShell
+
 public extension NSPasteboard.PasteboardType {
     static var kUrl: NSPasteboard.PasteboardType {
         return self.init(kUTTypeURL as String)
@@ -20,44 +21,9 @@ public extension NSPasteboard.PasteboardType {
         return self.init(kUTTypeFileURL as String)
     }
 }
-class Config: MenuConfiguration {
-    override var cornerRadius: CGFloat {
-        return 15.0
-    }
-    
-    override var menuItemTextColor: NSColor {
-        return NSColor.black
-    }
-
-    override var backgroundColor: NSColor {
-        return NSColor.white
-    }
-
-    override var menuItemHoverBackgroundColor: NSColor {
-        return NSColor.gray
-    }
-
-    override var menuItemHoverCornerRadius: CGFloat {
-        return 10.0
-    }
-
-    override var contentEdgeInsets: NSEdgeInsets {
-        return NSEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-    }
-
-    override var menuItemHeight: CGFloat {
-        return 40.0
-    }
-
-    override var menuItemHoverEdgeInsets: NSEdgeInsets {
-        return NSEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-    }
-}
 
 class MainSignView: NSView {
 
-    let securityPath = "/usr/bin/security"
-    let defaults = UserDefaults()
     let fileManager = FileManager.default
     
     //MARK: IBOutlets
@@ -100,7 +66,6 @@ class MainSignView: NSView {
     fileprivate var fileTypes: [String] = ["ipa","app","mobileprovision", "xcarchive"]
     fileprivate var fileTypeIsOk = false
     
-    private let myMenu = Menu(with: "Select a search engine:",configuration: Config())
 
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -155,52 +120,13 @@ class MainSignView: NSView {
         
         populateProvisioningProfiles()
         populateCodesigningCerts()
-        
-        setStatus("Ready")
-        
-        let xcsCmd = "/usr/bin/xcode-select"
-        let checkCodeTask = Process().execute(xcsCmd, workingDirectory: nil, arguments: ["-p"])
-        if checkCodeTask.status != 0 {
-            _ = Process().execute(xcsCmd, workingDirectory: nil, arguments: ["--install"])
+
+        let xcodeCheck = SwiftShell.run("/usr/bin/xcode-select", "-p")
+        if xcodeCheck.exitcode != 0 {
+            // 提示安装xcode: /usr/bin/xcode-select --install
             NSApplication.shared.terminate(self)
         }
         setStatus("check XCode Task over")
-        
-        
-        let bing = MenuItem("Bing search", action: { [weak self] in
-//                   self?.showMenuButton.title = "Bing"
-               })
-               let item = MenuItem("DuckDuckGo search", action: { [weak self] in
-//                   self?.showMenuButton.title = "DuckDuckGo"
-               })
-               let google = MenuItem("Google search", action: { [weak self] in
-//                   self?.showMenuButton.title = "Google"
-               })
-               let longText = MenuItem("Some very-very-very long text with no icon", action: { [weak self] in
-//                   self?.showMenuButton.title = "Some very long text"
-               })
-               let emojiItem = MenuItem("Emojis are here 😎🚀", action: { [weak self] in
-//                   self?.showMenuButton.title = "Emojis are here 😎🚀"
-               })
-               let exit = MenuItem("Exit", action: {
-//                   NSApplication.shared.terminate(nil)
-               })
-               let separator = MenuItem.separator()
-               let menuItems = [
-                   bing,
-                   item,
-                   google,
-                   separator,
-                   longText,
-                   emojiItem,
-                   separator,
-                   exit
-               ]
-
-               myMenu.addItems(menuItems)
-        
-        
-        
     }
     
     
@@ -240,10 +166,6 @@ class MainSignView: NSView {
     
     
     @IBAction func doSign(_ sender: NSButton) {
-        
-//        myMenu.show(from: sender)
-//        return
-        
         
         if codesigningCerts.count == 0 {
             showCodesignCertsErrorAlert()
@@ -315,9 +237,29 @@ class MainSignView: NSView {
                     currSelectCert = self.codeSignCertsPop.selectedItem?.title
                 }
             }
-            try signer.sign(inputFile: inputFilePath, provisioningFile: currSelectProfile, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, signingCertificate: currSelectCert!, outputFile: currSelectOutput!)
+            try signer.sign(filePath: inputFilePath, provision: currSelectProfile, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, certificate: currSelectCert!, outputPath: currSelectOutput!)
         } catch {
             
+    //        let verificationTask = Process().execute(codesignPath, workingDirectory: nil, arguments: ["-v", file])
+    //        if verificationTask.status != 0 {
+    //            //MARK: alert if certificate  expired
+    ////              self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
+    //            DispatchQueue.main.async(execute: {
+    //                let alert = NSAlert()
+    //                alert.addButton(withTitle: "OK")
+    //                alert.messageText = "Error verifying code signature!"
+    //                alert.informativeText = verificationTask.output
+    //                alert.alertStyle = .critical
+    //                alert.runModal()
+    //            })
+    //            return
+    //        }
+    //
+    //        if codesignTask.status != 0 {
+    //            //MARK: alert if certificate expired
+    //            delegate?.codeSignLogRecord(logDes: "Error codesigning \(file) error:\(codesignTask.output)")
+    //        }
+    //
         }
         
     }

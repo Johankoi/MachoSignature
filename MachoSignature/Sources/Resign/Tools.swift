@@ -1,6 +1,6 @@
 //
 //  Tools.swift
-//  ResignForiOS
+//  MachoSignature
 //
 //  Created by hanxiaoqing on 2018/1/23.
 //  Copyright © 2018年 cheng. All rights reserved.
@@ -19,7 +19,7 @@ public func updateAppleCer() {
 class Log {
     
     static let mainBundle = Bundle.main
-    static let bundleID = mainBundle.bundleIdentifier ?? "com.chengcheng.ResignForiOS"
+    static let bundleID = mainBundle.bundleIdentifier ?? "com.chengcheng.MachoSignature"
     static let bundleName = mainBundle.infoDictionary!["CFBundleName"]
     static let bundleVersion = mainBundle.infoDictionary!["CFBundleShortVersionString"]
     static let tempDirectory = NSTemporaryDirectory()

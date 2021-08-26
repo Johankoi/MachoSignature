@@ -15,7 +15,6 @@
 		A34FB90026C5851800839439 /* FileManager+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EC26C5851800839439 /* FileManager+Resign.swift */; };
 		A34FB90226C5851800839439 /* CertificateDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */; };
 		A34FB90326C5851800839439 /* InputFileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EF26C5851800839439 /* InputFileFormat.swift */; };
-		A34FB90426C5851800839439 /* ProcessTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F026C5851800839439 /* ProcessTask.swift */; };
 		A34FB90526C5851800839439 /* PropertyListProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F126C5851800839439 /* PropertyListProcessor.swift */; };
 		A34FB90626C5851800839439 /* UpdateAppleCer.sh in Resources */ = {isa = PBXBuildFile; fileRef = A34FB8F226C5851800839439 /* UpdateAppleCer.sh */; };
 		A34FB90726C5851800839439 /* MainSignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F326C5851800839439 /* MainSignView.swift */; };
@@ -27,8 +26,23 @@
 		A34FB91126C5851800839439 /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FE26C5851800839439 /* Entitlements.swift */; };
 		A34FB91226C5851800839439 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FF26C5851800839439 /* String+Resign.swift */; };
 		A34FB91526C585EC00839439 /* Files in Frameworks */ = {isa = PBXBuildFile; productRef = A34FB91426C585EC00839439 /* Files */; };
-		A34FB91826C5860300839439 /* Menu in Frameworks */ = {isa = PBXBuildFile; productRef = A34FB91726C5860300839439 /* Menu */; };
+		D3080DDE26D3A77000FBDFA1 /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = D3080DDD26D3A77000FBDFA1 /* SwiftShell */; };
+		D3080DE626D3A7FC00FBDFA1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3080DE526D3A7FC00FBDFA1 /* main.swift */; };
+		D3080DEC26D3A80B00FBDFA1 /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = D3080DEB26D3A80B00FBDFA1 /* SwiftShell */; };
+		D32BAA5A26D79FC100CC5AE2 /* Commander in Frameworks */ = {isa = PBXBuildFile; productRef = D32BAA5926D79FC100CC5AE2 /* Commander */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D3080DE126D3A7FC00FBDFA1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A34A97B026C82BE900B259AC /* PropertyListDictionaryValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListDictionaryValue.swift; sourceTree = "<group>"; };
@@ -42,7 +56,6 @@
 		A34FB8EC26C5851800839439 /* FileManager+Resign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Resign.swift"; sourceTree = "<group>"; };
 		A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateDataProcessor.swift; sourceTree = "<group>"; };
 		A34FB8EF26C5851800839439 /* InputFileFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputFileFormat.swift; sourceTree = "<group>"; };
-		A34FB8F026C5851800839439 /* ProcessTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessTask.swift; sourceTree = "<group>"; };
 		A34FB8F126C5851800839439 /* PropertyListProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyListProcessor.swift; sourceTree = "<group>"; };
 		A34FB8F226C5851800839439 /* UpdateAppleCer.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = UpdateAppleCer.sh; sourceTree = "<group>"; };
 		A34FB8F326C5851800839439 /* MainSignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSignView.swift; sourceTree = "<group>"; };
@@ -53,6 +66,8 @@
 		A34FB8FD26C5851800839439 /* DecodableDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecodableDefault.swift; sourceTree = "<group>"; };
 		A34FB8FE26C5851800839439 /* Entitlements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entitlements.swift; sourceTree = "<group>"; };
 		A34FB8FF26C5851800839439 /* String+Resign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Resign.swift"; sourceTree = "<group>"; };
+		D3080DE326D3A7FC00FBDFA1 /* macho-sign */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "macho-sign"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3080DE526D3A7FC00FBDFA1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +76,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				A34FB91526C585EC00839439 /* Files in Frameworks */,
-				A34FB91826C5860300839439 /* Menu in Frameworks */,
+				D3080DDE26D3A77000FBDFA1 /* SwiftShell in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3080DE026D3A7FC00FBDFA1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3080DEC26D3A80B00FBDFA1 /* SwiftShell in Frameworks */,
+				D32BAA5A26D79FC100CC5AE2 /* Commander in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,7 +96,9 @@
 			isa = PBXGroup;
 			children = (
 				A34FB8DA26C584B500839439 /* MachoSignature */,
+				D3080DE426D3A7FC00FBDFA1 /* macho-sign */,
 				A34FB8D926C584B500839439 /* Products */,
+				D3080DEA26D3A80B00FBDFA1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				A34FB8D826C584B500839439 /* MachoSignature.app */,
+				D3080DE326D3A7FC00FBDFA1 /* macho-sign */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -106,7 +133,6 @@
 				A3D0774126C58BE0007C1B61 /* PropertyList */,
 				A3D0774026C58BA5007C1B61 /* Extention */,
 				A3D0773F26C58AFB007C1B61 /* MobileProvision */,
-				A3D0773E26C58ABD007C1B61 /* ShellProcess */,
 				A3D0773D26C58A93007C1B61 /* Certificate */,
 				A3D0774326C58C1B007C1B61 /* Resign */,
 			);
@@ -119,14 +145,6 @@
 				A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */,
 			);
 			path = Certificate;
-			sourceTree = "<group>";
-		};
-		A3D0773E26C58ABD007C1B61 /* ShellProcess */ = {
-			isa = PBXGroup;
-			children = (
-				A34FB8F026C5851800839439 /* ProcessTask.swift */,
-			);
-			path = ShellProcess;
 			sourceTree = "<group>";
 		};
 		A3D0773F26C58AFB007C1B61 /* MobileProvision */ = {
@@ -176,6 +194,21 @@
 			path = Resign;
 			sourceTree = "<group>";
 		};
+		D3080DE426D3A7FC00FBDFA1 /* macho-sign */ = {
+			isa = PBXGroup;
+			children = (
+				D3080DE526D3A7FC00FBDFA1 /* main.swift */,
+			);
+			path = "macho-sign";
+			sourceTree = "<group>";
+		};
+		D3080DEA26D3A80B00FBDFA1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -194,11 +227,32 @@
 			name = MachoSignature;
 			packageProductDependencies = (
 				A34FB91426C585EC00839439 /* Files */,
-				A34FB91726C5860300839439 /* Menu */,
+				D3080DDD26D3A77000FBDFA1 /* SwiftShell */,
 			);
 			productName = MachoSignature;
 			productReference = A34FB8D826C584B500839439 /* MachoSignature.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D3080DE226D3A7FC00FBDFA1 /* macho-sign */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3080DE726D3A7FC00FBDFA1 /* Build configuration list for PBXNativeTarget "macho-sign" */;
+			buildPhases = (
+				D3080DDF26D3A7FC00FBDFA1 /* Sources */,
+				D3080DE026D3A7FC00FBDFA1 /* Frameworks */,
+				D3080DE126D3A7FC00FBDFA1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "macho-sign";
+			packageProductDependencies = (
+				D3080DEB26D3A80B00FBDFA1 /* SwiftShell */,
+				D32BAA5926D79FC100CC5AE2 /* Commander */,
+			);
+			productName = "macho-sign";
+			productReference = D3080DE326D3A7FC00FBDFA1 /* macho-sign */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -210,6 +264,9 @@
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
 					A34FB8D726C584B500839439 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+					D3080DE226D3A7FC00FBDFA1 = {
 						CreatedOnToolsVersion = 12.5.1;
 					};
 				};
@@ -225,13 +282,15 @@
 			mainGroup = A34FB8CF26C584B500839439;
 			packageReferences = (
 				A34FB91326C585EC00839439 /* XCRemoteSwiftPackageReference "Files" */,
-				A34FB91626C5860300839439 /* XCRemoteSwiftPackageReference "Menu" */,
+				D3080DDC26D3A77000FBDFA1 /* XCRemoteSwiftPackageReference "SwiftShell" */,
+				D32BAA5826D79FC100CC5AE2 /* XCRemoteSwiftPackageReference "Commander" */,
 			);
 			productRefGroup = A34FB8D926C584B500839439 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				A34FB8D726C584B500839439 /* MachoSignature */,
+				D3080DE226D3A7FC00FBDFA1 /* macho-sign */,
 			);
 		};
 /* End PBXProject section */
@@ -257,7 +316,6 @@
 				A34A97B126C82BE900B259AC /* PropertyListDictionaryValue.swift in Sources */,
 				A34FB90026C5851800839439 /* FileManager+Resign.swift in Sources */,
 				A34FB91126C5851800839439 /* Entitlements.swift in Sources */,
-				A34FB90426C5851800839439 /* ProcessTask.swift in Sources */,
 				A34FB90326C5851800839439 /* InputFileFormat.swift in Sources */,
 				A34FB90226C5851800839439 /* CertificateDataProcessor.swift in Sources */,
 				A34FB90826C5851800839439 /* HProgregressHUD.swift in Sources */,
@@ -270,6 +328,14 @@
 				A34FB90526C5851800839439 /* PropertyListProcessor.swift in Sources */,
 				A34FB91226C5851800839439 /* String+Resign.swift in Sources */,
 				A34FB90926C5851800839439 /* CodeSignProcessor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3080DDF26D3A7FC00FBDFA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3080DE626D3A7FC00FBDFA1 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,6 +510,26 @@
 			};
 			name = Release;
 		};
+		D3080DE826D3A7FC00FBDFA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D3080DE926D3A7FC00FBDFA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -465,6 +551,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		D3080DE726D3A7FC00FBDFA1 /* Build configuration list for PBXNativeTarget "macho-sign" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3080DE826D3A7FC00FBDFA1 /* Debug */,
+				D3080DE926D3A7FC00FBDFA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -476,12 +571,20 @@
 				minimumVersion = 4.2.0;
 			};
 		};
-		A34FB91626C5860300839439 /* XCRemoteSwiftPackageReference "Menu" */ = {
+		D3080DDC26D3A77000FBDFA1 /* XCRemoteSwiftPackageReference "SwiftShell" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/iSapozhnik/Menu";
+			repositoryURL = "https://github.com/kareman/SwiftShell";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.10.2;
+				minimumVersion = 5.1.0;
+			};
+		};
+		D32BAA5826D79FC100CC5AE2 /* XCRemoteSwiftPackageReference "Commander" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kylef/Commander";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -492,10 +595,20 @@
 			package = A34FB91326C585EC00839439 /* XCRemoteSwiftPackageReference "Files" */;
 			productName = Files;
 		};
-		A34FB91726C5860300839439 /* Menu */ = {
+		D3080DDD26D3A77000FBDFA1 /* SwiftShell */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A34FB91626C5860300839439 /* XCRemoteSwiftPackageReference "Menu" */;
-			productName = Menu;
+			package = D3080DDC26D3A77000FBDFA1 /* XCRemoteSwiftPackageReference "SwiftShell" */;
+			productName = SwiftShell;
+		};
+		D3080DEB26D3A80B00FBDFA1 /* SwiftShell */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3080DDC26D3A77000FBDFA1 /* XCRemoteSwiftPackageReference "SwiftShell" */;
+			productName = SwiftShell;
+		};
+		D32BAA5926D79FC100CC5AE2 /* Commander */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D32BAA5826D79FC100CC5AE2 /* XCRemoteSwiftPackageReference "Commander" */;
+			productName = Commander;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

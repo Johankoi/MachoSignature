@@ -8,10 +8,6 @@
 
 import Foundation
 
-/**
- Eventually intends to be a getopt-compatible option parser.
- */
-
 public enum OptionTrigger : Equatable, CustomDebugStringConvertible, Hashable {
     case short(Character)
     case long(String)
