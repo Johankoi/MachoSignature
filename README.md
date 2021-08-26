@@ -22,11 +22,23 @@
 支持使用命令行调起签名功能：(打开源码工程运行macho-sign target，从Products目录拷贝出同名的可执行二进制文件)
 命令：  
 ```
-open -a ResignForiOS --args 
-```
-必加参数：  
+Usage:
+    $ ./macho-sign
+Commands:
+    + resign - resign a mach-o type file
+Options:
+    --filepath [default: ] - A mach-o type file path use to resign.
+    --provisionPath [default: ] - select a mobileProvision file.
+    --bundleid [default: ] - change bundle identifier in the info.plist of target ipa or other mach-o excuable file.
+    --displayName [default: ] - change bundle displayName in the info.plist of target ipa or other mach-o excuable file.
+    --bundleVersion [default: ] - change bundleVersion in the info.plist of target ipa or other mach-o excuable file.
+    --bundleShortVersion [default: ] - change bundleShortVersion in the info.plist of target ipa or other mach-o excuable file.
+    --certificate [default: ] - input name of the certificate in login keychan to resign.
+    --outputPath [default: ] - outputPath after resign.
 
-| 参数 | 说明 | 
+```
+
+| 参数 | 解释 | 
 | :---------------: | ------ |
 |--filepath|要重签名的ipa/app/xcarchive文件路径| 
 |--provisionPath|描述文件路径| 
