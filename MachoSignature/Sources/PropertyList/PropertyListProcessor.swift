@@ -78,39 +78,43 @@ public final class PropertyListProcessor {
         self.content = try! decoder.decode(InfoPlist.self, from: data)
     }
     
-    func modifyBundleName(with new: String) {
-        if !new.isEmpty {
-            content.bundleName = new
-            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleName.rawValue as NSCopying)
-            dictContent.write(toFile: plistPath, atomically: true);
+    func modifyBundleName(with new: String?) {
+        guard let newValue = new, !newValue.isEmpty else {
+            return
         }
+        content.bundleName = newValue
+        dictContent.setObject(newValue, forKey: InfoPlist.CodingKeys.bundleName.rawValue as NSCopying)
+        dictContent.write(toFile: plistPath, atomically: true);
     }
     
-    func modifyBundleIdentifier(with new: String) {
-        if !new.isEmpty {
-            content.bundleIdentifier = new
-            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleIdentifier.rawValue as NSCopying)
-            if let _ = content.companionAppBundleIdentifier {
-                dictContent.setObject(new, forKey: InfoPlist.CodingKeys.companionAppBundleIdentifier.rawValue as NSCopying)
-            }
-            dictContent.write(toFile: plistPath, atomically: true);
+    func modifyBundleIdentifier(with new: String?) {
+        guard let newValue = new, !newValue.isEmpty else {
+            return
         }
+        content.bundleIdentifier = newValue
+        dictContent.setObject(newValue, forKey: InfoPlist.CodingKeys.bundleIdentifier.rawValue as NSCopying)
+        if let _ = content.companionAppBundleIdentifier {
+            dictContent.setObject(newValue, forKey: InfoPlist.CodingKeys.companionAppBundleIdentifier.rawValue as NSCopying)
+        }
+        dictContent.write(toFile: plistPath, atomically: true);
     }
     
-    func modifyBundleVersionShort(with new: String) {
-        if !new.isEmpty {
-            content.bundleVersionShort = new
-            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleVersionShort.rawValue as NSCopying)
-            dictContent.write(toFile: plistPath, atomically: true);
+    func modifyBundleVersionShort(with new: String?) {
+        guard let newValue = new, !newValue.isEmpty else {
+            return
         }
+        content.bundleVersionShort = newValue
+        dictContent.setObject(newValue, forKey: InfoPlist.CodingKeys.bundleVersionShort.rawValue as NSCopying)
+        dictContent.write(toFile: plistPath, atomically: true);
     }
     
-    func modifyBundleVersion(with new: String) {
-        if !new.isEmpty {
-            content.bundleVersion = new
-            dictContent.setObject(new, forKey: InfoPlist.CodingKeys.bundleVersion.rawValue as NSCopying)
-            try! content.write(to: plistPath)
+    func modifyBundleVersion(with new: String?) {
+        guard let newValue = new, !newValue.isEmpty else {
+            return
         }
+        content.bundleVersion = newValue
+        dictContent.setObject(newValue, forKey: InfoPlist.CodingKeys.bundleVersion.rawValue as NSCopying)
+        try! content.write(to: plistPath)
     }
     func delete(key: String) {
         if !key.isEmpty {

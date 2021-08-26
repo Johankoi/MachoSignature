@@ -26,6 +26,16 @@
 		A34FB91126C5851800839439 /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FE26C5851800839439 /* Entitlements.swift */; };
 		A34FB91226C5851800839439 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FF26C5851800839439 /* String+Resign.swift */; };
 		A34FB91526C585EC00839439 /* Files in Frameworks */ = {isa = PBXBuildFile; productRef = A34FB91426C585EC00839439 /* Files */; };
+		A39B741826D7FE0600BDD439 /* PropertyListProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F126C5851800839439 /* PropertyListProcessor.swift */; };
+		A39B741926D7FE0900BDD439 /* PropertyListDictionaryValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A97B026C82BE900B259AC /* PropertyListDictionaryValue.swift */; };
+		A39B741A26D7FE0D00BDD439 /* FileManager+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EC26C5851800839439 /* FileManager+Resign.swift */; };
+		A39B741B26D7FE1000BDD439 /* String+Resign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FF26C5851800839439 /* String+Resign.swift */; };
+		A39B741C26D7FE1200BDD439 /* MobileProvisionProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F626C5851800839439 /* MobileProvisionProcessor.swift */; };
+		A39B741D26D7FE1800BDD439 /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8FE26C5851800839439 /* Entitlements.swift */; };
+		A39B741E26D7FE1B00BDD439 /* CertificateDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EE26C5851800839439 /* CertificateDataProcessor.swift */; };
+		A39B741F26D7FE1E00BDD439 /* InputFileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8EF26C5851800839439 /* InputFileFormat.swift */; };
+		A39B742026D7FE2600BDD439 /* CodeSignProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FB8F526C5851800839439 /* CodeSignProcessor.swift */; };
+		A39B742226D8001D00BDD439 /* Files in Frameworks */ = {isa = PBXBuildFile; productRef = A39B742126D8001D00BDD439 /* Files */; };
 		D3080DDE26D3A77000FBDFA1 /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = D3080DDD26D3A77000FBDFA1 /* SwiftShell */; };
 		D3080DE626D3A7FC00FBDFA1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3080DE526D3A7FC00FBDFA1 /* main.swift */; };
 		D3080DEC26D3A80B00FBDFA1 /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = D3080DEB26D3A80B00FBDFA1 /* SwiftShell */; };
@@ -84,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A39B742226D8001D00BDD439 /* Files in Frameworks */,
 				D3080DEC26D3A80B00FBDFA1 /* SwiftShell in Frameworks */,
 				D32BAA5A26D79FC100CC5AE2 /* Commander in Frameworks */,
 			);
@@ -249,6 +260,7 @@
 			packageProductDependencies = (
 				D3080DEB26D3A80B00FBDFA1 /* SwiftShell */,
 				D32BAA5926D79FC100CC5AE2 /* Commander */,
+				A39B742126D8001D00BDD439 /* Files */,
 			);
 			productName = "macho-sign";
 			productReference = D3080DE326D3A7FC00FBDFA1 /* macho-sign */;
@@ -335,7 +347,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A39B741C26D7FE1200BDD439 /* MobileProvisionProcessor.swift in Sources */,
+				A39B741B26D7FE1000BDD439 /* String+Resign.swift in Sources */,
 				D3080DE626D3A7FC00FBDFA1 /* main.swift in Sources */,
+				A39B741A26D7FE0D00BDD439 /* FileManager+Resign.swift in Sources */,
+				A39B741D26D7FE1800BDD439 /* Entitlements.swift in Sources */,
+				A39B741826D7FE0600BDD439 /* PropertyListProcessor.swift in Sources */,
+				A39B742026D7FE2600BDD439 /* CodeSignProcessor.swift in Sources */,
+				A39B741E26D7FE1B00BDD439 /* CertificateDataProcessor.swift in Sources */,
+				A39B741F26D7FE1E00BDD439 /* InputFileFormat.swift in Sources */,
+				A39B741926D7FE0900BDD439 /* PropertyListDictionaryValue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,6 +612,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		A34FB91426C585EC00839439 /* Files */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A34FB91326C585EC00839439 /* XCRemoteSwiftPackageReference "Files" */;
+			productName = Files;
+		};
+		A39B742126D8001D00BDD439 /* Files */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A34FB91326C585EC00839439 /* XCRemoteSwiftPackageReference "Files" */;
 			productName = Files;

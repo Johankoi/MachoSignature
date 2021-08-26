@@ -12,7 +12,10 @@ import SwiftShell
 
 public enum CodeSignProcessorError: Error {
     case inputFileNull
+    case outputPathNull
     case provisioningProfileNull
+    case certificateNull
+    case entitlementsPathNotExist
     case chmodFileFailed(file: String, stderr: String)
     case codeSignVerificationFailed(file: String, stderr: String)
     case codesignFailed(file: String, stderr: String)
@@ -22,9 +25,15 @@ extension CodeSignProcessorError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .inputFileNull:
-            return "input file is null, can not continue"
+            return "input file is null, can not continue."
+        case .outputPathNull:
+            return "output path is null, can not continue after resign."
         case .provisioningProfileNull:
-            return "provisioningProfile is null, can not continue to write entitlements plist"
+            return "provisioningProfile is null, can not continue to write entitlements plist."
+        case .certificateNull:
+            return "certificate is null, can not continue to resign."
+        case .entitlementsPathNotExist:
+            return "entitlements plist path not exist, can not continue to resign."
         case .chmodFileFailed(let file, let stderr):
             return "execute to chmod file failed: \(file), shell stderr: \(stderr)"
         case .codeSignVerificationFailed(let file, let stderr):
@@ -112,23 +121,34 @@ class CodeSignProcessor {
         outputFolder = try baseFolder.createSubfolder(named: "out")
         inputFolder  = try baseFolder.createSubfolder(named: "in")
     }
-
+    
     func sign(filePath: String?, provision: ProvisioningProfile?,
-              newBundleID: String, newDisplayName: String,
-              newVersion: String, newShortVersion: String,
-              certificate: String, outputPath: String) throws {
+              bundleID: String?, displayName: String?,
+              version: String?, shortVersion: String?,
+              certificate: String?, outputPath: String?) throws {
         
         guard let filePath = filePath, !filePath.isEmpty else {
             throw CodeSignProcessorError.inputFileNull
+        }
+        
+        guard let outputPath = outputPath, !outputPath.isEmpty else {
+            throw CodeSignProcessorError.outputPathNull
         }
         
         guard let provision = provision else {
             throw CodeSignProcessorError.provisioningProfileNull
         }
         
+        
+        guard let certificate = certificate, !certificate.isEmpty else {
+            throw CodeSignProcessorError.certificateNull
+        }
+        
+        // undo 检查provision的证书信息 与 certificate 是否对应上？？
         let payloadFolder = try outputFolder.createSubfolder(named: "Payload")
         let entitlementsPath = tempFolder.path + "entitlements.plist"
         
+
         switch filePath.pathExtension.pathExtentionFormat {
         case .IPA:
             try Compress.shared.unzip(input: filePath, output: outputFolder.path)
@@ -152,27 +172,28 @@ class CodeSignProcessor {
         var failed = false
         for folder in foldersToSign {
             if folder.containsFile(named: "Info.plist") {
-                var bundleIdToChange = newBundleID
                 let plistFile = try folder.file(named: "Info.plist")
                 let plistProcessor = PropertyListProcessor(with: plistFile.path)
                 let bundleExecutable = plistProcessor.content.bundleExecutable
                 let executablePath = folder.path.appendPathComponent(bundleExecutable)
                 
                 if folder.url.pathExtension == "app"  {
-                    plistProcessor.modifyBundleIdentifier(with: bundleIdToChange)
-                    plistProcessor.modifyBundleName(with: newDisplayName)
-                    plistProcessor.modifyBundleVersion(with: newVersion)
-                    plistProcessor.modifyBundleVersionShort(with: newShortVersion)
+                    plistProcessor.modifyBundleIdentifier(with: bundleID)
+                    plistProcessor.modifyBundleName(with: displayName)
+                    plistProcessor.modifyBundleVersion(with: version)
+                    plistProcessor.modifyBundleVersionShort(with: shortVersion)
                     plistProcessor.delete(key: InfoPlist.CodingKeys.bundleResourceSpecification.rawValue)
                     
                 } else if folder.url.pathExtension == "appex"  {
                     let oldBundleId = plistProcessor.content.bundleIdentifier;
                     let appexName = oldBundleId.components(separatedBy: ".").last!
-                    bundleIdToChange = "\(newBundleID).\(appexName)"
-                    plistProcessor.modifyBundleIdentifier(with: bundleIdToChange)
+                    if var bundleIdToChange = bundleID {
+                        bundleIdToChange = "\(bundleIdToChange).\(appexName)"
+                        plistProcessor.modifyBundleIdentifier(with: bundleIdToChange)
+                    }
                 }
                 
-                let result = codeSign(executablePath, certificate: certificate, entitlements: entitlementsPath)
+                let result = codeSignInner(executablePath, certificate, entitlementsPath)
                 if case .failure(let err) = result {
                     print(err.localizedDescription)
                     failed = true
@@ -185,22 +206,25 @@ class CodeSignProcessor {
             try baseFolder.empty()
         }
     }
+    
+    
+    private func codeSignInner(_ file: String, _ certificate: String, _ entitlements: String) -> Result<String, Error> {
+        
+        var arguments = ["-vvv", "-fs", certificate, "--no-strict"]
 
-
-    func codeSign(_ file: String, certificate: String, entitlements: String?) -> Result<String, Error> {
- 
         let chmodTask = SwiftShell.run("/bin/chmod", "755", file)
         if chmodTask.exitcode != 0 {
             return .failure(CodeSignProcessorError.chmodFileFailed(file: file, stderr: chmodTask.stderror))
         }
-
-        var arguments = ["-vvv", "-fs", certificate, "--no-strict"]
-        let fileManager = FileManager.default
-        if fileManager.fileExists(atPath: entitlements!) {
-            arguments.append("--entitlements=\(entitlements!)")
+        
+        if FileManager.default.fileExists(atPath: entitlements) {
+            arguments.append("--entitlements=\(entitlements)")
+        } else {
+            return .failure(CodeSignProcessorError.entitlementsPathNotExist)
         }
+        
         arguments.append(file)
-
+        
         let codesignTask = runAsync("/usr/bin/codesign", arguments).onCompletion { command in
             print("finshed codesign command")
         }

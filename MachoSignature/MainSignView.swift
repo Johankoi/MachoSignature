@@ -23,7 +23,7 @@ public extension NSPasteboard.PasteboardType {
 }
 
 class MainSignView: NSView {
-
+    
     let fileManager = FileManager.default
     
     //MARK: IBOutlets
@@ -40,7 +40,7 @@ class MainSignView: NSView {
     @IBOutlet var StartButton: NSButton!
     @IBOutlet var StatusLabel: NSTextField!
     
-
+    
     var provisioningProfiles: [ProvisioningProfile] = MobileProvisionProcessor().filterAll()
     var codesigningCerts: [SecureCertificate] = []
     
@@ -60,13 +60,13 @@ class MainSignView: NSView {
     
     var currSelectCert: String? = nil
     var currSelectOutput: String?
-
+    
     
     //MARK: Drag / Drop
     fileprivate var fileTypes: [String] = ["ipa","app","mobileprovision", "xcarchive"]
     fileprivate var fileTypeIsOk = false
     
-
+    
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         if checkExtension(sender) == true {
@@ -99,7 +99,7 @@ class MainSignView: NSView {
     
     func checkExtension(_ drag: NSDraggingInfo) -> Bool {
         if let board = drag.draggingPasteboard.propertyList(forType: .kFilenames) as? NSArray,
-            let path = board[0] as? String {
+           let path = board[0] as? String {
             return fileTypes.contains(path.pathExtension.lowercased())
         }
         return false
@@ -120,7 +120,7 @@ class MainSignView: NSView {
         
         populateProvisioningProfiles()
         populateCodesigningCerts()
-
+        
         let xcodeCheck = SwiftShell.run("/usr/bin/xcode-select", "-p")
         if xcodeCheck.exitcode != 0 {
             // 提示安装xcode: /usr/bin/xcode-select --install
@@ -225,6 +225,9 @@ class MainSignView: NSView {
         }
         
         do {
+            
+            
+//          undo 完成回调block 使用swiftlog 打日志
             let signer = try CodeSignProcessor()
             signer.delegate = self
             if currSelectProfile == nil {
@@ -237,49 +240,50 @@ class MainSignView: NSView {
                     currSelectCert = self.codeSignCertsPop.selectedItem?.title
                 }
             }
-            try signer.sign(filePath: inputFilePath, provision: currSelectProfile, newBundleID: newBundleID, newDisplayName: newDisplayName, newVersion: newVersion, newShortVersion: newShortVersion, certificate: currSelectCert!, outputPath: currSelectOutput!)
+            try signer.sign(filePath: inputFilePath, provision: currSelectProfile, bundleID: newBundleID, displayName: newDisplayName, version: newVersion, shortVersion: newShortVersion, certificate: currSelectCert, outputPath: currSelectOutput)
         } catch {
             
-    //        let verificationTask = Process().execute(codesignPath, workingDirectory: nil, arguments: ["-v", file])
-    //        if verificationTask.status != 0 {
-    //            //MARK: alert if certificate  expired
-    ////              self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
-    //            DispatchQueue.main.async(execute: {
-    //                let alert = NSAlert()
-    //                alert.addButton(withTitle: "OK")
-    //                alert.messageText = "Error verifying code signature!"
-    //                alert.informativeText = verificationTask.output
-    //                alert.alertStyle = .critical
-    //                alert.runModal()
-    //            })
-    //            return
-    //        }
-    //
-    //        if codesignTask.status != 0 {
-    //            //MARK: alert if certificate expired
-    //            delegate?.codeSignLogRecord(logDes: "Error codesigning \(file) error:\(codesignTask.output)")
-    //        }
-    //
+            //        let verificationTask = Process().execute(codesignPath, workingDirectory: nil, arguments: ["-v", file])
+            //        if verificationTask.status != 0 {
+            //            //MARK: alert if certificate  expired
+            ////              self.delegate?.codeSignError(errDes: "verifying code sign fail:\(verificationTask.output)", tempDir: tempFolder)
+            //            DispatchQueue.main.async(execute: {
+            //                let alert = NSAlert()
+            //                alert.addButton(withTitle: "OK")
+            //                alert.messageText = "Error verifying code signature!"
+            //                alert.informativeText = verificationTask.output
+            //                alert.alertStyle = .critical
+            //                alert.runModal()
+            //            })
+            //            return
+            //        }
+            //
+            //        if codesignTask.status != 0 {
+            //            //MARK: alert if certificate expired
+            //            delegate?.codeSignLogRecord(logDes: "Error codesigning \(file) error:\(codesignTask.output)")
+            //        }
+            //
         }
         
     }
     
     
     //MARK: IBActions
+    //   undo 选择完成描述文件的时候 自动检索对应的证书
     @IBAction func chooseProvisioningProfile(_ sender: NSPopUpButton) {
         if sender.indexOfSelectedItem == 0 {
-//            newBundleIDField.isEditable = true
+            newBundleIDField.isEditable = true
             newBundleIDField.stringValue = ""
         } else {
-//            newBundleIDField.isEditable = false
+            newBundleIDField.isEditable = false
             currSelectProfile = provisioningProfiles[sender.indexOfSelectedItem - 1]
             let matchCer = currSelectProfile?.developerCertificates.first
-//            if let matchCer = matchCer, codesigningCerts.contains(matchCer) {
-//                codeSignCertsPop.selectItem(withTitle: matchCer)
-//                currSelectCert = matchCer
-//            } else {
-//                //MARK: todo  // 提醒用户没有匹配的证书
-//            }
+            //            if let matchCer = matchCer, codesigningCerts.contains(matchCer) {
+            //                codeSignCertsPop.selectItem(withTitle: matchCer)
+            //                currSelectCert = matchCer
+            //            } else {
+            //                //MARK: todo  // 提醒用户没有匹配的证书
+            //            }
         }
     }
     

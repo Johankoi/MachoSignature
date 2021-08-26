@@ -152,7 +152,6 @@ public extension ProvisioningProfile {
         let data = try encoder.encode(entitlements)
         try data.write(to: URL(fileURLWithPath: filePath))
     }
-    
 }
 
 
@@ -173,7 +172,7 @@ public final class MobileProvisionProcessor {
                                                 errorHandler: nil)!
         
         for case let url as URL in enumerator {
-            if let profile = self.parse(url: url) {
+            if let profile = MobileProvisionProcessor.parse(url: url) {
                 uuidProvisons[profile.uuid] = profile
             }
         }
@@ -343,7 +342,7 @@ public final class MobileProvisionProcessor {
         case dataCreationFailed
     }
 
-    private func parse(url: URL) -> ProvisioningProfile? {
+    public static func parse(url: URL) -> ProvisioningProfile? {
         var profile: ProvisioningProfile? = nil
         do {
             let data = try Data(contentsOf: url)
